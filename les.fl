@@ -1,0 +1,234 @@
+%{
+#include "y.tab.h"
+#include <string.h>
+#include "mydefs.h"
+#include "gml_parser.h"
+#include "var.h"
+
+#define MAX_INCLUDE_DEPTH 10
+YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH];
+int linenum[MAX_INCLUDE_DEPTH];
+int include_stack_ptr = 0;
+%}
+
+%x incl
+%x inclgml
+%x COMMENTS
+%x INCLCOMMENTS
+
+/* ANTO */
+
+delim	[ \t\n]
+nl	";"
+ws	{delim}+
+letter	[A-Z_a-z'-]
+digit	[0-9]
+id	{letter}({letter}|{digit})*
+number	{digit}+
+/* ANTO */
+path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
+/* ANTO */
+
+%%
+{ws}						{}
+"if"						{return(IF);}
+"then"						{return(THEN);}
+"else"						{return(ELSE);}
+"#setloops"					{return(SETLOOPS);}
+"#quit"|"quit"				{return(QUIT);}
+"#symbol"|"symbol"			{return(SYMBOL);}
+"#trace"|"trace"			{return(TRACEF);}
+"#verbose"|"verbose"        {return(VERBOSEF);}
+"#uselib"|"#use"|"#include" {return(USELIB);}
+"#open"|"#load"|"#import"   {BEGIN(incl);}
+"#gml"				    	{BEGIN(inclgml);}
+"#write"                    {return(WRITE);}
+"#setdir"                   {return(SETDIR);}
+"#status"                   {return(STATUS);}
+"#help"                     {return(HELP);}
+"#def"|"#define"            {return(DEF);}
+"#xcall"                    {return (XCALL);}
+"rec"                       {return(REC);}
+"let"                       {return(LET);}
+"in"                        {return(INN);}
+"and"|"And"|"or"|"Or"|"Add"|"add"|">"|"mult"|"Mult"	{
+		    			  strcpy(yylval.string,yytext);
+					  return (F2ARG);
+					}
+"xfunction" {                   
+			strcpy(yylval.string,yytext);
+			return (XFUNCTION);
+}
+"not"|"Not"|"succ"|"Succ"|"pred"|"Pred"|"iszero"	{
+		  	  strcpy(yylval.string,yytext);
+		  	  return (F1ARG);
+			}
+
+"true"|"false"|"TRUE"|"FALSE"|"True"|"False"		{ strcpy(yylval.string,yytext); 
+							  return(BOOLEAN);}
+
+{id}		{
+		  strcpy( yylval.string ,yytext);
+		  return (ID);
+		}
+{number}	{
+		  /*yylval.number=atof(yytext);*/
+              strcpy(yylval.string,yytext);
+ 	          return (NUM);
+  		}
+
+\+|\-	{
+		  strcpy(yylval.string,yytext);
+		  return (OP1);
+		}
+\*|\/		{
+		  strcpy(yylval.string,yytext);
+		  return (OP2);
+		}
+{nl}	{linenum[include_stack_ptr]++; return (NL);}
+\=		{return(EQ);}
+\(		{return('(');}
+\)		{return(')');}
+\[		{return('[');}
+\]		{return(']');}
+\,		{return(',');}
+\\		{return(LAMBDA);}
+\.		{return('.');}
+
+{path}	{
+		  strncpy( yylval.string ,yytext+1, yyleng-2);
+          yylval.string[yyleng-2] = '\0';
+		  return (PATH);
+		}
+
+<incl>\/\*                    { // start of a comment: go to a 'COMMENTS' state.
+	BEGIN(INCLCOMMENTS);
+}
+
+\/\*                    { // start of a comment: go to a 'COMMENTS' state.
+	BEGIN(COMMENTS);
+}
+
+<INCLCOMMENTS>\*\/    {  // end of a comment: go back to file including state.
+	BEGIN(incl);
+}
+<COMMENTS>\*\/    {   // end of a comment: go back to normal parsing.
+	BEGIN(INITIAL);
+}
+<COMMENTS>\n      { ++linenum[include_stack_ptr];}
+<COMMENTS>.       ;   // ignore every other character while we're in this state
+
+<INCLCOMMENTS>\n      { ++linenum[include_stack_ptr];}
+<INCLCOMMENTS>.       ;   // ignore every other character while we're in this state
+
+
+<incl>{path}  {
+      if ( include_stack_ptr >= MAX_INCLUDE_DEPTH )
+      {
+        fprintf( stderr, "Includes nested too deeply" );
+        exit( 1 );
+      }
+
+      include_stack[include_stack_ptr++] = YY_CURRENT_BUFFER;
+      *(yytext + (yyleng-1)) = '\0';
+      sprintf(infile,"%s/%s",directoryname,yytext+1);
+      printf("\n(%d) reading from file %s\n",rank,yytext+1);
+      yyin = fopen(infile, "r");
+      if (!yyin)
+      {
+        fprintf( stderr, "\n(%d) cannot open file %s\n",rank,infile);
+        exit( 1 );
+      }
+      
+      printf("(%d) filepointer [%p] to %s",rank,yyin,infile);
+
+      yy_switch_to_buffer(yy_create_buffer( yyin, YY_BUF_SIZE ) );
+      BEGIN(INITIAL);
+}
+
+<inclgml>{path} {
+
+	  /*parsing gml*/
+	  
+	  FILE *gmlfile;
+	  int npozzi ;
+//	  struct messaggio pozzi[MAXCUTNODES];
+	  
+	  struct GML_pair*list;
+	  struct GML_stat*stat= (struct GML_stat*)malloc(sizeof(struct GML_stat));
+	  stat->key_list= NULL;
+
+	  if ( include_stack_ptr >= MAX_INCLUDE_DEPTH )
+	  {
+		  fprintf( stderr, "Includes nested too deeply" );
+		  exit( 1 );
+	  }
+	  
+	  include_stack[include_stack_ptr++] = YY_CURRENT_BUFFER;
+	  *(yytext + (yyleng-1)) = '\0';
+	  sprintf(infile,"%s/%s",directoryname,yytext+1);
+	  printf("\n(%d) reading from file %s\n",rank,yytext+1);
+	  
+	  gmlfile = fopen(infile, "r");
+	  
+	  GML_init();
+	  list = GML_parser(gmlfile,stat,0);
+	  
+	  if(stat->err.err_num!=GML_OK){
+		  printf("Error at line %d column %d of %s:\n",stat->err.line,stat->err.column,infile);
+		  
+		  switch(stat->err.err_num){
+			  case GML_UNEXPECTED:
+			  printf("UNEXPECTED CHARACTER");
+			  break;
+			  
+			  case GML_SYNTAX:
+			  printf("SYNTAX ERROR");
+			  break;
+			  
+			  case GML_PREMATURE_EOF:
+			  printf("PREMATURE EOF IN STRING");
+			  break;
+			  
+			  case GML_TOO_MANY_DIGITS:
+			  printf("NUMBER WITH TOO MANY DIGITS");
+			  break;
+			  
+			  case GML_OPEN_BRACKET:
+			  printf("OPEN BRACKETS LEFT AT EOF");
+			  break;
+			  
+			  case GML_TOO_MANY_BRACKETS:
+			  printf("TOO MANY CLOSING BRACKETS");
+			  break;
+			  
+			  default:
+			  break;
+		  }
+		  GML_free_list(list,stat->key_list);
+	  };
+	  fclose(gmlfile);
+
+	  BDump(&incoming[schedule]);
+	  printf("(%d) exit from initialization procedure %d\n",rank);
+	  printf("(%d) message stack size (of schedule %d) is |%d-%d|=%d\n",rank,schedule,incoming[schedule].last,incoming[schedule].first,incoming[schedule].last-incoming[schedule].first);
+	  printf("(%d) number of target nodes %d\n",rank,npozzi);
+	  BEGIN(INITIAL);
+	  return GMLGRAPH ;
+}
+
+<<EOF>> {
+      if ( --include_stack_ptr < 0 )
+      {
+        yyterminate();
+      }
+      else
+      {
+        yy_delete_buffer( YY_CURRENT_BUFFER );
+        yy_switch_to_buffer(include_stack[include_stack_ptr] );
+      }
+}
+
+
+
+%%
