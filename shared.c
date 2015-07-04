@@ -1,4 +1,7 @@
-/* This is an external function added as a library
+/* This is an external function added as a library, when we want to include 
+	a function to be executed as a side effect on a state 
+	of the machine we can program it in C and compile as a library 
+	to be linked to our executable. 
  
  Copyright (C) 1997-2015 Marco Pedicini
  
