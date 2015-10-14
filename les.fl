@@ -53,6 +53,7 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 "then"						{return(THEN);}
 "else"						{return(ELSE);}
 "#setloops"					{return(SETLOOPS);}
+"#setfires"					{return(SETFIRES);}
 "#quit"|"quit"				{return(QUIT);}
 "#symbol"|"symbol"			{return(SYMBOL);}
 "#trace"|"trace"			{return(TRACEF);}
@@ -228,7 +229,7 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 	  fclose(gmlfile);
 
 	  BDump(&incoming[schedule]);
-	  printf("(%d) exit from initialization procedure %d\n",rank);
+	  printf("(%d) exit from initialization procedure, schedule = %d\n",rank,schedule);
 	  printf("(%d) message stack size (of schedule %d) is |%d-%d|=%d\n",rank,schedule,incoming[schedule].last,incoming[schedule].first,incoming[schedule].last-incoming[schedule].first);
 	  printf("(%d) number of target nodes %d\n",rank,npozzi);
 	  BEGIN(INITIAL);

@@ -750,7 +750,7 @@ void FunInteraction() {
 
 void ComputeResult() {
     printf("(%d) running...\n",rank);
-    while((!end_computation)&&(loops<=maxloop)) {
+    while((!end_computation)&&(loops<=maxloop)&&((maxfires==0) || bip3<maxfires)) {
         maxubound = 1;
         if (!THREAD) {
             FunReceiveMessages();

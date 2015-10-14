@@ -1813,14 +1813,13 @@ void InitializeIncoming(termGraph *t) {
         }
     }
     // printf("           [OK]\n");
-    TRACING fprintf(logfile,"            [OK]\n");
-    
-    
-    BDump(&incoming[schedule]);
-    printf("(%d) exit from initialization procedure\n",rank);
-    printf("(%d) message stack size (of schedule %d) is |%d-%d|=%d\n",rank,schedule,incoming[schedule].last,incoming[schedule].first,incoming[schedule].last-incoming[schedule].first);
-	printf("(%d) number of target nodes %d\n",rank,npozzi);
+    TRACING fprintf(logfile,"(%d) [OK]\n",rank);
 
+    BDump(&incoming[schedule]);
+    TRACING printf("(%d) exit from initialization procedure\n",rank);
+    TRACING printf("(%d) message stack size (of schedule %d) is |%d-%d|=%d\n",rank,schedule,incoming[schedule].last,incoming[schedule].first,incoming[schedule].last-incoming[schedule].first);
+	TRACING printf("(%d) number of target nodes %d\n",rank,npozzi);
+	TRACING printf("(%d) message stack size (of schedule %d) is |%d-%d|=%d\n",rank,size,incoming[size].last,incoming[size].first,incoming[size].last-incoming[size].first);
 	
 }
 
@@ -1886,7 +1885,6 @@ void MostraArchi(edge *e) {
     }
 }
 
-/* ANTO */
 void LoadLib(char *path)
 {
     /* dynamic loading of a function library */
@@ -2007,6 +2005,10 @@ USERTYPE pelcr_iszero(USERTYPE n) {
     else return 0;
 }
 
+/* this part is not well supported by the theory:
+	since when executed the DVR with the rules given in CosentinoPediciniQuaglia2005
+	we get a null path when it should be weighted different of zero */
+
 USERTYPE pelcr_add(USERTYPE n, USERTYPE m) {
     return n+m;
 }
@@ -2025,7 +2027,7 @@ USERTYPE pelcr_great(USERTYPE n, USERTYPE m) {
     else return 0;
 }
 
-/* ANTO */
+/***********************************************/
 
 void InitTable() {
     

@@ -45,7 +45,7 @@ char Path[MAXNAMELEN];
 const char *error;
 /* ANTO */
 
-long maxloop,maxfires;
+long maxloop,maxfires,maxbips;
 
 long timestamp,outtimestamp;
 long aggregation_cumulate,  num_receives;

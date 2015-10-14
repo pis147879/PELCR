@@ -196,7 +196,7 @@ void WriteStatus() {
 	if (inflag) printf("(%d) input file: %s\n",rank,infile);
 	if (outflag) printf("(%d) output file: %s\n",rank,outfile);
 	printf("(%d) loops: ",rank) ;if (loops) printf("%ld\n",loops); else printf(" (%ld) unlimited\n",loops);
-	printf("(%d) maxfires: ",rank) ;if (maxfires) printf("%ld",maxfires); else printf(" (%ld) unlimited\n",maxfires);
+	printf("(%d) maxfires: ",rank) ;if (maxfires) printf("%ld\n",maxfires); else printf(" (%ld) unlimited\n",maxfires);
 	printf("(%d) print every %ld steps\n",rank,prnsteps);
 	
 }
@@ -207,7 +207,7 @@ void WriteHelp() {
 	printf("       #open <filename> : import the file (pex: default directory)\n");
 	printf("       #trace           : enable tracing of execution in log files\n");
 	printf("       #setloops <num>  : set the number of idle loops before ending\n");
-	
+	printf("       #setfires <num>   : set the maximal number of combustion steps before forcing to end\n");
 }
 
 void SetOutputFile(char *name)

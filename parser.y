@@ -63,7 +63,7 @@ int yyerror(char *s);
   struct termGraph *grafo;
 };
 
-%token <intero> HELP TRACEF VERBOSEF USELIB QUIT WRITE SETDIR SETLOOPS STATUS SYMBOL REC DEF IF THEN ELSE GMLGRAPH
+%token <intero> HELP TRACEF VERBOSEF USELIB QUIT WRITE SETDIR SETLOOPS SETFIRES STATUS SYMBOL REC DEF IF THEN ELSE GMLGRAPH
 %token <number> NL EQ LAMBDA 
 %token <string> OP1 OP2 ID LOP1 LOP2 NUM BOOLEAN F1ARG F2ARG XFUNCTION LET INN PATH XCALL
 
@@ -124,8 +124,11 @@ line: lterm NL {
                       };
 		    printf("\n PELCR 10.0> "); fflush(stdout);
         }
-| error        {  yyerrok; printf("\n PELCR 10.0 > ");}
-;
+| error {
+			yyerrok;
+			printf("\n PELCR 10.0 > ");
+			yyerror("");
+		};
 
 stmt	: QUIT { $$=QUIT; }
 | SYMBOL                        { $$=SYMBOL; }
@@ -138,6 +141,11 @@ stmt	: QUIT { $$=QUIT; }
 									 thus PEs with different rank do not receive this value and run with 
 									 the default setting of maxloop */
 								}
+| SETFIRES NUM					{
+	maxfires = atol($2) ;
+	printf("\n(%d) setting max number of combustion steps to %ld",rank,maxfires);
+}
+
 | WRITE PATH                    { SetOutputFile($2) ; }
 | USELIB PATH                   { LoadLib($2);}
 | XCALL '(' ID ')' '(' PATH ')' { CallXF1ArgChar($3,$6); }
