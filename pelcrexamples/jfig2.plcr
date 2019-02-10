@@ -1,0 +1,5 @@
+#uselib "./shared.so"
+#def pls = \x.\y.xfunction(add2)(x,y)
+
+(((\x.x)pls)1 )3
+#quit

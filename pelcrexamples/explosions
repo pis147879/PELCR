@@ -1,0 +1,13 @@
+#def I = \x.x
+#def two = \f.\x.(f)(f)x
+
+#def G = \n.((n)(two)I)I
+#def F = \n.((n)(two)(two)I)I
+
+#def one = \f.\x.(f)x 
+#def ten = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x
+#def thirteen = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x
+#def nineteen = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x
+
+ 
+

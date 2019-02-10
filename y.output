@@ -1,0 +1,970 @@
+Terminals which are not used
+
+   OP1
+   OP2
+   LOP1
+   LOP2
+
+
+Grammar
+
+    0 $accept: lines $end
+
+    1 lines: lines line
+    2      | line
+
+    3 line: lterm NL
+    4     | stmt NL
+    5     | error
+
+    6 stmt: QUIT
+    7     | SYMBOL
+    8     | TRACEF
+    9     | VERBOSEF
+   10     | SETLOOPS NUM
+   11     | SETFIRES NUM
+   12     | WRITE PATH
+   13     | USELIB PATH
+   14     | XCALL '(' ID ')' '(' PATH ')'
+   15     | XCALL '(' ID ')' '(' NUM ')'
+   16     | DEF ID EQ lterm
+   17     | SETDIR PATH
+   18     | STATUS
+   19     | HELP
+   20     | GMLGRAPH
+
+   21 lterm: LAMBDA ID '.' lterm
+   22      | '(' lterm ')' lterm
+   23      | ID
+   24      | NUM
+   25      | BOOLEAN
+   26      | F1ARG '(' lterm ')'
+   27      | F2ARG '(' lterm ',' lterm ')'
+   28      | XFUNCTION '(' ID ')' '(' lterm ')'
+   29      | XFUNCTION '(' ID ')' '(' lterm ',' lterm ')'
+   30      | IF lterm THEN lterm ELSE lterm
+   31      | LET ID EQ lterm INN lterm
+   32      | REC ID INN lterm
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 14 15 22 26 27 28 29
+')' (41) 14 15 22 26 27 28 29
+',' (44) 27 29
+'.' (46) 21
+error (256) 5
+HELP (258) 19
+TRACEF (259) 8
+VERBOSEF (260) 9
+USELIB (261) 13
+QUIT (262) 6
+WRITE (263) 12
+SETDIR (264) 17
+SETLOOPS (265) 10
+SETFIRES (266) 11
+STATUS (267) 18
+SYMBOL (268) 7
+REC (269) 32
+DEF (270) 16
+IF (271) 30
+THEN (272) 30
+ELSE (273) 30
+GMLGRAPH (274) 20
+NL (275) 3 4
+EQ (276) 16 31
+LAMBDA (277) 21
+OP1 (278)
+OP2 (279)
+ID (280) 14 15 16 21 23 28 29 31 32
+LOP1 (281)
+LOP2 (282)
+NUM (283) 10 11 15 24
+BOOLEAN (284) 25
+F1ARG (285) 26
+F2ARG (286) 27
+XFUNCTION (287) 28 29
+LET (288) 31
+INN (289) 31 32
+PATH (290) 12 13 14 17
+XCALL (291) 14 15
+
+
+Nonterminals, with rules where they appear
+
+$accept (41)
+    on left: 0
+lines (42)
+    on left: 1 2, on right: 0 1
+line (43)
+    on left: 3 4 5, on right: 1 2
+stmt (44)
+    on left: 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20,
+    on right: 4
+lterm (45)
+    on left: 21 22 23 24 25 26 27 28 29 30 31 32, on right: 3 16 21
+    22 26 27 28 29 30 31 32
+
+
+state 0
+
+    0 $accept: . lines $end
+
+    error      shift, and go to state 1
+    HELP       shift, and go to state 2
+    TRACEF     shift, and go to state 3
+    VERBOSEF   shift, and go to state 4
+    USELIB     shift, and go to state 5
+    QUIT       shift, and go to state 6
+    WRITE      shift, and go to state 7
+    SETDIR     shift, and go to state 8
+    SETLOOPS   shift, and go to state 9
+    SETFIRES   shift, and go to state 10
+    STATUS     shift, and go to state 11
+    SYMBOL     shift, and go to state 12
+    REC        shift, and go to state 13
+    DEF        shift, and go to state 14
+    IF         shift, and go to state 15
+    GMLGRAPH   shift, and go to state 16
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    XCALL      shift, and go to state 25
+    '('        shift, and go to state 26
+
+    lines  go to state 27
+    line   go to state 28
+    stmt   go to state 29
+    lterm  go to state 30
+
+
+state 1
+
+    5 line: error .
+
+    $default  reduce using rule 5 (line)
+
+
+state 2
+
+   19 stmt: HELP .
+
+    $default  reduce using rule 19 (stmt)
+
+
+state 3
+
+    8 stmt: TRACEF .
+
+    $default  reduce using rule 8 (stmt)
+
+
+state 4
+
+    9 stmt: VERBOSEF .
+
+    $default  reduce using rule 9 (stmt)
+
+
+state 5
+
+   13 stmt: USELIB . PATH
+
+    PATH  shift, and go to state 31
+
+
+state 6
+
+    6 stmt: QUIT .
+
+    $default  reduce using rule 6 (stmt)
+
+
+state 7
+
+   12 stmt: WRITE . PATH
+
+    PATH  shift, and go to state 32
+
+
+state 8
+
+   17 stmt: SETDIR . PATH
+
+    PATH  shift, and go to state 33
+
+
+state 9
+
+   10 stmt: SETLOOPS . NUM
+
+    NUM  shift, and go to state 34
+
+
+state 10
+
+   11 stmt: SETFIRES . NUM
+
+    NUM  shift, and go to state 35
+
+
+state 11
+
+   18 stmt: STATUS .
+
+    $default  reduce using rule 18 (stmt)
+
+
+state 12
+
+    7 stmt: SYMBOL .
+
+    $default  reduce using rule 7 (stmt)
+
+
+state 13
+
+   32 lterm: REC . ID INN lterm
+
+    ID  shift, and go to state 36
+
+
+state 14
+
+   16 stmt: DEF . ID EQ lterm
+
+    ID  shift, and go to state 37
+
+
+state 15
+
+   30 lterm: IF . lterm THEN lterm ELSE lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 38
+
+
+state 16
+
+   20 stmt: GMLGRAPH .
+
+    $default  reduce using rule 20 (stmt)
+
+
+state 17
+
+   21 lterm: LAMBDA . ID '.' lterm
+
+    ID  shift, and go to state 39
+
+
+state 18
+
+   23 lterm: ID .
+
+    $default  reduce using rule 23 (lterm)
+
+
+state 19
+
+   24 lterm: NUM .
+
+    $default  reduce using rule 24 (lterm)
+
+
+state 20
+
+   25 lterm: BOOLEAN .
+
+    $default  reduce using rule 25 (lterm)
+
+
+state 21
+
+   26 lterm: F1ARG . '(' lterm ')'
+
+    '('  shift, and go to state 40
+
+
+state 22
+
+   27 lterm: F2ARG . '(' lterm ',' lterm ')'
+
+    '('  shift, and go to state 41
+
+
+state 23
+
+   28 lterm: XFUNCTION . '(' ID ')' '(' lterm ')'
+   29      | XFUNCTION . '(' ID ')' '(' lterm ',' lterm ')'
+
+    '('  shift, and go to state 42
+
+
+state 24
+
+   31 lterm: LET . ID EQ lterm INN lterm
+
+    ID  shift, and go to state 43
+
+
+state 25
+
+   14 stmt: XCALL . '(' ID ')' '(' PATH ')'
+   15     | XCALL . '(' ID ')' '(' NUM ')'
+
+    '('  shift, and go to state 44
+
+
+state 26
+
+   22 lterm: '(' . lterm ')' lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 45
+
+
+state 27
+
+    0 $accept: lines . $end
+    1 lines: lines . line
+
+    $end       shift, and go to state 46
+    error      shift, and go to state 1
+    HELP       shift, and go to state 2
+    TRACEF     shift, and go to state 3
+    VERBOSEF   shift, and go to state 4
+    USELIB     shift, and go to state 5
+    QUIT       shift, and go to state 6
+    WRITE      shift, and go to state 7
+    SETDIR     shift, and go to state 8
+    SETLOOPS   shift, and go to state 9
+    SETFIRES   shift, and go to state 10
+    STATUS     shift, and go to state 11
+    SYMBOL     shift, and go to state 12
+    REC        shift, and go to state 13
+    DEF        shift, and go to state 14
+    IF         shift, and go to state 15
+    GMLGRAPH   shift, and go to state 16
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    XCALL      shift, and go to state 25
+    '('        shift, and go to state 26
+
+    line   go to state 47
+    stmt   go to state 29
+    lterm  go to state 30
+
+
+state 28
+
+    2 lines: line .
+
+    $default  reduce using rule 2 (lines)
+
+
+state 29
+
+    4 line: stmt . NL
+
+    NL  shift, and go to state 48
+
+
+state 30
+
+    3 line: lterm . NL
+
+    NL  shift, and go to state 49
+
+
+state 31
+
+   13 stmt: USELIB PATH .
+
+    $default  reduce using rule 13 (stmt)
+
+
+state 32
+
+   12 stmt: WRITE PATH .
+
+    $default  reduce using rule 12 (stmt)
+
+
+state 33
+
+   17 stmt: SETDIR PATH .
+
+    $default  reduce using rule 17 (stmt)
+
+
+state 34
+
+   10 stmt: SETLOOPS NUM .
+
+    $default  reduce using rule 10 (stmt)
+
+
+state 35
+
+   11 stmt: SETFIRES NUM .
+
+    $default  reduce using rule 11 (stmt)
+
+
+state 36
+
+   32 lterm: REC ID . INN lterm
+
+    INN  shift, and go to state 50
+
+
+state 37
+
+   16 stmt: DEF ID . EQ lterm
+
+    EQ  shift, and go to state 51
+
+
+state 38
+
+   30 lterm: IF lterm . THEN lterm ELSE lterm
+
+    THEN  shift, and go to state 52
+
+
+state 39
+
+   21 lterm: LAMBDA ID . '.' lterm
+
+    '.'  shift, and go to state 53
+
+
+state 40
+
+   26 lterm: F1ARG '(' . lterm ')'
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 54
+
+
+state 41
+
+   27 lterm: F2ARG '(' . lterm ',' lterm ')'
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 55
+
+
+state 42
+
+   28 lterm: XFUNCTION '(' . ID ')' '(' lterm ')'
+   29      | XFUNCTION '(' . ID ')' '(' lterm ',' lterm ')'
+
+    ID  shift, and go to state 56
+
+
+state 43
+
+   31 lterm: LET ID . EQ lterm INN lterm
+
+    EQ  shift, and go to state 57
+
+
+state 44
+
+   14 stmt: XCALL '(' . ID ')' '(' PATH ')'
+   15     | XCALL '(' . ID ')' '(' NUM ')'
+
+    ID  shift, and go to state 58
+
+
+state 45
+
+   22 lterm: '(' lterm . ')' lterm
+
+    ')'  shift, and go to state 59
+
+
+state 46
+
+    0 $accept: lines $end .
+
+    $default  accept
+
+
+state 47
+
+    1 lines: lines line .
+
+    $default  reduce using rule 1 (lines)
+
+
+state 48
+
+    4 line: stmt NL .
+
+    $default  reduce using rule 4 (line)
+
+
+state 49
+
+    3 line: lterm NL .
+
+    $default  reduce using rule 3 (line)
+
+
+state 50
+
+   32 lterm: REC ID INN . lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 60
+
+
+state 51
+
+   16 stmt: DEF ID EQ . lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 61
+
+
+state 52
+
+   30 lterm: IF lterm THEN . lterm ELSE lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 62
+
+
+state 53
+
+   21 lterm: LAMBDA ID '.' . lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 63
+
+
+state 54
+
+   26 lterm: F1ARG '(' lterm . ')'
+
+    ')'  shift, and go to state 64
+
+
+state 55
+
+   27 lterm: F2ARG '(' lterm . ',' lterm ')'
+
+    ','  shift, and go to state 65
+
+
+state 56
+
+   28 lterm: XFUNCTION '(' ID . ')' '(' lterm ')'
+   29      | XFUNCTION '(' ID . ')' '(' lterm ',' lterm ')'
+
+    ')'  shift, and go to state 66
+
+
+state 57
+
+   31 lterm: LET ID EQ . lterm INN lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 67
+
+
+state 58
+
+   14 stmt: XCALL '(' ID . ')' '(' PATH ')'
+   15     | XCALL '(' ID . ')' '(' NUM ')'
+
+    ')'  shift, and go to state 68
+
+
+state 59
+
+   22 lterm: '(' lterm ')' . lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 69
+
+
+state 60
+
+   32 lterm: REC ID INN lterm .
+
+    $default  reduce using rule 32 (lterm)
+
+
+state 61
+
+   16 stmt: DEF ID EQ lterm .
+
+    $default  reduce using rule 16 (stmt)
+
+
+state 62
+
+   30 lterm: IF lterm THEN lterm . ELSE lterm
+
+    ELSE  shift, and go to state 70
+
+
+state 63
+
+   21 lterm: LAMBDA ID '.' lterm .
+
+    $default  reduce using rule 21 (lterm)
+
+
+state 64
+
+   26 lterm: F1ARG '(' lterm ')' .
+
+    $default  reduce using rule 26 (lterm)
+
+
+state 65
+
+   27 lterm: F2ARG '(' lterm ',' . lterm ')'
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 71
+
+
+state 66
+
+   28 lterm: XFUNCTION '(' ID ')' . '(' lterm ')'
+   29      | XFUNCTION '(' ID ')' . '(' lterm ',' lterm ')'
+
+    '('  shift, and go to state 72
+
+
+state 67
+
+   31 lterm: LET ID EQ lterm . INN lterm
+
+    INN  shift, and go to state 73
+
+
+state 68
+
+   14 stmt: XCALL '(' ID ')' . '(' PATH ')'
+   15     | XCALL '(' ID ')' . '(' NUM ')'
+
+    '('  shift, and go to state 74
+
+
+state 69
+
+   22 lterm: '(' lterm ')' lterm .
+
+    $default  reduce using rule 22 (lterm)
+
+
+state 70
+
+   30 lterm: IF lterm THEN lterm ELSE . lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 75
+
+
+state 71
+
+   27 lterm: F2ARG '(' lterm ',' lterm . ')'
+
+    ')'  shift, and go to state 76
+
+
+state 72
+
+   28 lterm: XFUNCTION '(' ID ')' '(' . lterm ')'
+   29      | XFUNCTION '(' ID ')' '(' . lterm ',' lterm ')'
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 77
+
+
+state 73
+
+   31 lterm: LET ID EQ lterm INN . lterm
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 78
+
+
+state 74
+
+   14 stmt: XCALL '(' ID ')' '(' . PATH ')'
+   15     | XCALL '(' ID ')' '(' . NUM ')'
+
+    NUM   shift, and go to state 79
+    PATH  shift, and go to state 80
+
+
+state 75
+
+   30 lterm: IF lterm THEN lterm ELSE lterm .
+
+    $default  reduce using rule 30 (lterm)
+
+
+state 76
+
+   27 lterm: F2ARG '(' lterm ',' lterm ')' .
+
+    $default  reduce using rule 27 (lterm)
+
+
+state 77
+
+   28 lterm: XFUNCTION '(' ID ')' '(' lterm . ')'
+   29      | XFUNCTION '(' ID ')' '(' lterm . ',' lterm ')'
+
+    ')'  shift, and go to state 81
+    ','  shift, and go to state 82
+
+
+state 78
+
+   31 lterm: LET ID EQ lterm INN lterm .
+
+    $default  reduce using rule 31 (lterm)
+
+
+state 79
+
+   15 stmt: XCALL '(' ID ')' '(' NUM . ')'
+
+    ')'  shift, and go to state 83
+
+
+state 80
+
+   14 stmt: XCALL '(' ID ')' '(' PATH . ')'
+
+    ')'  shift, and go to state 84
+
+
+state 81
+
+   28 lterm: XFUNCTION '(' ID ')' '(' lterm ')' .
+
+    $default  reduce using rule 28 (lterm)
+
+
+state 82
+
+   29 lterm: XFUNCTION '(' ID ')' '(' lterm ',' . lterm ')'
+
+    REC        shift, and go to state 13
+    IF         shift, and go to state 15
+    LAMBDA     shift, and go to state 17
+    ID         shift, and go to state 18
+    NUM        shift, and go to state 19
+    BOOLEAN    shift, and go to state 20
+    F1ARG      shift, and go to state 21
+    F2ARG      shift, and go to state 22
+    XFUNCTION  shift, and go to state 23
+    LET        shift, and go to state 24
+    '('        shift, and go to state 26
+
+    lterm  go to state 85
+
+
+state 83
+
+   15 stmt: XCALL '(' ID ')' '(' NUM ')' .
+
+    $default  reduce using rule 15 (stmt)
+
+
+state 84
+
+   14 stmt: XCALL '(' ID ')' '(' PATH ')' .
+
+    $default  reduce using rule 14 (stmt)
+
+
+state 85
+
+   29 lterm: XFUNCTION '(' ID ')' '(' lterm ',' lterm . ')'
+
+    ')'  shift, and go to state 86
+
+
+state 86
+
+   29 lterm: XFUNCTION '(' ID ')' '(' lterm ',' lterm ')' .
+
+    $default  reduce using rule 29 (lterm)

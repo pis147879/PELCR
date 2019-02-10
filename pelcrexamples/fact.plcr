@@ -1,0 +1,11 @@
+#def one = \f.\x.(f)x
+#def tt = \f.\x.f
+#def ff = \f.\x.x
+#def isz = \n.((n) \d.tt)ff
+#def I = \x.x
+#def S = \x.((x)I)\y.\z.((x)y)(y)z
+#def K = \x.\y.\z.z
+#def pd = \n.( (n) S ) \w.(n) K
+#def g=(rec fact in \x.\n.((isz) n)(fact)(pd)n)one)\f.\x.(f)(f)(f)x
+#quit
+

@@ -1,0 +1,5 @@
+#def delta = \x.(x)x
+#def two = \f.\x.(f)(f)x
+(delta)two
+#quit
+

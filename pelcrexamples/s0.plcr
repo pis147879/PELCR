@@ -1,0 +1,8 @@
+#trace
+#verbose
+#include "./shared.so"
+#def FF     = \x.xfunction(square)(x)
+#def AA     = 4
+
+(FF)AA
+#quit

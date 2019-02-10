@@ -1,0 +1,3 @@
+#def kduei = (\x.\y.y)(\f.\g.(f)(f)g)\z.z
+kduei
+#quit

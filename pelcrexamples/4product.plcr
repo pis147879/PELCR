@@ -1,0 +1,6 @@
+#uselib "./shared.so"
+#def prod = \x.xfunction(product2)(3,x)
+#def four = \f.\x.(f)(f)(f)(f)x
+((four)prod)2
+#quit
+

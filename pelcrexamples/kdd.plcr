@@ -1,0 +1,4 @@
+#def k=\x.\y.y
+#def d=\u.(u)u
+let x = d in (k)(x)x
+#quit

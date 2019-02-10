@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
   scount= 0;
   saddflag= 1;
   
-  sprintf(directoryname, "/Users/marco/marco.live/PROGRAMS/ALL-PELCR/pex");
+  sprintf(directoryname, "pelcrexamples");
 /* ANTO */
   memset(Path, 0, MAXNAMELEN);
   handle = NULL;

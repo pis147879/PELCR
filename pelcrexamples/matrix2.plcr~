@@ -1,0 +1,89 @@
+#uselib "./shared.so"
+#def mul = \x.\y.xfunction(product2)(x,y)
+#def pls = \x.\y.xfunction(add2)(x,y)
+#def show = \x.xfunction(show)(x) 
+#def show2 = \x.\y.xfunction(show2)(x,y) 
+#def suc = \x.xfunction(succ2)(x) 
+
+#def tt = \a.\b.a
+#def ff = \a.\b.b
+#def t1 = \t.(t)\a.\b.\c.a
+#def t2 = \t.(t)\a.\b.\c.b
+#def t3 = \t.(t)\a.\b.\c.c
+#def pair = \a.\b.\p.((p)a)b
+#def triple = \a.\b.\c.\p.(((p)a)b)c
+
+#def showtriple = \t.\p.(((p)(show)(t1)t)(show)(t2)t)(show)(t3)t
+
+#def A = (((triple)1)2)3
+#def B = ((pair)1)2
+#def fst  = \p.(p)tt
+#def snd  = \p.(p)ff
+
+#def emptylist = \k.\x.x
+#def cons = \l.\a.\k.\x.((l)k)((k)a)x
+
+#def AA     = \k.\x.((k)123)((k)10)((k)3)x
+#def BB     = \k.\x.((k)10)((k)5)((k)2)x
+#def map    = \f.\l.\k.\x.((l)\y.(k)(f)y)x
+#def fold   = \f.\e.\l.((l)\a. \b.((f)b)a)e
+#def foldr   = \f.\e.\l.((l)f)e
+#def rev    = \l. (((fold) cons) emptylist) l
+#def mysum    = \l.(((foldr) pls) 0) l
+#def length   = \l.(((foldr) \a.\b.(suc)b) 0) l
+#def showlength   = \l.(((foldr) \a.\b.(\z.(suc)b)((show2)a)b) 0) l
+#def lazylist = \l.(((foldr) pair ) ff )  l
+
+#def dot      = \v1.\v2.((v1) \a.\bp. ( (pair) ((show2)   ((mul) a) (fst)(snd)bp )  (fst)bp) (snd)(snd)bp ) ((pair)0)(lazylist)v2
+
+(show)(fst)((dot)(rev)AA)BB
+
+
+
+#quit
+
+#def mysum2    = \l.(((fold) plus) 0) l  // non funziona ! scoprire perche'
+(show)(length)((cons)AA)5
+((map)show)(rev)AA
+(show)(fst)(snd)(snd)(lazylist)AA
+(show)(fst)((dot)AA)(rev)AA
+#def dot      = \v1.\v2.((v1) \a.\bp. ( (pair) ((pls)((mul)a)(fst)(snd)bp )(fst)bp) (snd)(snd)bp ) ((pair)0)(lazylist)v2
+
+
+#quit
+((map)\y.((plus)2)y)AA
+#def empty = ff
+#def cons = \l.\a.((pair)a)l
+#def head = \l.(fst)l
+#def tail = \l.(snd)l
+
+#def two = \f.\x.(f)(f)x
+#def five = \f.\x.(f)(f)(f)(f)x
+#def ten = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x
+#def delta = \x.(x)x
+#def v1 = ((cons)((cons)((cons)empty)1)2)3
+#def v2 = ((cons)((cons)((cons)empty)7)11)13
+#def v3 = ((cons)((cons)((cons)((cons)empty)0)1)2)11
+#def sumlist = \l.((l) \a.\b.((plus)a)b)0
+#def bi = ((pair)2)3
+#def dot = \l1.\l2. let step = \x.\y.((pair)(tail)(fst)y)((plus)((prod)(head)(fst)y)x)(snd)y in let base = ((pair)l2)0 in ((l1)step)base 
+ 
+
+#def f1 = show
+#def f2 = show
+#def f3 = show
+#def F = \t.(((triple)(f1)(t1)t)(f2)(t2)t)(f3)(t3)t
+
+#def double = \l.\k.\x.((l)k)((l)k)x
+
+#def F1     = show
+#def FF     = \l.((map)F1)(double)l
+
+
+((five)FF)AA
+#quit
+
+((Plus)((dot)v1)v2)0
+(show)(head)v1
+(v1)show
+
