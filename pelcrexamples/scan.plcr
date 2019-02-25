@@ -1,0 +1,8 @@
+#uselib "./numeric.so"
+#def tt = \x.\y.x
+#def ff = \x.\y.y
+def scan = \f.\l.\k.\x.let base = \p.((p)0)x in let step = \y.\z.\p.(\w.((p)w)((k)w)(ff)z)((f)y)(tt)z in ((l)step)base
+#def v1 = \k.\x.((k)1)((k)6)((k)2)((k)7)((k)3)((k)4)x
+((scan)\x.\y.xfunction(max)(x,y))v1
+#quit
+ 

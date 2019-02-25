@@ -1,0 +1,4 @@
+#def delta = \x.(x)x ;
+#def three = \f.\x.(f)(f)(f)x ;
+(delta)(delta)three ;
+#quit ;

@@ -1,0 +1,6 @@
+#uselib "./shared.so"
+#def checksum = \x.xfunction(checksum)(x)
+#def twenty = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x
+((twenty)checksum)12345
+#quit
+

@@ -1,0 +1,21 @@
+#def pippo = java(
+ int p(int x)
+	{	 
+	 return (2*x)
+	 }
+)
+
+(\x.add(x,x))(pippo)2
+
+
+#def fst = \u.\v.u
+#def snd = \u.\v.v
+#def suc = \n.\x.\y.((n)x)(x)y
+#def pair = \x.\y.\z.((z)x)y
+#def molt = \n.\m.\x.(n)(m)x
+#def one = \f.\x.(f)x
+#def nextfibo = \p. (\a.(\b. ((pair)((molt)a)b)a)(suc)(p)snd)(p)fst
+
+#def fiboprim = \n. (((n)nextfibo)((pair)zero)one)fst
+(fiboprim)\c.\d.(c)(c)(c)d 
+#quit

@@ -1,0 +1,7 @@
+/* esecuzione di delta 4 */
+
+#def delta = \x.(x)x ;
+#def four = \f.\x.(f)(f)(f)(f)x ;
+(delta)four ;
+#quit ;
+

@@ -1,0 +1,7 @@
+#def delta = \x.(x)x
+#def four = \f.\x.(f)(f)(f)(f)x
+#def two = \f.\x.(f)(f)x
+#def I   = \x.x
+((two)(delta)(delta)four)I
+#quit
+

@@ -1,0 +1,22 @@
+#def two = \f.\x.(f)(f)x
+#def three = \f.\x.(f)(f)(f)x
+#def four = \f.\x.(f)(f)(f)(f)x
+#def I = \x.x
+
+
+(((((three)two)two)two)I)I 
+
+#quit
+
+
+(((two)two)I)I
+((((two)two)two)I)I // 0 sec.
+((three)I)I
+(((three)three)I)I
+((((three)two)two)I)I // 0 sec
+(((((two)two)two)two)I)I // 25 sec     
+(((((two)two)three)two)I)I //explodes 
+(((((two)two)two)three)I)I // explodes
+(((((two)two)three)three)I)I
+(((four)four)I)I
+(((((two)two)three)two)I)I

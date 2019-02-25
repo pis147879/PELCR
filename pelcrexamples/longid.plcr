@@ -1,0 +1,53 @@
+#def delta = \xx. (xx)xx 
+#def two = \fun. \arg. (fun)(fun)arg 
+#def scale = \n . \x.  Mult(n,x)
+#def scale2 = \x. ((scale) 2 )x
+
+#def empty = \k.\x.x
+#def cons = \l.\a.\k.\x.((k)a)((l)k)x
+
+#def map = \f. \list.\k.\x.((list)\y.(k)(f)y)x
+#def concat = \l1.\l2.\k.\x.((l1)k)((l2)k)x
+
+#def length = \l.((l)\f.\x.add(x,1))0
+
+#def true = \a.\b.a
+#def false = \a.\b.b
+
+#def pair = \a.\b.\p.((p)a)b
+#def fst  = \p.(true)p
+#def snd  = \p.(false)p
+
+#def head = \l.((l)true)false
+#def tail = \l.\k.\x.(first)((l)\a.\p.((pair)((cons)p)(snd)p)a)((pair)x)false
+
+#def listexample = \k.\x.((k)1)((k)2)((k)3)x
+
+#def listb = ((cons)((cons)((cons)empty)3)2)1
+#def nsucc = \x.add(x,1)
+
+((map)nsucc)listb
+
+
+
+#def nfact = \x. rec fak in if iszero(x) then 1 else mult(x,(fak)pred(x))
+
+
+
+(nfact)5
+
+#def isempty = \l. ((l) \x.\y.0) 1  
+
+#def reverse = \lista. rec revaux in 
+                  if isempty(lista) 
+                         then empty 
+                         else ((cons)(revaux)(tail)lista)(head)lista  
+			 
+
+#include square.so
+xfunction(square)(4)
+
+(length)listb
+
+
+#quit

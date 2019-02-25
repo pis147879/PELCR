@@ -1,0 +1,7 @@
+#uselib "./shared.so"
+#def checksum = \x.xfunction(checksum)(x)
+#def delta = \x.(x)x
+#def four = \f.\x.(f)(f)(f)(f)x
+(((delta)four)checksum)12345
+#quit
+
