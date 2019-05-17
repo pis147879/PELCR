@@ -9,10 +9,11 @@ CC          = $(MPIR_HOME)/bin/mpicc
 CCP         = $(MPIR_HOME)/bin/mpiCC
 CLINKER     = $(CC)
 CCC         = $(MPIR_HOME)/bin/mpiCC
+COMPILINGRDIR = ./
 CCLINKER    = $(CCC)
 PROFILING   = $(PMPILIB)
 #OPTFLAGS    = -DDEBUG -DWDEBUG -DMEMDEBUG -Wall -g -pg
-OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG  -DUSERTYPE=$(BASETYPE) -Wall -g -Wl,-export-dynamic 
+OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG  -DUSERTYPE=$(BASETYPE) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG 
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 
