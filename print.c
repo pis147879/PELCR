@@ -147,9 +147,9 @@ FILE *wstream;
 node *p;
 {
 #ifdef _DEBUG
-	DEBUG_PRINT { fprintf(logfile,"(%d) WRITENODE (function writenode) %p\n",rank,p);}
+	DEBUG_PRINT { fprintf(logfile,"(%d) WRITENODE (function writenode) %p\n",rank,(void*)p);}
 #endif
-	fprintf(wstream,"node [ id %ld label \"%p\" ",((long)p),p);
+	fprintf(wstream,"node [ id %ld label \"%p\" ",((long)p),(void*)p);
 	fprintf(wstream,"graphics [ w 6.0 h 6.0  type \"oval\" ");
 	if((p->left.length==0)&&(p->right.length==0))
 	{
@@ -186,7 +186,7 @@ int c;
 	
 #ifdef _DEBUG
 	DEBUG_PRINT {
-		fprintf(logfile,"(%d) WRITENODE (function writedge) %p\n",rank,e->source);
+		fprintf(logfile,"(%d) WRITENODE (function writedge) %p\n",rank,(void*)e->source);
 	}
 #endif
 	if (e->rankpuit==rank)
@@ -261,7 +261,7 @@ int priority;
 			
 			if (target->printed != pflag) {
 #ifdef _DEBUG
-				DEBUG_PRINT { fprintf(logfile,"(%d) WRITENODE (function mmwrite) %p\n",rank,target);}
+				DEBUG_PRINT { fprintf(logfile,"(%d) WRITENODE (function mmwrite) %p\n",rank,(void*)target);}
 #endif
 				writenode(wstream, target);
 			}
@@ -367,7 +367,7 @@ void Print(graph g, struct mbuffer *b, long sq)
 		{
 #ifdef _DEBUG
 			DEBUG_PRINT
-			fprintf(logfile,"(%d) WRITENODE (function Print) %p\n",rank,P);
+			fprintf(logfile,"(%d) WRITENODE (function Print) %p\n",rank,(void*)P);
 #endif
 			writenode(writefile,P);
 		}
@@ -384,7 +384,7 @@ void Print(graph g, struct mbuffer *b, long sq)
 	{
 #ifdef _DEBUG
 		DEBUG_PRINT {
-			fprintf(logfile,"(%d) WRITENODE (function Print) %p\n",rank,P);
+			fprintf(logfile,"(%d) WRITENODE (function Print) %p\n",rank,(void*)P);
 		};
 #endif
 		//		printf("-------->file pointer [%p]\n",writefile);
@@ -525,7 +525,7 @@ int sq;
 	P= g.hot; /* scan the hot part of the graph */
 	for(i= 0;P!=NULL;i++)
 	{
-		OUTPUT2 printf("{%d} hot node n.%d [%p] has ",rank,i,P);
+		OUTPUT2 printf("{%d} hot node n.%d [%p] has ",rank,i,(void*)P);
 		OUTPUT2 printf("%d incident left edge(s)",P->left.length);
 		OUTPUT2 printf("%d incident right edge(s)",P->right.length);
 		OUTPUT2 printf("and EOT state %d.\n",P->left.eot);
@@ -583,7 +583,7 @@ int sq;
 	P= G.cold;
 	for(i= 0;P!=NULL;i++)
 	{
- 	OUTPUT2 printf("{%d} environment node n.%d [%p] has ",rank,i,P);
+ 	OUTPUT2 printf("{%d} environment node n.%d [%p] has ",rank,i,(void*)P);
  	OUTPUT2 printf("%d incident edge(s) and EOT state %d.\n",P->left.length,P->left.eot);
  	OUTPUTFILE{
 		fprintf(writefile,"node [ id %ld  ",((long)P)*size+rank);
@@ -609,7 +609,7 @@ int sq;
 	};
 #ifdef _DEBUG
 		DEBUG_PRINT {
-			fprintf(logfile,"(%d) COLDLIST-NEXTPRINT([%p]) -> [%p]\n",rank,P,P->nextpuit);
+			fprintf(logfile,"(%d) COLDLIST-NEXTPRINT([%p]) -> [%p]\n",rank,(void*)P,(void*)P->nextpuit);
 			fflush(logfile);
 		}
 #endif

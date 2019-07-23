@@ -127,18 +127,18 @@ void OpenFileInitStruct() {
 #ifdef _DEBUG
 		TRACING{
 			printf("(%d) opened files:\n",rank);
-			if (tempfile) printf("(%d) temp = [%p]\n",rank,tempfile);
-			if (nofile)   printf("(%d) no   = [%p]\n",rank,nofile);
-			if (hotfile)  printf("(%d) hot  = [%p]\n",rank,hotfile);
-			if (coldfile) printf("(%d) cold = [%p]\n",rank,coldfile);
-			if (trivfile) printf("(%d) triv = [%p]\n",rank,trivfile);
-			if (firfile)  printf("(%d) fire = [%p]\n",rank,firfile);
+			if (tempfile) printf("(%d) temp = [%p]\n",rank,(void*)tempfile);
+			if (nofile)   printf("(%d) no   = [%p]\n",rank,(void*)nofile);
+			if (hotfile)  printf("(%d) hot  = [%p]\n",rank,(void*)hotfile);
+			if (coldfile) printf("(%d) cold = [%p]\n",rank,(void*)coldfile);
+			if (trivfile) printf("(%d) triv = [%p]\n",rank,(void*)trivfile);
+			if (firfile)  printf("(%d) fire = [%p]\n",rank,(void*)firfile);
 			for(i=0;i<size;i++){
 				if (maxwinfile[i])
-					printf("(%d) maxaggregation[%d]=[%p]\n",rank,i,maxwinfile[i]);
+					printf("(%d) maxaggregation[%d]=[%p]\n",rank,i,(void*)maxwinfile[i]);
 				if (mawfile[i])
-					printf("(%d) meanaggregation[%d]=[%p]\n",rank,i,mawfile[i]);
-				if (logfile)  printf("(%d) log  = [%p]\n",rank,logfile);
+					printf("(%d) meanaggregation[%d]=[%p]\n",rank,i,(void*)mawfile[i]);
+				if (logfile)  printf("(%d) log  = [%p]\n",rank,(void*)logfile);
 			}
 		}
 #endif
@@ -229,7 +229,7 @@ struct GML_pair*GML_parser(FILE*source,struct GML_stat*stat,int open)
 	struct GML_list_elem*tmp_elem;
 	
 	struct messaggio pozzi[MAXCUTNODES];
-	int npozzi= 0;
+	int npozzi = 0;
 	
 	assert(stat);
 	
@@ -405,7 +405,7 @@ struct GML_pair*GML_parser(FILE*source,struct GML_stat*stat,int open)
 		{
 			printf("\n\n\n");
 			for(i= 0;i<npozzi;i++){
-				printf("pozzo n.%d nodo %d[%p]\n",i,(int)pozzi[i].vtarget.source,pozzi[i].vtarget.source);
+	//			printf("pozzo n.%d nodo %d[%p]\n",i,(int)pozzi[i].vtarget.source,(void*((pozzi[i].vtarget).source)));
 				PushMessage(&pozzi[i]);
 				pozzi[i].side= !(pozzi[i].side);
 				PushMessage(&pozzi[i]);
@@ -498,7 +498,7 @@ void GML_print_list(struct GML_pair*list,int level){
 	}
 }
 
-int GML_edge_det(struct GML_pair*list, struct messaggio*pozzi, int npozzi)
+int GML_edge_det(struct GML_pair*list, struct messaggio*pozzi, int nnpozzi)
 {
 	edge*vsource,*vtarget;
 	int storeclass,polarity;
@@ -561,11 +561,11 @@ int GML_edge_det(struct GML_pair*list, struct messaggio*pozzi, int npozzi)
 			
 			StoreMessage(&m,vtarget,vsource,weight,storeclass,polarity);
 			PushMessage(&m);
-			if(vtarget->sto==IN)npozzi= SinkList(&m,pozzi,npozzi);
+			if(vtarget->sto==IN)nnpozzi= SinkList(&m,pozzi,nnpozzi);
 			
 		};
 	};
-	return npozzi;
+	return nnpozzi;
 }
 
 

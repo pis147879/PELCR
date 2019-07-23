@@ -240,7 +240,7 @@ long ord;
   node*address;
 
 #ifdef _DEBUG
-    TRACING fprintf(logfile,"(%d) ROOT[%p] hash_table(%d) key:%ld(%p) ",rank,BookTable[rk],rk,ord,(node*)ord);
+    TRACING fprintf(logfile,"(%d) ROOT[%p] hash_table(%d) key:%ld(%p) ",rank,(void*)BookTable[rk],rk,ord,(void*)ord);
 #endif
   if(rk==rank){
 #ifdef _DEBUG

@@ -75,7 +75,7 @@ void SendAddEdge(N,E,sw,sto)
                 target = (node*)BookedAddress(N->creator,(long)N->source);
 #ifdef _DEBUG
         DEBUG_DISTRIBUTION
-                fprintf(logfile,"(%d) ADDR TARGET BY HASHING [%p]\n",rank,target);
+                fprintf(logfile,"(%d) ADDR TARGET BY HASHING [%p]\n",rank,(void*)target);
 #endif
             }
             else
@@ -83,15 +83,15 @@ void SendAddEdge(N,E,sw,sto)
                 target= N->source;
 #ifdef _DEBUG
         DEBUG_DISTRIBUTION
-                fprintf(logfile,"(%d) ADDR TARGET BY REFERENCE [%p]\n",rank,target);
+                fprintf(logfile,"(%d) ADDR TARGET BY REFERENCE [%p]\n",rank,(void*)target);
 #endif
             };
 
 #ifdef _DEBUG
         DEBUG_DISTRIBUTION {
             fprintf(logfile,"(%d) SELFSENDTO[(%d),(%d,",rank,N->rankpuit,N->creator);
-            fprintf(logfile,"%p)]->[%p] Reference: [(%d),(%d,",N->source,target,E->rankpuit,E->creator);
-            fprintf(logfile,"%ld[%p])], Storage: %d Weight: %s\n",(long)E->source,E->source,E->sto,sw);
+            fprintf(logfile,"%p)]->[%p] Reference: [(%d),(%d,",(void*)N->source,(void*)target,E->rankpuit,E->creator);
+            fprintf(logfile,"%ld[%p])], Storage: %d Weight: %s\n",(long)E->source,(void*)E->source,E->sto,sw);
             fflush(logfile);
         };
 #endif

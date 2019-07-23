@@ -50,7 +50,7 @@
 //#include "lambdastar.h"
 //#include "buildgraph.h"
 #include "var.h"
-
+//int npozzi=0;
 int yylex();
 int yyerror(char *s);
 %}

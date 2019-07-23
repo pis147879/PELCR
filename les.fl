@@ -17,16 +17,17 @@
  You should have received a copy of the GNU General Public License
  along with PELCR.  If not, see <http://www.gnu.org/licenses/>.  */
 %{
-#include "y.tab.h"
+#include "parser.tab.h"
 #include <string.h>
 #include "mydefs.h"
 #include "gml_parser.h"
-#include "var.h"
+//#include "var.h"
 
 #define MAX_INCLUDE_DEPTH 10
 YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH];
 int linenum[MAX_INCLUDE_DEPTH];
 int include_stack_ptr = 0;
+int is_interactive = 1;
 %}
 
 %x incl
@@ -159,7 +160,7 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
         exit( 1 );
       }
       
-      printf("(%d) filepointer [%p] to %s",rank,yyin,infile);
+      printf("(%d) filepointer [%p] to %s",rank,(void *)yyin,infile);
 
       yy_switch_to_buffer(yy_create_buffer( yyin, YY_BUF_SIZE ) );
       BEGIN(INITIAL);
@@ -170,7 +171,7 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 	  /*parsing gml*/
 	  
 	  FILE *gmlfile;
-	  int npozzi ;
+//	  int npozzi = 0 ;
 //	  struct messaggio pozzi[MAXCUTNODES];
 	  
 	  struct GML_pair*list;

@@ -276,8 +276,8 @@ void ShowMessage(m)
 struct messaggio*m;
 {
     fprintf(logfile,"(%d) %20s : %d[(%d).(%d)%p]->%d[(%d).(%d)%p]\n", rank, m->weight,
-            m->vsource.side, m->vsource.rankpuit, m->vsource.creator, m->vsource.source,
-            m->side, m->vtarget.rankpuit, m->vtarget.creator, m->vtarget.source);
+            m->vsource.side, m->vsource.rankpuit, m->vsource.creator,(void*) m->vsource.source,
+            m->side, m->vtarget.rankpuit, m->vtarget.creator,(void*) m->vtarget.source);
     return ;
 }
 
@@ -953,7 +953,7 @@ void PrintResult() {
         e = m->vsource;
         
         TRACING {
-            fprintf(logfile,"(%d) ****** target address = %ld [%p]\n", rank,(long int)targetaddress,targetaddress);
+            fprintf(logfile,"(%d) ****** target address = %ld [%p]\n", rank,(long int)targetaddress,(void*)targetaddress);
             
             //    printf("(%d) target address = %ld [%p]\n", rank,(long int)targetaddress,targetaddress);
             fflush(stdout);

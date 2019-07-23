@@ -189,32 +189,3 @@ della dimensione massima del messaggio fisico a inviare
 /* numbero of cut nodes in a parsed term */
 #define MAXCUTNODES 100
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

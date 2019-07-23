@@ -41,6 +41,6 @@
 void read_back( node *principal )
 {
 //	DEBUG{
-			printf("(%d) ********** principal port address %p\n" , rank, principal);
+			printf("(%d) ********** principal port address %p\n" , rank, (void*)principal);
 //   		};
 	}

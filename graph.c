@@ -158,7 +158,7 @@ int side;
 #ifdef _DEBUG
         DEBUG_MEM {
             ShowEdge(p);
-            fprintf(logfile,"(%d) LENNODE[%p]: %d\n",rank,S,v->length);
+            fprintf(logfile,"(%d) LENNODE[%p]: %d\n",rank,(void*)S,v->length);
             fflush(logfile);
         };
 #endif

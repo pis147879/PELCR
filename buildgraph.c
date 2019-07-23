@@ -1123,13 +1123,14 @@ termGraph *BuildRec(char *xname,termGraph *M){
     
     
     TRACING {
-        printf("\n root del grafo M %p\n",M->root);
+		printf("\n root del grafo M %p\n",(void *)M->root);
         printf("\nGRAFO M dopo meltnode***********************\n");
         MostraGrafo(M);
     }
     
     if (!find)
-    {   fprintf(logfile,"\nATTENZIONE!!!!!!!!!!Il termine M non contiene la var libera x\n");
+    {
+		fprintf(logfile,"\nATTENZIONE!!!!!!!!!!Il termine M non contiene la var libera x\n");
         newT=M;
     }
     else
@@ -1155,7 +1156,7 @@ termGraph *BuildRec(char *xname,termGraph *M){
             printf("\nGRAFO REC***********************\n");
             MostraGrafo(newT);
             for (p=newT->root; p!=NULL; p=p->nextpuit)
-                printf("\nnodo %d del grafo finale= %p\n",i++,p);
+                printf("\nnodo %d del grafo finale= %p\n",i++,(void*)p);
         }
     }
     
@@ -1703,7 +1704,7 @@ void InitializeIncoming(termGraph *t) {
     int storeclass,polarity;
     struct messaggio m;
     char weight[MAXLENWEIGHT];
-    int npozzi=0 ;
+   
     
     for(nodo=t->root; nodo!=NULL;nodo=nodo->nextpuit) {
         for(arco=(nodo->left).vector; arco!=NULL; arco=arco->vector) {
@@ -1863,8 +1864,8 @@ void MostraNodo(node *n) {
     printf("\tRIGHT) weot    = %d\n",(n->right).weot);
     printf("\tRIGHT) length = %d\n",(n->right).length);
     MostraArchi((n->right).vector);
-    printf("\tIl Next Ã¨ %p\n",n->nextpuit);
-    printf("\tIl Prev Ã¨ %p\n",n->prevpuit);
+    printf("\t Next is %p\n",(void*)n->nextpuit);
+    printf("\t Prev is %p\n",(void*)n->prevpuit);
 }
 
 void MostraArchi(edge *e) {

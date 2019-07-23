@@ -27,7 +27,7 @@
 #include "symbolic.h"
 #include "graph.h"
 #include "combustion.h"
-//#include "yy.tab.h"
+//#include "y.tab.h"
 #include "io.h"
 #include "dvm.h"
 #include "distribution.h"
@@ -65,6 +65,8 @@ int laddtest,leottest;
 long idle,lidle,lbip2;
 int temp,nhot,ncold,scount;
 long francesco,lastloop;
+
+int npozzi=0 ;
 
 int fra_hot;
 

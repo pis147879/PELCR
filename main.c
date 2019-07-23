@@ -122,8 +122,28 @@ int main(int argc, char **argv) {
   fires= 0;
   scount= 0;
   saddflag= 1;
-  
-  sprintf(directoryname, "/Users/marco/marco.live/PROGRAMS/ALL-PELCR/pex");
+	
+	{
+	
+		FILE *fp;
+		//int status;
+		char path[MAXNAMELEN];
+		
+		
+		fp = popen("echo $PEX", "r");
+		if (fp == NULL)
+		/* Handle error */;
+		
+		while (strncmp(fgets(path, MAXNAMELEN, fp), "",1))
+		printf("%s", path);
+		
+		pclose(fp);
+	
+        sprintf(directoryname, "%s", path);
+	
+	}
+	
+	
 /* ANTO */
   memset(Path, 0, MAXNAMELEN);
   handle = NULL;
@@ -222,7 +242,7 @@ int main(int argc, char **argv) {
 	  OUTPUT printf("(%d) initial network created\n",rank);
 	  OUTPUT printf("(%d) n. of activated processes %d\n",rank,number_of_processes);
                         environment= NULL;
-	  TRACING fprintf(logfile,"(%d) COLDS=[%p] HOTS=[%p]\n",rank,G.cold,G.hot);
+	  TRACING fprintf(logfile,"(%d) COLDS=[%p] HOTS=[%p]\n",rank,(void*)G.cold,(void*)G.hot);
                         /*DEBUG Print(G,incoming,bip3);*/
                     }
                 }
