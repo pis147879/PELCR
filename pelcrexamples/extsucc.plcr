@@ -1,0 +1,17 @@
+#uselib "./shared.so"
+#def double = \l.\k.\x.((l)k)((l)k)x
+#def map = \f.\l.\k.\x.((l)\y.(k)(f)y)x
+#def F1 =\x.xfunction(addone)(x)
+#def FF = \l.((map)F1)(double)l
+#def AA = \k.\x.((k)1)((k)23)((k)150)x
+#def two = \f.\x.(f)(f)x
+#def four = \f.\x.(f)(f)(f)(f)x
+#def five = \f.\x.(f)(f)(f)(f)(f)x
+#def six = \f.\x.(f)(f)(f)(f)(f)(f)x
+#def seven = \f.\x.(f)(f)(f)(f)(f)(f)(f)x
+#def eight = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)x
+#def ten = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x
+
+((five)FF)AA
+#quit
+

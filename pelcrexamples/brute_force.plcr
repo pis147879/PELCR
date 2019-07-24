@@ -1,0 +1,27 @@
+/* this example shows how to use the C-ffi code
+	to implement a parallel brute-force executor
+	of a password cracker */
+
+/* note that in PELCR the theory for distributed execution
+	of ffi has been proved to be correct only for unary
+	functions (as it is in this particular case) */
+
+#include crypto_primitives
+
+#def join = \l1 .\l2. \k. \x. ((l1)k)((l2)k)x
+#def map = \f. \list.\k.\x.((list)\y.(k)(f)y)x
+
+#def generate_trials = \s. ((join) (oneexpand)s ) (zeroexpand)s 
+
+#def oneexpand  = \y. xfunction(shiftplus) y 
+#def zeroexpand = \y. xfunction(shift) y 
+
+#def test_function = xfunction(test_encoder)
+
+#def bruteforce = \n.\w. ((map) test_function) ((n)generate_trials) \k.\x.((k) w)x 
+
+#def ten = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x
+
+((bruteforce)ten) longword(0)
+
+#quit

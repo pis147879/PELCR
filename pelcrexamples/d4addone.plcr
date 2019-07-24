@@ -1,0 +1,7 @@
+#uselib "./shared.so"
+#def sumone = \x.xfunction(addone)(x)
+#def delta = \x.(x)x
+#def four = \f.\x.(f)(f)(f)(f)x
+(((delta)four)sumone)1
+#quit
+

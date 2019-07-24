@@ -122,6 +122,7 @@ int main(int argc, char **argv) {
   fires= 0;
   scount= 0;
   saddflag= 1;
+
 	
 	{
 	
@@ -144,6 +145,7 @@ int main(int argc, char **argv) {
 	}
 	
 	
+
 /* ANTO */
   memset(Path, 0, MAXNAMELEN);
   handle = NULL;

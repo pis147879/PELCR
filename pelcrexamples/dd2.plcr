@@ -1,0 +1,9 @@
+/*	delta delta two: the resulting graph,
+	representing the Church numeral 256
+	is verifiable by hand */
+
+#def delta = \x.(x)x ;
+#def two = \f.\x.(f)(f)x ;
+(delta)(delta)two ;
+#quit
+

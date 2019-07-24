@@ -1,0 +1,8 @@
+#def join = \l1 .\l2. \k. \x. ((l1)k)((l2)k)x
+
+#def generate_trials = \s. ((join) (oneexpand)s ) (zeroexpand)s 
+
+#def oneexpand  = \y. xfunction(shiftplus) y 
+#def zeroexpand = \y. xfunction(shift) y 
+
+church(n)(attack) longword(0) 

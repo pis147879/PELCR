@@ -1,0 +1,18 @@
+#uselib "./shared.so"
+#def fun = \x.xfunction(addone)(x)
+#def delta = \x.(x)x
+#def two = \f.\x.(f)(f)x
+#def eleven = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x
+
+#def pi1 = \a.\b.\c.a
+#def pi2 = \a.\b.\c.b
+#def pi3 = \a.\b.\c.c
+
+#def triple = \a.\b.\c.\t.(((t)a)b)c
+
+#def A = (((triple)1)500)1000
+#def F = \z.(((triple)(fun)(z)pi1)(fun)(z)pi2)(fun)(z)pi3
+(((two)eleven)F)A
+
+#quit
+

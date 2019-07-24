@@ -1,0 +1,6 @@
+#uselib "./shared.so"
+#def square = \x.xfunction(square)(x)
+#def four = \f.\x.(f)(f)(f)(f)x
+((four)square)2
+#quit
+
