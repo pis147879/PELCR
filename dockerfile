@@ -12,6 +12,7 @@ COPY . /app
 RUN cd /app ; rm -f Makefile ; ln -s Makefile.docker Makefile ; make
 RUN make /app
 RUN useradd -ms /bin/bash pelcr
+RUN chown -R pelcr /app
 USER pelcr
 WORKDIR /app
 

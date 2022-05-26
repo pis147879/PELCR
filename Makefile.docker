@@ -32,7 +32,9 @@ OBJECTS	  = read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o mai
 SRCS	  = read_back.c dvm.c  io.c graph.c symbolic.c distribution.c print.c parser.tab.c main.c buildgraph.c combustion.c lex.yy.c
 PARSERSRC = lex.yy.c parser.tab.c
 EXECS     = combustion.linux
-RUN       = $(MPIR_HOME)/bin/mpirun -np 1 $(EXECS) -- -I ciccio -loop 100000 -v -t -o GML/ciccio
+RUN1  = echo "\#setdir \"$(PEXDIR)\" ; \#open \"$(TESTFILE)\""
+RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS) -- -I ciccio -loop 10000000 -o GML/prova -v -t
+
 LIB_PATH    = 
 LIB_LIST    = -ldl -lm -ll -lfl -lpthread -lc
 
@@ -68,14 +70,31 @@ lex.yy.c: les.fl
 parser: $(PARSERSRC)
 	$(CC) lex.yy.c parser.tab.c dvm.c io.c graph.c symbolic4.c distribution.c -ll -lfl -o parser
 
+go:	NP=1
 go:
 	$(RUN)
+
+go2: NP=2
+go2:
+	$(RUN)
+
+test: NP=1
+test:
+	$(RUNTEST)
+
+test2: NP=2
+test2:
+	$(RUNTEST)
+
+test4: NP=4
+test4:
+	$(RUNTEST)	
 
 clean:
 	/bin/rm -f y.output y.tab.h y.tab.c lex.yy.c *.o run.*.log core combustion combustion.home combustion.ultra combustion.linux combustion.capital combustion.mac *.log combustion*.tex *.idx *.aux *.scn combustion*.dvi *.toc *~ DAT/*.* GML/* h/*~ ./Crypto/*.o ./Crypto/*.so *.so
 
-
-sp:     rm Makefile
+sp:
+	rm Makefile
 	ln -s Makefile.sp Makefile
 	make all
 
