@@ -19,9 +19,6 @@ PROFILING   = $(PMPILIB)
 COMPILINGRDIR = ./
 #OPTFLAGS    = -D_DEBUG -Wall 
 OPTFLAGS    = -D_DEBUG -DUSERTYPE=$(BASETYPE) -I $(COMPILINGRDIR)h -I .
-#ARCHFLAGS   = -O2 -fstrict-aliasing -mtune=G5 -mcpu=G5 -mpowerpc64
-#ARCHFLAGS   = -O2 -fstrict-aliasing -mtune=x86_64 -framework
-#ARCHFLAGS   = -g -fstrict-aliasing -mtune=x86_64
 ARCHFLAGS   = -g -fstrict-aliasing -mtune=x86-64
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
