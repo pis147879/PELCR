@@ -6,9 +6,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
- 
 
-# Make data base, printed on Thu May 26 14:39:22 2022
+# Make data base, printed on Thu May 26 16:20:54 2022
 
 # Variables
 
@@ -33,7 +32,6 @@ CURDIR := /Users/marco/marco.live/PROGRAMS/ALL-PELCR/GITHUB-current
 # makefile
 SHELL = /bin/sh
 # environment
- 
 VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
@@ -52,7 +50,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/2z/whkzmvnn3hqd2xpfxkzvkrxm0000gn/T/vscode-ipc-a71db68d-10d3-499d-9922-9f8abd6bb2ca.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/2z/whkzmvnn3hqd2xpfxkzvkrxm0000gn/T/vscode-ipc-7c4aa4b4-a49e-4db1-88ce-0374cc746c39.sock
 # makefile (from `Makefile', line 14)
 CCLINKER = $(CCC)
 # environment
@@ -67,8 +65,6 @@ YACC = bison
 FFLAGS = $(OPTFLAGS)
 # makefile (from `Makefile', line 46)
 RUNTEST = $(RUN1)|$(RUN)
-# environment
-LaunchInstanceID = B9893D51-6855-444A-8568-309B13A65233
 # environment
 VSCODE_LOG_STACK = false
 # environment
@@ -168,7 +164,6 @@ COMPILINGRDIR = ./
 # makefile (from `Makefile', line 12)
 CLINKER = $(CC)
 # automatic
- 
 +F = $(notdir $+)
 # makefile (from `Makefile', line 44)
 RUN1 = echo "#setdir \"$(PEXDIR)\" ; #open \"$(TESTFILE)\""
@@ -182,8 +177,6 @@ MAKEFILES :=
 <F = $(notdir $<)
 # environment
 LC_ALL = C
-# environment
-SECURITYSESSIONID = 186a6
 # automatic
 ^F = $(notdir $^)
 # default
@@ -199,9 +192,9 @@ BASETYPE = 'long long'
 # environment
 LANG = C
 # environment
-VSCODE_PID = 525
+VSCODE_PID = 5062
 # variable set hash-table stats:
-# Load=93/1024=9%, Rehash=0, Collisions=3/139=2%
+# Load=91/1024=9%, Rehash=0, Collisions=3/137=2%
 
 # Pattern-specific Variable Values
 
@@ -293,10 +286,10 @@ gcombustion: objects y.tab.c
 les.fl:
 #  Implicit rule search has been done.
 #  Last modified 2022-05-26 11:19:57
+ 
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
- 
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 test4:
@@ -443,7 +436,6 @@ lex.yy.c: les.fl
 # automatic
 # | := 
 # automatic
- 
 # < := les.fl
 # automatic
 # ^ := les.fl
@@ -558,6 +550,6 @@ buildgraph.c:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Thu May 26 14:39:22 2022
+# Finished Make data base on Thu May 26 16:20:54 2022
 
  
