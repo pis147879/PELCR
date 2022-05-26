@@ -121,26 +121,29 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 		  return (PATH);
 		}
 
-<incl>\/\*                    { // start of a comment: go to a 'COMMENTS' state.
-	BEGIN(INCLCOMMENTS);
+<incl>\/\*              { // start of a comment: go to a 'COMMENTS' state.
+    BEGIN(INCLCOMMENTS);
 }
 
 \/\*                    { // start of a comment: go to a 'COMMENTS' state.
-	BEGIN(COMMENTS);
+    BEGIN(COMMENTS);
 }
 
-<INCLCOMMENTS>\*\/    {  // end of a comment: go back to file including state.
-	BEGIN(incl);
+<INCLCOMMENTS>\*\/      {  // end of a comment: go back to file including state.
+    BEGIN(incl);
 }
-<COMMENTS>\*\/    {   // end of a comment: go back to normal parsing.
-	BEGIN(INITIAL);
+
+<COMMENTS>\*\/          {   // end of a comment: go back to normal parsing.
+    BEGIN(INITIAL);
 }
+
 <COMMENTS>\n      { ++linenum[include_stack_ptr];}
-<COMMENTS>.       ;   // ignore every other character while we're in this state
+
 
 <INCLCOMMENTS>\n      { ++linenum[include_stack_ptr];}
-<INCLCOMMENTS>.       ;   // ignore every other character while we're in this state
 
+<COMMENTS>.       ;   // ignore every other character while we are in this state
+<INCLCOMMENTS>.   ;   // ignore every other character while we are in this state
 
 <incl>{path}  {
       if ( include_stack_ptr >= MAX_INCLUDE_DEPTH )
@@ -171,7 +174,7 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 	  /*parsing gml*/
 	  
 	  FILE *gmlfile;
-//	  int npozzi = 0 ;
+      extern int npozzi ;
 //	  struct messaggio pozzi[MAXCUTNODES];
 	  
 	  struct GML_pair*list;
@@ -248,7 +251,5 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
         yy_switch_to_buffer(include_stack[include_stack_ptr] );
       }
 }
-
-
 
 %%

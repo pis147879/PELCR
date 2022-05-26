@@ -181,7 +181,11 @@ della dimensione massima del messaggio fisico a inviare
 
 
 /* code di priorita' incoming  6/10/2001 */
-/* la priorita minima e' quella associata agli EOT */
+/*
+    min priority is associated to EOT in order to guarantee that
+    an edge cannot arrive to its target node after that node has been
+    removed.
+ */
 #define MAXPRIORITY 0
 #define MINPRIORITY 1
 

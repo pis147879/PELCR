@@ -41,7 +41,7 @@
 unsigned int GML_line;
 unsigned int GML_column;
 
-
+extern int npozzi;
 
 
 void OpenFileInitStruct() {
@@ -229,7 +229,7 @@ struct GML_pair*GML_parser(FILE*source,struct GML_stat*stat,int open)
 	struct GML_list_elem*tmp_elem;
 	
 	struct messaggio pozzi[MAXCUTNODES];
-	int npozzi = 0;
+	//int npozzi = 0;
 	
 	assert(stat);
 	

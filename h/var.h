@@ -66,7 +66,7 @@ long idle,lidle,lbip2;
 int temp,nhot,ncold,scount;
 long francesco,lastloop;
 
-int npozzi=0 ;
+int npozzi;
 
 int fra_hot;
 
