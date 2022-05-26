@@ -132,11 +132,12 @@ int main(int argc, char **argv) {
 		
 		
 		fp = popen("echo $PEX", "r");
-		if (fp == NULL)
-		/* Handle error */;
-		
-		while (strncmp(fgets(path, MAXNAMELEN, fp), "",1))
-		printf("%s", path);
+        if (fp == NULL) {
+            /* Handle error */;
+            printf("error in the filename\n");
+            return -1;
+        }
+		while (strncmp(fgets(path, MAXNAMELEN, fp), "",1)) printf("%s", path);
 		
 		pclose(fp);
 	
