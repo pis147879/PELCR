@@ -1,8 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory `/Users/marco/marco.live/PROGRAMS/ALL-PELCR/GITHUB-current'
-flex ./les.fl
-bison -d -v ./parser.y -b y
-/usr/local/bin/mpicc -D_DEBUG -DUSERTYPE='long long' -I ./h -I . -g -fstrict-aliasing -mtune=x86-64  -c lex.yy.c y.tab.c ./read_back.c ./dvm.c  ./io.c ./graph.c ./symbolic.c ./distribution.c ./print.c ./main.c ./buildgraph.c ./combustion.c
-/usr/local/bin/mpicc -g -fstrict-aliasing -mtune=x86-64 -D_DEBUG -DUSERTYPE='long long' -I ./h -I .  -o combustion.mac y.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o  -ldl -lm -ll -lc
-make: Leaving directory `/Users/marco/marco.live/PROGRAMS/ALL-PELCR/GITHUB-current'
- 
