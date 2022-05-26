@@ -1,6 +1,8 @@
 # Generated automatically from Makefile.in by configure.
 ALL: default
 ##### User configurable options #####
+#TEST
+
 
 ARCH        = LINUX
 BASETYPE    = 'long long'
