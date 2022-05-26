@@ -137,6 +137,8 @@ int main(int argc, char **argv) {
             printf("error in the filename\n");
             return -1;
         }
+        
+        
 		while (strncmp(fgets(path, MAXNAMELEN, fp), "",1)) printf("%s", path);
 		
 		pclose(fp);
