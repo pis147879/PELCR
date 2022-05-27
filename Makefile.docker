@@ -3,7 +3,6 @@ ALL: default
 ##### User configurable options #####
 #TEST
 
-
 ARCH        = LINUX
 BASETYPE    = 'long long'
 MPIR_HOME   = /usr/lib64/openmpi
@@ -19,6 +18,8 @@ OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG  -DUSERTYPE=$(BASETYPE) -Wall -g -Wl,
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG 
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 
+COMPILINGRDIR = ./
+
 ########per il parser
 LEX= lex
 YACC = bison
@@ -30,5 +31,3 @@ CCFLAGS   = $(CFLAGS)
 FFLAGS    = $(OPTFLAGS)
 EXECS     = combustion.docker
 
-default:
-	make -f Makefile.common $(target)

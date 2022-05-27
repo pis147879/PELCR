@@ -22,3 +22,5 @@
 /y.tab.h
 /.vscode/c_cpp_properties.json
 *.log
+/Makefile.head
+/.vscode/

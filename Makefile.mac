@@ -16,9 +16,8 @@ PROFILING   = $(PMPILIB)
 
 COMPILINGRDIR = ./
 #OPTFLAGS    = -D_DEBUG -Wall
-
-BASETYPE='long long'
 OPTFLAGS=-D_DEBUG -DUSERTYPE=$(BASETYPE) -I$(COMPILINGRDIR)h -I.
+
 ARCHFLAGS=-g -fstrict-aliasing -mtune=x86-64
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
