@@ -2,12 +2,10 @@
 ALL: default
 ##### User configurable options #####
 PEXDIR      = pelcrexamples
-TESTFILE    = "dd4.plcr"
 ARCH        = LINUX
-BASETYPE    = 'long long'
 #MPIR_HOME   = /mpi-share/current-mpi
 MPIR_HOME  = /usr/local
-CC          = $(MPIR_HOME)/bin/mpicc
+CC=$(MPIR_HOME)/bin/mpicc
 CCP         = $(MPIR_HOME)/bin/mpiCC
 CLINKER     = $(CC)
 CCC         = $(MPIR_HOME)/bin/mpiCC
@@ -17,27 +15,25 @@ PROFILING   = $(PMPILIB)
 #OPTFLAGS    = -D_DEBUG -DUSERTYPE=$(BASETYPE) -Wall -bind_at_load
 
 COMPILINGRDIR = ./
-#OPTFLAGS    = -D_DEBUG -Wall 
-OPTFLAGS    = -D_DEBUG -DUSERTYPE=$(BASETYPE) -I $(COMPILINGRDIR)h -I .
-ARCHFLAGS   = -g -fstrict-aliasing -mtune=x86-64
+#OPTFLAGS    = -D_DEBUG -Wall
+
+BASETYPE='long long'
+OPTFLAGS=-D_DEBUG -DUSERTYPE=$(BASETYPE) -I$(COMPILINGRDIR)h -I.
+ARCHFLAGS=-g -fstrict-aliasing -mtune=x86-64
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 
-
 ########per il parser
-LEX= flex
-YACC = bison
+LEX=flex
+YACC=bison
 
 ### End User configurable options ###
-#OSFLAGS	  = -DLINUX
+#OSFLAGS = -DLINUX
 OSFLAGS	  =
-CFLAGS    = $(OPTFLAGS) $(ARCHFLAGS)
-CCFLAGS   = $(CFLAGS)
-FFLAGS    = $(OPTFLAGS)
+
 OBJECTS	  = y.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o
 
-SRCS	  = lex.yy.c y.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c
+SRCS	  =lex.yy.c y.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c
 EXECS     = combustion.mac
 
-default:
-	make -f Makefile.common $(target)
+
