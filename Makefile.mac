@@ -40,4 +40,4 @@ SRCS	  = lex.yy.c y.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(C
 EXECS     = combustion.mac
 
 default:
-    make -f Makefile.common $(target)
+	make -f Makefile.common $(target)

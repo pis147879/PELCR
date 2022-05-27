@@ -1,4 +1,8 @@
 ################ common part
+OBJECTS   = read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o lex.yy.o
+SRCS      = read_back.c dvm.c  io.c graph.c symbolic.c distribution.c print.c parser.tab.c main.c buildgraph.c combustion.c lex.yy.c
+PARSERSRC = lex.yy.c parser.tab.c
+
 
 RUN1  = echo "\#setdir \"$(PEXDIR)\" ; \#open \"$(TESTFILE)\""
 RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS) -- -I ciccio -loop 10000000 -o GML/prova -v -t
@@ -80,8 +84,8 @@ mac2:
 	make all
  
 docker:
-    rm Makefile
-    ln -s Makefile.docker Makefile
-    make all
+	rm Makefile
+	ln -s Makefile.docker Makefile
+	make all
 	
 home: gcombustion

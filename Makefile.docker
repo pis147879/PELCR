@@ -28,10 +28,7 @@ OSFLAGS	  = -DLINUX
 CFLAGS    = $(OPTFLAGS)
 CCFLAGS   = $(CFLAGS)
 FFLAGS    = $(OPTFLAGS)
-OBJECTS	  = read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o lex.yy.o 
-SRCS	  = read_back.c dvm.c  io.c graph.c symbolic.c distribution.c print.c parser.tab.c main.c buildgraph.c combustion.c lex.yy.c
-PARSERSRC = lex.yy.c parser.tab.c
 EXECS     = combustion.docker
 
 default:
-    make -f Makefile.common $(target)
+	make -f Makefile.common $(target)
