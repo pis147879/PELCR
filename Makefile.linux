@@ -31,5 +31,3 @@ SRCS	  = read_back.c dvm.c  io.c graph.c symbolic.c distribution.c print.c parse
 PARSERSRC = lex.yy.c parser.tab.c
 EXECS     = combustion.linux
 
-default:
-    make -f Makefile.common $(target)
