@@ -17,4 +17,4 @@ RUN chown -R pelcr /app
 USER pelcr
 WORKDIR /app
 
-CMD bash
+CMD make run2

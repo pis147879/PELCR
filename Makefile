@@ -10,6 +10,7 @@ BASETYPE='long long'
 TESTFILE    = "dd4.plcr"
 
 RUN1= echo "\#setdir \"$(PEXDIR)\" ; \#open \"$(TESTFILE)\""
+RUN2 = echo "#open \"dd5.plcr\""|$(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS)
 RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS) -- -I ciccio -loop 10000000 -o GML/prova -v -t
 RUNTEST = $(RUN1)|$(RUN)
 
@@ -53,6 +54,10 @@ test4: NP=4
 test4:
 	$(RUNTEST)
 
+run2: NP=4
+run2:
+	$(RUN2)
+
 clean:
 	/bin/rm -f y.output y.tab.h y.tab.c lex.yy.c *.o run.*.log core combustion combustion.home combustion.ultra combustion.linux combustion.capital combustion.mac *.log combustion*.tex *.idx *.aux *.scn combustion*.dvi *.toc *~ DAT/*.* GML/* h/*~ ./Crypto/*.o ./Crypto/*.so *.so
 
@@ -71,7 +76,7 @@ docker:
 	ln -s Makefile.docker Makefile.head
 	make all
 	
-docker:
+tesla:
 	rm Makefile.head
 	ln -s Makefile.tesla Makefile.head
 	make all

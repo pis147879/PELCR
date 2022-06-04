@@ -1,5 +1,4 @@
-#def delta = \x.(x)x
-#def five = \f.\x.(f)(f)(f)(f)(f)x
-(delta)(delta)five
-#quit
-
+#def delta = \x.(x)x;
+#def five = \f.\x.(f)(f)(f)(f)(f)x;
+(delta)(delta)five;
+#quit;
