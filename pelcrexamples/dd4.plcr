@@ -1,4 +1,5 @@
 #def delta=\x.(x)x;
 #def four=\f.\x.(f)(f)(f)(f)x;
-(delta)(delta)four
-#quit
+(delta)(delta)four;
+#quit;
+

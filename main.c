@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
 	timestamp=0;
 	outtimestamp=1;
 
-	maxloop= 1000;
+	maxloop= 10000000;
 	maxfires= 0;
 
 	fires= 0;
@@ -172,9 +172,10 @@ int main(int argc, char **argv) {
 		//FILE *fp;
 		//int status;
 		//char path[MAXNAMELEN];
+        char path[MAXNAMELEN];
+        char *tpath=getenv("PEX");
 
-		char *tpath=getenv("PEX");
-
+        
 	//	fp = popen("echo $PEX", "r");
 	//	if (fp == NULL)
 	//		/* Handle error */;
@@ -184,9 +185,13 @@ int main(int argc, char **argv) {
 
 	//	pclose(fp);
 
-		if(-1 == snprintf(directoryname,MAXNAMELEN, "%s", tpath)){
-			fprintf(stderr,"[WARN][%s][%d] Truncated output\n",__FILE__,__LINE__);
-		}
+        strcpy(path,"pelcrexamples");printf("%s\n",path);
+        if (tpath==NULL) tpath=path;
+        if(-1 == snprintf(directoryname,MAXNAMELEN, "%s", tpath)){
+                fprintf(stderr,"[WARN][%s][%d] Truncated output\n",__FILE__,__LINE__);
+            }
+        
+        printf("%s -> %s -> %s\n",path,tpath,directoryname);
 
 	}
 
@@ -219,7 +224,7 @@ int main(int argc, char **argv) {
 	};
 
 
-	while ((c = getopt_long(argc, argv, "f:hi:l:o:p:tv",long_options,NULL)) != -1) {
+	while ((c = getopt_long(argc, argv, "f:h:i:l:o:p:t:v",long_options,NULL)) != -1) {
 		switch(c){
 			case 'f':
 				maxfires=atoi(optarg);
@@ -235,7 +240,7 @@ int main(int argc, char **argv) {
 				break;
 			case 'l':
 				maxloop=atoi(optarg);
-				printf("Loop: %ld\n",maxloop);
+				printf("------------>>>Loops: %ld\n",maxloop);
 				break;
 			case 'o':
 				SetOutputFile(optarg);
@@ -373,6 +378,7 @@ int main(int argc, char **argv) {
 					BCastLoad();
 
 					/* READY TO START EVALUATION */
+                    printf("(%d) idle loops set to %ld\n",rank,maxloop);
 					MPI_Barrier(MPI_COMM_WORLD);
 					TRACING fprintf(logfile,"3nd Barrier passed - starting the distributed computing engine\n");
 					printf("(%d) 3rd barrier - starting the distributed computing engine\n",rank);
