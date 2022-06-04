@@ -147,6 +147,7 @@ int main(int argc, char **argv) {
 	kindex=-1;
 	findex=-1;
 	fcounter=-1;
+	MPI_Init(&argc,&argv);
 
 	for (j=0; j<MAXNUMCOST; j++)
 	{
@@ -198,7 +199,6 @@ int main(int argc, char **argv) {
 	printf ("USER TYPE Size: %ld bit",8*sizeof(k[0][1]));
 	/* ANTO */
 
-	MPI_Init(&argc,&argv);
 
 	/* print the list of arguments */
 	for(j= 1;j<argc;j++){

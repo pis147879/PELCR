@@ -74,8 +74,11 @@ FILE* Fopen(const char *pathname, const char *mode){
 	return f;
 }
 
-
+int openfileinitflag=0;
 void OpenFileInitStruct() {
+	if(openfileinitflag ==1){
+		return;
+	}
 	int i,j;
 	char namefile[MAXNAMELEN];
 	char command[5000];
@@ -233,6 +236,7 @@ void OpenFileInitStruct() {
 	
 	G.cold= NULL;
 	G.hot= NULL;
+    openfileinitflag=1;
 }
 
 void SetDirectory(char *name) {

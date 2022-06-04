@@ -15,7 +15,7 @@ PROFILING   = $(PMPILIB)
 OPTFLAGS    = -D_DEBUG -DUSERTYPE=$(BASETYPE) -Wall -bind_at_load
 
 COMPILINGRDIR = ./
-INCLUDEDIR = -I$(COMPILINGRDIR)h -I.
+INCLUDEDIR = -I$(COMPILINGRDIR)h -I$(COMPILINGRDIR)
 LIB_PATH    =
 LIB_LIST    = -ldl -lm -ll -lc -lpthread
 
@@ -35,9 +35,9 @@ YACC=bison
 #OSFLAGS = -DLINUX
 OSFLAGS	  =-DLINUX
 
-OBJECTS	  = y.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o
+OBJECTS	  = parser.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o
 
-SRCS	  =lex.yy.c y.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c
+SRCS	  =lex.yy.c parser.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c
 EXECS     = combustion.mac
 
 

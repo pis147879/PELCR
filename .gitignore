@@ -15,8 +15,14 @@
 /runold.1.log
 /symbolic.o
 /y.tab.o
-/Makefile
 /lex.yy.c
 /y.output
 /y.tab.c
 /y.tab.h
+/.vscode/
+/DAT/
+/pelcrexamples/DAT/
+/cianf-NEW_PELCR.tgz
+/out.err
+/parser.tab.o
+/Makefile.head

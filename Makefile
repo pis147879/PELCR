@@ -51,7 +51,7 @@ test2:
 
 test4: NP=4
 test4:
-	$(RUNTEST)	
+	$(RUNTEST)
 
 clean:
 	/bin/rm -f y.output y.tab.h y.tab.c lex.yy.c *.o run.*.log core combustion combustion.home combustion.ultra combustion.linux combustion.capital combustion.mac *.log combustion*.tex *.idx *.aux *.scn combustion*.dvi *.toc *~ DAT/*.* GML/* h/*~ ./Crypto/*.o ./Crypto/*.so *.so
@@ -71,4 +71,10 @@ docker:
 	ln -s Makefile.docker Makefile.head
 	make all
 	
+docker:
+	rm Makefile.head
+	ln -s Makefile.tesla Makefile.head
+	make all
+	
 home: gcombustion
+
