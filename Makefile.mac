@@ -12,11 +12,16 @@ CCC         = $(MPIR_HOME)/bin/mpiCC
 CCLINKER    = $(CCC)
 PROFILING   = $(PMPILIB)
 #OPTFLAGS    = -DDEBUG -DWDEBUG -DMEMDEBUG -Wall -g -pg
-#OPTFLAGS    = -D_DEBUG -DUSERTYPE=$(BASETYPE) -Wall -bind_at_load
+OPTFLAGS    = -D_DEBUG -DUSERTYPE=$(BASETYPE) -Wall -bind_at_load
 
 COMPILINGRDIR = ./
+INCLUDEDIR = -I$(COMPILINGRDIR)h -I.
+LIB_PATH    =
+LIB_LIST    = -ldl -lm -ll -lc -lpthread
+
+
 #OPTFLAGS    = -D_DEBUG -Wall
-OPTFLAGS=-D_DEBUG -DUSERTYPE=$(BASETYPE) -I$(COMPILINGRDIR)h -I.
+#OPTFLAGS=-D_DEBUG -DUSERTYPE=$(BASETYPE) -Wl,export-dynamic -I$(COMPILINGRDIR)h -I.
 
 ARCHFLAGS=-g -fstrict-aliasing -mtune=x86-64
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG
@@ -28,7 +33,7 @@ YACC=bison
 
 ### End User configurable options ###
 #OSFLAGS = -DLINUX
-OSFLAGS	  =
+OSFLAGS	  =-DLINUX
 
 OBJECTS	  = y.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o
 

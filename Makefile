@@ -12,8 +12,7 @@ TESTFILE    = "dd4.plcr"
 RUN1= echo "\#setdir \"$(PEXDIR)\" ; \#open \"$(TESTFILE)\""
 RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS) -- -I ciccio -loop 10000000 -o GML/prova -v -t
 RUNTEST = $(RUN1)|$(RUN)
-LIB_PATH    =
-LIB_LIST    = -ldl -lm -ll -lc
+
 CFLAGS    =$(ARCHFLAGS) $(OPTFLAGS)
 CCFLAGS   = $(CFLAGS)
 FFLAGS    = $(OPTFLAGS)
@@ -29,10 +28,10 @@ y.tab.c: $(COMPILINGRDIR)parser.y
 	$(YACC) -d -v $(COMPILINGRDIR)parser.y -b y
 
 objects: $(SRCS)
-	$(CC) $(CFLAGS) $(OSFLAGS) -c $(SRCS)
+	$(CC) $(CFLAGS) $(OSFLAGS) $(INCLUDEDIR) -c $(SRCS)
 
 gcombustion: y.tab.c objects
-	$(CLINKER) $(ARCHFLAGS) $(OPTFLAGS) $(OSFLAG) -o $(EXECS) $(OBJECTS) $(LIB_PATH) $(LIB_LIST)
+	$(CLINKER) $(ARCHFLAGS) $(OPTFLAGS) $(OSFLAG) $(INCLUDEDIR) -o $(EXECS) $(OBJECTS) $(LIB_PATH) $(LIB_LIST)
 
 go:	NP=1
 go:

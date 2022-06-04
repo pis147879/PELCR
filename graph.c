@@ -35,6 +35,8 @@
 #include <time.h>
 #include "var.h"
 
+int combusted;
+graph G;
 /**/
 
 graph*NewGraph()
@@ -309,7 +311,7 @@ node*P;
 #ifdef _DEBUG
         DEBUG_MEM {
             fprintf(logfile,"(%d) ok 1\n",rank);
-            fprintf(logfile,"(%d) Graph HOT=[%p]\n",rank,G.hot);
+            fprintf(logfile,"(%d) GHOT=[%p]\n",rank,G.hot);
         };
 #endif
     }

@@ -37,7 +37,25 @@
 #include "var.h"
 
 
-extern int fra_hot;
+
+
+int schedule ;
+long applicative_msgs[MAXNPROCESS];
+long cumulate_timeout[MAXNPROCESS];
+long physical_msgs[MAXNPROCESS];
+int TempProcess[MAXNPROCESS];
+
+
+MPI_Status status;
+MPI_Request data_request,add_request,create_request,eot_request,die_request,request;
+int dataflag,saddflag,addflag,createflag,eotflag,dieflag,flag,h;
+int sbuf[MAXLENWEIGHT];
+long sbuflong[10];
+int reotbuf[10],raddbuf[MAXLENWEIGHT];
+struct mbuffer incoming[MINPRIORITY]; /* array of buffers of incoming messages */
+pthread_mutex_t mutex;
+char buf[MAXNPROCESS][sizeof(long) + (1+MAXAWIN)*sizeof(struct messaggio)];
+char rbuf[sizeof(int) + (1+MAXAWIN)*sizeof(struct messaggio)];
 
 int NouvelleReservation(dest)
      int dest;

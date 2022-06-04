@@ -70,11 +70,11 @@ typedef struct functionstack
 } functionstack ;
 
 /* ANTO */
-USERTYPE k[MAXNUMCOST][3];
+extern USERTYPE k[MAXNUMCOST][3];
 /* ANTO */
 
-functionstack f[MAXFUNCTIONS];
-functionstack f_db[MAXFUNCTIONS];
-int  t[5][2];
+extern functionstack f[MAXFUNCTIONS];
+extern functionstack f_db[MAXFUNCTIONS];
+extern int  t[5][2];
 #endif
  

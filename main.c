@@ -1,22 +1,22 @@
 /* Main part of the source code: interpretation of commandline options,
- starting of execution, printing of messages.
- 
- Copyright (C) 1997-2015 Marco Pedicini
- 
- This file is part of PELCR.
- 
- PELCR is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
- 
- PELCR is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- 
- You should have received a copy of the GNU General Public License
- along with PELCR.  If not, see <http://www.gnu.org/licenses/>.  */
+   starting of execution, printing of messages.
+
+   Copyright (C) 1997-2015 Marco Pedicini
+
+   This file is part of PELCR.
+
+   PELCR is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   PELCR is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with PELCR.  If not, see <http://www.gnu.org/licenses/>.  */
 
 
 #include <stddef.h>
@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <getopt.h>
 //#include <mpi.h>
 
 //#include "mydefs.h"
@@ -50,257 +51,353 @@
 //#include "buildgraph.h"
 #include "var.h"
 
+#define USAGE "pelcr: USAGE\n"
+
 extern int yyparse (void);
 
+int locf_counter;
+int findex;
+int kindex;
+
+void *handle;
+char Path[MAXNAMELEN];
+long maxloop,maxfires,maxbips;
+long timestamp,outtimestamp;
+long aggregation_cumulate,  num_receives;
+long global_physical_msgs;
+int lift;
+int varname;
+symTbl *symbolTable;
+int pflag;
+int contatore_combustioni_f;
+int fcounter;
+int traceflag, inflag, outflag,verflag;
+long maxloo,maxfir,bip,bip2,bip3,bip4,fam_counter;
+long fires,loops,prnsteps,ones;
+int unaddtest,uneottest;
+long idle,lidle,lbip2;
+int laddtest,leottest;
+int scount;
+long francesco,lastloop;
+char infile[MAXNAMELEN];
+char directoryname[MAXNAMELEN];
+node*environment;
+int rank,size;
+int number_of_processes;
+int ending,end_computation,check_passed;
+int maxubound;
+int local_pending;
+int edges_counter;
+time_t inittime,finaltime,tim;
+long nTickSend; /* Quante volte spedisco allo scadere del tick */
+long nFullSend; /* Quante volte spedisco perche il messaggio fisico e' pieno */
+int newval;
+char sendbuffer[150*(sizeof(int) + (1+MAXAWIN)*sizeof(struct messaggio))];
 int main(int argc, char **argv) {
-  int j;
-  int fine=0;
+	int j;
+	int fine=0;
+	char c=0;
 
-  timestamp = 0;
-  outtimestamp=1;
-  aggregation_cumulate = 0;
-  num_receives = 0;
+	timestamp = 0;
+	outtimestamp=1;
+	aggregation_cumulate = 0;
+	num_receives = 0;
 
-  global_physical_msgs=0;
+	global_physical_msgs=0;
 
-  pflag=0 ;
+	pflag=0 ;
 
-  traceflag=0;
-  inflag=0;
-  outflag=0;
-  verflag=0;
+	traceflag=0;
+	inflag=0;
+	outflag=0;
+	verflag=0;
 
-  bip= 0;
-  bip2= 0;
-  bip3= 0;
-  bip4= 0;
-  fires= 0;
-  loops= 0;
-  prnsteps= 1;
-  ones= 0;
-  unaddtest= 0;
-  uneottest= 0;
-  laddtest= 0;
-  leottest= 0;
-  idle= 0;
-  lidle= 0;
-  lbip2= 0;
-  francesco= 0;
-  lastloop= 0;
-    
-  ending= 0;
-  end_computation= 0;
-  check_passed= TRUE;
+	bip= 0;
+	bip2= 0;
+	bip3= 0;
+	bip4= 0;
+	fires= 0;
+	loops= 0;
+	prnsteps= 1;
+	ones= 0;
+	unaddtest= 0;
+	uneottest= 0;
+	laddtest= 0;
+	leottest= 0;
+	idle= 0;
+	lidle= 0;
+	lbip2= 0;
+	francesco= 0;
+	lastloop= 0;
 
-  maxubound =1 ;
-  local_pending = 0;
-  edges_counter=0;
-  inittime=0;
-  finaltime=0;
-  contatore_combustioni_f = 0;
-  lift=0;
-  varname=0;
-  symbolTable=NULL;
+	ending= 0;
+	end_computation= 0;
+	check_passed= TRUE;
 
-  kindex=-1;
-  findex=-1;
-  fcounter=-1;
+	maxubound =1 ;
+	local_pending = 0;
+	edges_counter=0;
+	inittime=0;
+	finaltime=0;
+	contatore_combustioni_f = 0;
+	lift=0;
+	varname=0;
+	symbolTable=NULL;
 
-  for (j=0; j<MAXNUMCOST; j++)
-  {
-  	k[j][0]=0;
-	k[j][1]=0;
-	k[j][2]=0;
-  }
+	kindex=-1;
+	findex=-1;
+	fcounter=-1;
 
-  timestamp=0;
-  outtimestamp=1;
-    
-  maxloop= 1000;
-  maxfires= 0;
-
-  fires= 0;
-  scount= 0;
-  saddflag= 1;
-
-	
+	for (j=0; j<MAXNUMCOST; j++)
 	{
-	
-		FILE *fp;
-		//int status;
-		char path[MAXNAMELEN];
-		
-		
-		fp = popen("echo $PEX", "r");
-        if (fp == NULL) {
-            /* Handle error */;
-            printf("error in the filename\n");
-            return -1;
-        }
-        
-        
-		while (strncmp(fgets(path, MAXNAMELEN, fp), "",1)) printf("%s", path);
-		
-		pclose(fp);
-	
-        sprintf(directoryname, "%s", path);
-	
+		k[j][0]=0;
+		k[j][1]=0;
+		k[j][2]=0;
 	}
-	
-	
 
-/* ANTO */
-  memset(Path, 0, MAXNAMELEN);
-  handle = NULL;
+	timestamp=0;
+	outtimestamp=1;
 
-  printf ("USER TYPE Size: %ld bit",8*sizeof(k[0][1]));
-/* ANTO */
+	maxloop= 1000;
+	maxfires= 0;
 
-  MPI_Init(&argc,&argv);
-
-/* print the list of arguments */
- for(j= 1;j<argc;j++) printf("%s ",argv[j]);
-  printf("\n");
-  fflush(stdout);
-
-  for(j= 1;j<argc;j++) {
-    if(strcmp(argv[j],"-v")==0) {
-      printf("Verbose Mode On\n");
-      verflag= 1;
-    }
-
-    if(strcmp(argv[j],"-t")==0) {
-      printf("Trace Mode On\n");
-      traceflag= 1;
-    }
-
-    if(strcmp(argv[j],"-I")==0) {
-      strcpy(infile,argv[j+1]);
-      printf("Input File : %s\n",infile);
-      inflag= 1;
-    }
-
-    if(strcmp(argv[j],"-loop")==0) {
-      maxloop= atoi(argv[j+1]);
-      printf("Loop: %ld\n",maxloop);
-      j= j+1;
-    }
-
-    if(strcmp(argv[j],"-fires")==0) {
-      maxfires= atoi(argv[j+1]);
-      printf("Fires: %ld\n",maxfires);
-      j= j+1;
-    }
-
-    if(strcmp(argv[j],"-prnstep")==0) {
-      prnsteps= atoi(argv[j+1]);
-      printf("Print every %ld loops\n",prnsteps);
-      j= j+1;
-    }
-
-    if(strcmp(argv[j],"-o")==0) SetOutputFile(argv[j+1]);
-  }
-  MPI_Comm_size(MPI_COMM_WORLD,&size);
-
-  /*if(size==1)outbuffer= &incoming;*/
-  {
-  int i;
-
-  for(i=0;i<MINPRIORITY;i++) incoming[i].first= 0;incoming[i].last= 0;
-  }
-  /*outgoing.first= 0;outgoing.last= 0;*/
+	fires= 0;
+	scount= 0;
+	saddflag= 1;
 
 
-  InitTable();
+	{
 
-  /* provide a buffer for buffered MPI_Send */
-  MPI_Buffer_attach(sendbuffer,150 * ( sizeof(int) + (1+MAXAWIN)*sizeof(struct messaggio)));
+		//FILE *fp;
+		//int status;
+		//char path[MAXNAMELEN];
 
-  /*******************************************/
-  if((size<MAXNPROCESS)&&(size>=1)) {
-    MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+		char *tpath=getenv("PEX");
 
-    fine=0;
+	//	fp = popen("echo $PEX", "r");
+	//	if (fp == NULL)
+	//		/* Handle error */;
 
-    if INITIALIZER {
-      printf("PELCR (Parallel Environment for Lambda Calculus Optimal Reduction)\n");
-      printf("             C. Giuffrida, M. Pedicini, F. Quaglia \n");
-      printf("                  IAC - CNR (Rome, 1996 - 2002)\n");
-    };
+	//	while (strncmp(fgets(path, MAXNAMELEN, fp), "",1))
+	//		printf("%s", path);
 
-/*** INTERPRETER MAIN LOOP ***/
-      while (fine!=MAXNUMCOST+1) {
-          printf("(%d) EVAL\n",rank);
-                OpenFileInitStruct(); fflush(stdout);
-                if INITIALIZER {
-                    printf("(%d) PELCR 10.0> ",rank); fflush(stdout);
-                    /* CALLING PARSER */
-                    fine = yyparse();
-				//	printf("(%d) loops %ld\n",rank,maxloop); fflush(stdout);
+	//	pclose(fp);
 
-                    /* BROADCAST TO MPICOMMWORLD RENDEZ-VOUS POINT AFTER PARSING*/
-                    MPI_Bcast(&fine,1,MPI_INT,0,MPI_COMM_WORLD);
-                    if (fine!=MAXNUMCOST+1) {
-                        BDump(&incoming[schedule]);
-                        /*MPI_Barrier(MPI_COMM_WORLD);*/
-                        number_of_processes=size;
-	  OUTPUT printf("(%d) initial network created\n",rank);
-	  OUTPUT printf("(%d) n. of activated processes %d\n",rank,number_of_processes);
-                        environment= NULL;
-	  TRACING fprintf(logfile,"(%d) COLDS=[%p] HOTS=[%p]\n",rank,(void*)G.cold,(void*)G.hot);
-                        /*DEBUG Print(G,incoming,bip3);*/
-                    }
-                }
-                if WARMING {
-                    MPI_Bcast(&fine,1,MPI_INT,0,MPI_COMM_WORLD);
-                    if (fine!=MAXNUMCOST+1) {
-                            kindex=fine;
-                            /*MPI_Barrier(MPI_COMM_WORLD);*/
-                    }
-                }
+		if(-1 == snprintf(directoryname,MAXNAMELEN, "%s", tpath)){
+			fprintf(stderr,"[WARN][%s][%d] Truncated output\n",__FILE__,__LINE__);
+		}
 
-      MPI_Barrier(MPI_COMM_WORLD);
-      if (fine!=MAXNUMCOST+1) {
-          TRACING fprintf(logfile,"2nd Barrier passed - injecting the stream of actions corresponding to the parsed term\n");
-          printf("(%d) 2nd barrier - injecting the stream of actions corresponding to the parsed term\n",rank);fflush(stdout);
-          
-          /* set to zero the counter for beta-reductions */
-          /* number of LAMBDA-APP reductions (families in the Levy's sense) */
-          fam_counter = 0 ;
-          buf_flush(); /* scheduler*/
+	}
 
-          if (size!=1) loops = 0;
-          tim = time(&inittime);
 
-          /* ANTO */
-          BCastLoad();
-          
-          /* READY TO START EVALUATION */
-          MPI_Barrier(MPI_COMM_WORLD);
-          TRACING fprintf(logfile,"3nd Barrier passed - starting the distributed computing engine\n");
-          printf("(%d) 3rd barrier - starting the distributed computing engine\n",rank);
-          fflush(stdout);
-          
-          /* START */
-          ComputeResult();
-		  TRACING fprintf(logfile,"(%d) finished - collecting results\n",rank);
-		  printf("(%d) finished - collecting results\n",rank);
-          /* PRINT AFTER EVALUATING */
-          PrintResult();
 
-          if INITIALIZER
-              if (newval) printf("Result:  %lld\n",k[kindex][1]);
-              MostraTabelle(); fflush(stdout);
-                #ifdef WDEBUG
-                /*{long int f; for(f=0;f<500000000;f++);}*/
-                #endif
-         }
-    }
-  }
-  printf("\n(%d) QUIT\n",rank);
-  CloseLib();  
-  Finally();
-  fflush(stdout);
-  return 0;
-}
+	/* ANTO */
+	memset(Path, 0, MAXNAMELEN);
+	handle = NULL;
+
+	printf ("USER TYPE Size: %ld bit",8*sizeof(k[0][1]));
+	/* ANTO */
+
+	MPI_Init(&argc,&argv);
+
+	/* print the list of arguments */
+	for(j= 1;j<argc;j++){
+		printf("%s ",argv[j]);
+	}
+	printf("\n");
+	fflush(stdout);
+	static struct option long_options[] ={
+		{"fires", required_argument, NULL, 'f'},
+		{"help", no_argument, NULL, 'h'},
+		{"input-file", required_argument, NULL, 'i'},
+		{"loop", required_argument, NULL, 'l'},
+		{"output-file", required_argument, NULL, 'o'},
+		{"prnstep", required_argument, NULL, 'p'},
+		{"trace-on", no_argument, NULL, 't'},
+		{"verbose", no_argument, NULL, 'v'},
+		{NULL, 0, NULL, 0}
+	};
+
+
+	while ((c = getopt_long(argc, argv, "f:hi:l:o:p:tv",long_options,NULL)) != -1) {
+		switch(c){
+			case 'f':
+				maxfires=atoi(optarg);
+				printf("Fires: %ld\n",maxfires);
+				break;
+			case 'h':
+				fprintf(stderr,"%s",USAGE);
+				return EXIT_FAILURE;
+			case 'i':
+				strncpy(infile,optarg,MAXNAMELEN);
+				printf("Input File : %s\n",infile);
+				inflag= 1;
+				break;
+			case 'l':
+				maxloop=atoi(optarg);
+				printf("Loop: %ld\n",maxloop);
+				break;
+			case 'o':
+				SetOutputFile(optarg);
+				break;
+			case 'p':
+				prnsteps=atoi(optarg);
+				printf("Print every %ld loops\n",prnsteps);
+				break;
+			case 't':
+				printf("Trace Mode On\n");
+				traceflag= 1;
+				break;
+			case 'v':
+				printf("Verbose Mode On\n");
+				verflag= 1;
+				break;
+			default:
+				fprintf(stderr,"[ERROR]: Invalid option\n");
+				return EXIT_FAILURE;
+		}
+	}
+//		for(j= 1;j<argc;j++) {
+//			if(strcmp(argv[j],"-v")==0) {
+//				printf("Verbose Mode On\n");
+//				verflag= 1;
+//			}
+//
+//			if(strcmp(argv[j],"-t")==0) {
+//				printf("Trace Mode On\n");
+//				traceflag= 1;
+//			}
+//
+//			if(strcmp(argv[j],"-I")==0) {
+//				strcpy(infile,argv[j+1]);
+//				printf("Input File : %s\n",infile);
+//				inflag= 1;
+//			}
+//
+//			if(strcmp(argv[j],"-loop")==0) {
+//				maxloop= atoi(argv[j+1]);
+//				printf("Loop: %ld\n",maxloop);
+//				j= j+1;
+//			}
+//
+//			if(strcmp(argv[j],"-fires")==0) {
+//				maxfires= atoi(argv[j+1]);
+//				printf("Fires: %ld\n",maxfires);
+//				j= j+1;
+//			}
+//
+//			if(strcmp(argv[j],"-prnstep")==0) {
+//				prnsteps= atoi(argv[j+1]);
+//				printf("Print every %ld loops\n",prnsteps);
+//				j= j+1;
+//			}
+//
+//			if(strcmp(argv[j],"-o")==0) SetOutputFile(argv[j+1]);
+//		}
+		MPI_Comm_size(MPI_COMM_WORLD,&size);
+
+		/*if(size==1)outbuffer= &incoming;*/
+		{
+			int i;
+
+			for(i=0;i<MINPRIORITY;i++) {
+				incoming[i].first= 0;
+				incoming[i].last= 0;
+			}
+		}
+		/*outgoing.first= 0;outgoing.last= 0;*/
+
+
+		InitTable();
+
+		/* provide a buffer for buffered MPI_Send */
+		MPI_Buffer_attach(sendbuffer,150 * ( sizeof(int) + (1+MAXAWIN)*sizeof(struct messaggio)));
+
+		/*******************************************/
+		if((size<MAXNPROCESS)&&(size>=1)) {
+			MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+
+			fine=0;
+
+			if INITIALIZER {
+				printf("PELCR (Parallel Environment for Lambda Calculus Optimal Reduction)\n");
+				printf("             C. Giuffrida, M. Pedicini, F. Quaglia \n");
+				printf("                  IAC - CNR (Rome, 1996 - 2002)\n");
+			};
+
+			/*** INTERPRETER MAIN LOOP ***/
+			while (fine!=MAXNUMCOST+1) {
+				printf("(%d) EVAL\n",rank);
+				OpenFileInitStruct(); fflush(stdout);
+				if INITIALIZER {
+					printf("(%d) PELCR 10.0> ",rank); fflush(stdout);
+					/* CALLING PARSER */
+					fine = yyparse();
+					//	printf("(%d) loops %ld\n",rank,maxloop); fflush(stdout);
+
+					/* BROADCAST TO MPICOMMWORLD RENDEZ-VOUS POINT AFTER PARSING*/
+					MPI_Bcast(&fine,1,MPI_INT,0,MPI_COMM_WORLD);
+					if (fine!=MAXNUMCOST+1) {
+						BDump(&incoming[schedule]);
+						/*MPI_Barrier(MPI_COMM_WORLD);*/
+						number_of_processes=size;
+						OUTPUT printf("(%d) initial network created\n",rank);
+						OUTPUT printf("(%d) n. of activated processes %d\n",rank,number_of_processes);
+						environment= NULL;
+						TRACING fprintf(logfile,"(%d) COLDS=[%p] HOTS=[%p]\n",rank,(void*)G.cold,(void*)G.hot);
+						/*DEBUG Print(G,incoming,bip3);*/
+					}
+				}
+				if WARMING {
+					MPI_Bcast(&fine,1,MPI_INT,0,MPI_COMM_WORLD);
+					if (fine!=MAXNUMCOST+1) {
+						kindex=fine;
+						/*MPI_Barrier(MPI_COMM_WORLD);*/
+					}
+				}
+
+				MPI_Barrier(MPI_COMM_WORLD);
+				if (fine!=MAXNUMCOST+1) {
+					TRACING fprintf(logfile,"2nd Barrier passed - injecting the stream of actions corresponding to the parsed term\n");
+					printf("(%d) 2nd barrier - injecting the stream of actions corresponding to the parsed term\n",rank);fflush(stdout);
+
+					/* set to zero the counter for beta-reductions */
+					/* number of LAMBDA-APP reductions (families in the Levy's sense) */
+					fam_counter = 0 ;
+					buf_flush(); /* scheduler*/
+
+					if (size!=1) loops = 0;
+					tim = time(&inittime);
+
+					/* ANTO */
+					BCastLoad();
+
+					/* READY TO START EVALUATION */
+					MPI_Barrier(MPI_COMM_WORLD);
+					TRACING fprintf(logfile,"3nd Barrier passed - starting the distributed computing engine\n");
+					printf("(%d) 3rd barrier - starting the distributed computing engine\n",rank);
+					fflush(stdout);
+
+					/* START */
+					ComputeResult();
+					TRACING fprintf(logfile,"(%d) finished - collecting results\n",rank);
+					printf("(%d) finished - collecting results\n",rank);
+					/* PRINT AFTER EVALUATING */
+					PrintResult();
+
+					if INITIALIZER
+						if (newval) printf("Result:  %lld\n",k[kindex][1]);
+					MostraTabelle(); fflush(stdout);
+#ifdef WDEBUG
+					/*{long int f; for(f=0;f<500000000;f++);}*/
+#endif
+				}
+			}
+		}
+		printf("\n(%d) QUIT\n",rank);
+		CloseLib();  
+		Finally();
+		fflush(stdout);
+		return 0;
+	}
 

@@ -51,6 +51,7 @@
 //#include "buildgraph.h"
 #include "var.h"
 int npozzi=0;
+struct messaggio pozzi[MAXCUTNODES];
 int yylex();
 int yyerror(char *s);
 %}
@@ -202,7 +203,8 @@ lterm	: LAMBDA ID '.' lterm
  {
 	extern int yylineno;  // defined and maintained in lex
 	extern char *yytext;  // defined and maintained in lex
-	fprintf(stderr, "ERROR: %s at symbol '%s' on line %d\n", s, yytext, yylineno);
+	fprintf(stderr, "ERROR: %s at symbol '%s' on line %d\n", s,
+	yytext, yylineno);
 	return -1;
  }
 
