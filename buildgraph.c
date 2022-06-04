@@ -48,6 +48,8 @@
 #include "var.h"
 
 
+const char *error;
+
 termGraph *BuildF1Arg(char *namef, termGraph *arg) {
     termGraph *newT=(termGraph*)malloc(sizeof(termGraph));
     node *root=(node *)malloc(sizeof(node));
@@ -1294,7 +1296,9 @@ void LiftEdges(edge *e) {
             sscanf(tmp->weight,"!%d%s",&numero,tmpc);
             numero++;
             
-            sprintf(new,"!%d%s",numero,tmpc);
+            if(-1 == snprintf(new,MAXLENWEIGHT,"!%d%s",numero,tmpc)){
+		    fprintf(stderr,"[WARN][%s][%d] Truncated output\n", __FILE__,__LINE__);
+	    }
             strcpy(tmp->weight,new);
         }
         else if (strncmp(tmp->weight,"w",1)==0) {

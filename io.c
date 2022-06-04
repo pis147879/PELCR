@@ -41,7 +41,38 @@
 unsigned int GML_line;
 unsigned int GML_column;
 
-extern int npozzi;
+int lightprocess ;
+HashTable*BookTable[MAXNPROCESS];
+int temp;
+
+FILE *firfile,*tempfile,*coldfile,*anamfile;
+FILE*mawfile[MAXNPROCESS],*maxwinfile[MAXNPROCESS];
+FILE*trivfile,*hotfile,*nofile,*logfile;
+char outfile[MAXNAMELEN];
+int TableProcess[MAXNPROCESS];
+int OutCounter[MAXNPROCESS],InCounter[MAXNPROCESS];
+int nrFisicMsg[MAXNPROCESS];
+int nrApplMsg[MAXNPROCESS];
+float aggregationRatio[MAXNPROCESS];
+
+int aggregationWindow[MAXNPROCESS];
+int maxTick[MAXNPROCESS];
+
+int OutTerminationStatus[MAXNPROCESS][MAXNPROCESS];
+int InTerminationStatus[MAXNPROCESS][MAXNPROCESS];
+int outcontrol[MAXNPROCESS];
+int tickcontrol[MAXNPROCESS];
+float last_rate[MAXNPROCESS];
+
+FILE* Fopen(const char *pathname, const char *mode);
+FILE* Fopen(const char *pathname, const char *mode){
+	FILE *f =fopen(pathname,mode);
+	if(NULL == f){
+		fprintf(stderr,"[ERROR][%s][%d] unable to open file %s\n",__FILE__, __LINE__,pathname);
+		exit(EXIT_FAILURE);
+	}
+	return f;
+}
 
 
 void OpenFileInitStruct() {
@@ -92,28 +123,46 @@ void OpenFileInitStruct() {
 	OUTPUT
 	{
 		/*  if(inflag==1) { */
-		
-		sprintf(namefile,"DAT/%s.%d.temp.dat",infile,rank);
-		tempfile= fopen(namefile,"w");
-		sprintf(namefile,"DAT/%s.%d.nofires.dat",infile,rank);
-		nofile= fopen(namefile,"w");
-		sprintf(namefile,"DAT/%s.%d.hot.dat",infile,rank);
-		hotfile= fopen(namefile,"w");
-		sprintf(namefile,"DAT/%s.%d.cold.dat",infile,rank);
-		coldfile= fopen(namefile,"w");
-		sprintf(namefile,"DAT/%s.%d.nmm.dat",infile,rank);
-		anamfile= fopen(namefile,"w");
-		for(i=0;i<size;i++) {
-			sprintf(namefile,"DAT/%s.%d.%d.aws.dat",infile,rank,i);
-			maxwinfile[i]= fopen(namefile,"w");
-			sprintf(namefile,"DAT/%s.%d.%d.maw.dat",infile,rank,i);
-			mawfile[i]= fopen(namefile,"w");
+		if( -1 == snprintf(namefile,MAXNAMELEN,"%s/DAT/%s.%d.temp.dat",directoryname,infile,rank)){
+			fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
 		}
-		sprintf(namefile,"DAT/%s.%d.trivial.dat",infile,rank);
-		trivfile= fopen(namefile,"w");
 		
-		sprintf(namefile,"DAT/%s.%d.fires.dat",infile,rank);
-		firfile= fopen(namefile,"w");
+		tempfile= Fopen(namefile,"w");
+		if( -1 == snprintf(namefile,MAXNAMELEN,"%s/DAT/%s.%d.nofires.dat",directoryname,infile,rank)){
+			fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+		}
+		nofile= Fopen(namefile,"w");
+		if( -1 == snprintf(namefile,MAXNAMELEN,"%s/DAT/%s.%d.hot.dat",directoryname,infile,rank)){
+			fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+		}
+		hotfile= Fopen(namefile,"w");
+		if( -1 == snprintf(namefile,MAXNAMELEN,"%s/DAT/%s.%d.cold.dat",directoryname,infile,rank)){
+			fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+		}
+		coldfile= Fopen(namefile,"w");
+		if( -1 == snprintf(namefile,MAXNAMELEN,"%s/DAT/%s.%d.nmm.dat",directoryname,infile,rank)){
+			fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+		}
+		anamfile= Fopen(namefile,"w");
+		for(i=0;i<size;i++) {
+			if( -1 == snprintf(namefile,MAXNAMELEN,"%s/DAT/%s.%d.%d.aws.dat",directoryname,infile,rank,i)){			
+				fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+			}
+			maxwinfile[i]= Fopen(namefile,"w");
+			if( -1 == snprintf(namefile,MAXNAMELEN,"%s/DAT/%s.%d.%d.maw.dat",directoryname,infile,rank,i)){
+				fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+			}
+			mawfile[i]= Fopen(namefile,"w");
+		}
+		if( -1 == snprintf(namefile,MAXNAMELEN,"%s/DAT/%s.%d.trivial.dat",directoryname,infile,rank)){
+			fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+		}
+		trivfile= Fopen(namefile,"w");
+		
+		if( -1 == snprintf(namefile,MAXNAMELEN,"%s/DAT/%s.%d.fires.dat",directoryname,infile,rank)){
+			fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+		}
+		firfile= Fopen(namefile,"w");
 		
 		
 		//    printf("<---------------------------------\n\n");
@@ -122,8 +171,10 @@ void OpenFileInitStruct() {
 		
 		sprintf(command,"\\rm -f run.%d.log",rank);
 		system(command);
-		sprintf(namefile,"run.%d.log",rank);
-		logfile= fopen(namefile,"w");
+		if( -1 == snprintf(namefile,MAXNAMELEN,"run.%d.log",rank)){
+			fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+		}
+		logfile= Fopen(namefile,"w");
 #ifdef _DEBUG
 		TRACING{
 			printf("(%d) opened files:\n",rank);
@@ -212,7 +263,10 @@ void WriteHelp() {
 
 void SetOutputFile(char *name)
 {
-	sprintf(outfile,"%s/%s",directoryname,name);
+	if(-1 == snprintf(outfile,MAXNAMELEN,"%s/%s",directoryname,name)){
+		fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+	}
+
 	printf("Output File Set: %s\n",outfile);
 	outflag= 1;
 }
@@ -228,7 +282,7 @@ struct GML_pair*GML_parser(FILE*source,struct GML_stat*stat,int open)
 	struct GML_pair*tmp= NULL;
 	struct GML_list_elem*tmp_elem;
 	
-	struct messaggio pozzi[MAXCUTNODES];
+	//struct messaggio pozzi[MAXCUTNODES];
 	//int npozzi = 0;
 	
 	assert(stat);

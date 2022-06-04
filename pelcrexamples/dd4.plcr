@@ -1,9 +1,4 @@
-/*
-	evaluate a term with a huge normal form
-	so huge that it would be impossible to
-	be written (not enogh space in the universe).
-*/
-#def delta = \x.(x)x ;
-#def four = \f.\x.(f)(f)(f)(f)x ;
-(delta)(delta)four ;
-#quit ;
+#def delta=\x.(x)x;
+#def four=\f.\x.(f)(f)(f)(f)x;
+(delta)(delta)four
+#quit

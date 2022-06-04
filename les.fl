@@ -121,29 +121,26 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 		  return (PATH);
 		}
 
-<incl>\/\*              { // start of a comment: go to a 'COMMENTS' state.
-    BEGIN(INCLCOMMENTS);
+<incl>\/\*                    { // start of a comment: go to a 'COMMENTS' state.
+	BEGIN(INCLCOMMENTS);
 }
 
 \/\*                    { // start of a comment: go to a 'COMMENTS' state.
-    BEGIN(COMMENTS);
+	BEGIN(COMMENTS);
 }
 
-<INCLCOMMENTS>\*\/      {  // end of a comment: go back to file including state.
-    BEGIN(incl);
+<INCLCOMMENTS>\*\/    {  // end of a comment: go back to file including state.
+	BEGIN(incl);
 }
-
-<COMMENTS>\*\/          {   // end of a comment: go back to normal parsing.
-    BEGIN(INITIAL);
+<COMMENTS>\*\/    {   // end of a comment: go back to normal parsing.
+	BEGIN(INITIAL);
 }
-
 <COMMENTS>\n      { ++linenum[include_stack_ptr];}
-
+<COMMENTS>.       ;   // ignore every other character while we are in this state
 
 <INCLCOMMENTS>\n      { ++linenum[include_stack_ptr];}
+<INCLCOMMENTS>.       ;   // ignore every other character while we are in this state
 
-<COMMENTS>.       ;   // ignore every other character while we are in this state
-<INCLCOMMENTS>.   ;   // ignore every other character while we are in this state
 
 <incl>{path}  {
       if ( include_stack_ptr >= MAX_INCLUDE_DEPTH )
@@ -154,13 +151,15 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 
       include_stack[include_stack_ptr++] = YY_CURRENT_BUFFER;
       *(yytext + (yyleng-1)) = '\0';
-      sprintf(infile,"%s/%s",directoryname,yytext+1);
+      if(-1 == snprintf(infile,MAXNAMELEN,"%s/%s",directoryname,yytext+1)){
+          fprintf(stderr,"[WARN][%s][%d] Truncated output\n",__FILE__,__LINE__);
+      }
       printf("\n(%d) reading from file %s\n",rank,yytext+1);
       yyin = fopen(infile, "r");
       if (!yyin)
       {
         fprintf( stderr, "\n(%d) cannot open file %s\n",rank,infile);
-        exit( 1 );
+        exit( EXIT_FAILURE );
       }
       
       printf("(%d) filepointer [%p] to %s",rank,(void *)yyin,infile);
@@ -174,7 +173,7 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 	  /*parsing gml*/
 	  
 	  FILE *gmlfile;
-      extern int npozzi ;
+//	  int npozzi = 0 ;
 //	  struct messaggio pozzi[MAXCUTNODES];
 	  
 	  struct GML_pair*list;
@@ -184,16 +183,21 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 	  if ( include_stack_ptr >= MAX_INCLUDE_DEPTH )
 	  {
 		  fprintf( stderr, "Includes nested too deeply" );
-		  exit( 1 );
+		  exit( EXIT_FAILURE );
 	  }
 	  
 	  include_stack[include_stack_ptr++] = YY_CURRENT_BUFFER;
 	  *(yytext + (yyleng-1)) = '\0';
-	  sprintf(infile,"%s/%s",directoryname,yytext+1);
+	  if( -1 == snprintf(infile,MAXNAMELEN,"%s/%s",directoryname,yytext+1)){
+              fprintf(stderr,"[WARN][%s][%d] Truncated output\n",__FILE__,__LINE__);
+          }
 	  printf("\n(%d) reading from file %s\n",rank,yytext+1);
 	  
 	  gmlfile = fopen(infile, "r");
-	  
+          if(NULL==gmlfile){
+              fprintf(stderr,"[ERROR][%s][%d] Unable to open file %s\n",__FILE__,__LINE__,infile);
+              exit(EXIT_FAILURE);
+          }	  
 	  GML_init();
 	  list = GML_parser(gmlfile,stat,0);
 	  
@@ -252,4 +256,7 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
       }
 }
 
+
+
 %%
+
