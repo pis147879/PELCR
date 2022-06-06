@@ -31,7 +31,7 @@ parser.tab.c: $(COMPILINGRDIR)parser.y
 objects: $(SRCS)
 	$(CC) $(CFLAGS) $(OSFLAGS) $(INCLUDEDIR) -c $(SRCS)
 
-gcombustion: y.tab.c objects
+gcombustion: lex.yy.c parser.tab.c objects
 	$(CLINKER) $(ARCHFLAGS) $(OPTFLAGS) $(OSFLAG) $(INCLUDEDIR) -o $(EXECS) $(OBJECTS) $(LIB_PATH) $(LIB_LIST)
 
 go:	NP=1
