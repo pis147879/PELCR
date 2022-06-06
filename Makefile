@@ -2,9 +2,9 @@ include Makefile.head
 
 ################ common part
 
-OBJECTS   = y.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o
-PARSERSRC = lex.yy.c parser.tab.c
-SRCS      = lex.yy.c y.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c
+OBJECTS   = parser.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o
+PARSERSRC = $(COMPILINGRDIR)lex.yy.c $(COMPILINGRDIR)parser.tab.c
+SRCS      = $(PARSERSRC) $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c
 
 BASETYPE='long long'
 TESTFILE    = "dd4.plcr"
@@ -25,7 +25,7 @@ all: default
 lex.yy.c: $(COMPILINGRDIR)les.fl
 	$(LEX) $(COMPILINGRDIR)les.fl
 
-y.tab.c: $(COMPILINGRDIR)parser.y
+parser.tab.c: $(COMPILINGRDIR)parser.y
 	$(YACC) -d -v $(COMPILINGRDIR)parser.y -b y
 
 objects: $(SRCS)
