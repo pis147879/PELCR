@@ -1,0 +1,2698 @@
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(20) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(23) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(27) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(3) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(15) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(16) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(19) EVAL
+(12) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(28) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+PELCR (Parallel Environment for Lambda Calculus Optimal Reduction)
+             C. Giuffrida, M. Pedicini, F. Quaglia 
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(2) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(17) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(30) EVAL
+                  IAC - CNR (Rome, 1996 - 2002)
+(0) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(13) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(29) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(26) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(25) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(1) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(4) EVAL
+(7) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(18) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(24) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(5) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(21) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(31) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(9) EVAL
+(6) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(14) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(22) EVAL
+(10) EVAL
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+pelcrexamples
+pelcrexamples -> pelcrexamples -> pelcrexamples
+USER TYPE Size: 64 bit
+(8) EVAL
+(11) EVAL
+(0) PELCR 10.0>  
+(0) reading from file dd4.plcr
+(0) filepointer [0x561da6cbda70] to pelcrexamples/dd4.plcr
+ PELCR 10.0> 
+ PELCR 10.0> (0) number of cut-nodes:   1(0) number of cut-nodes:   2(0) number of cut-nodes:   3(0) number of cut-nodes:   4(0) number of cut-nodes:   5(0) number of cut-nodes:   6(0) number of cut-nodes:   7(0) number of cut-nodes:   8(0) sending initial graph termination signals (eot)
+(0) initial network created
+(0) n. of activated processes 32
+(28) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(25) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(30) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(27) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(1) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(1) idle loops set to 1000000000
+(24) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(5) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(5) idle loops set to 1000000000
+(29) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(10) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(31) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(9) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(8) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(8) idle loops set to 1000000000
+(23) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(4) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(4) idle loops set to 1000000000
+(6) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(6) idle loops set to 1000000000
+(3) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(3) idle loops set to 1000000000
+(15) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(2) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(2) idle loops set to 1000000000
+(7) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(7) idle loops set to 1000000000
+(16) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(18) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(14) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(20) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(26) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(22) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(13) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(13) idle loops set to 1000000000
+(19) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(12) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(12) idle loops set to 1000000000
+(11) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(11) idle loops set to 1000000000
+(17) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(21) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(0) 2nd barrier - injecting the stream of actions corresponding to the parsed term
+(10) idle loops set to 1000000000
+(9) idle loops set to 1000000000
+(15) idle loops set to 1000000000
+(16) idle loops set to 1000000000
+(18) idle loops set to 1000000000
+(14) idle loops set to 1000000000
+(19) idle loops set to 1000000000
+(17) idle loops set to 1000000000
+(21) idle loops set to 1000000000
+(21) 3rd barrier - starting the distributed computing engine
+(21) running...
+(28) idle loops set to 1000000000
+(28) 3rd barrier - starting the distributed computing engine
+(28) running...
+(25) idle loops set to 1000000000
+(25) 3rd barrier - starting the distributed computing engine
+(25) running...
+(30) idle loops set to 1000000000
+(30) 3rd barrier - starting the distributed computing engine
+(30) running...
+(27) idle loops set to 1000000000
+(27) 3rd barrier - starting the distributed computing engine
+(27) running...
+(24) idle loops set to 1000000000
+(24) 3rd barrier - starting the distributed computing engine
+(24) running...
+(29) idle loops set to 1000000000
+(29) 3rd barrier - starting the distributed computing engine
+(29) running...
+(0) idle loops set to 1000000000
+(0) 3rd barrier - starting the distributed computing engine
+(0) running...
+(23) idle loops set to 1000000000
+(23) 3rd barrier - starting the distributed computing engine
+(23) running...
+(7) 3rd barrier - starting the distributed computing engine
+(7) running...
+(15) 3rd barrier - starting the distributed computing engine
+(15) running...
+(16) 3rd barrier - starting the distributed computing engine
+(16) running...
+(18) 3rd barrier - starting the distributed computing engine
+(18) running...
+(20) idle loops set to 1000000000
+(20) 3rd barrier - starting the distributed computing engine
+(20) running...
+(26) idle loops set to 1000000000
+(26) 3rd barrier - starting the distributed computing engine
+(26) running...
+(22) idle loops set to 1000000000
+(22) 3rd barrier - starting the distributed computing engine
+(22) running...
+(13) 3rd barrier - starting the distributed computing engine
+(13) running...
+(14) 3rd barrier - starting the distributed computing engine
+(14) running...
+(12) 3rd barrier - starting the distributed computing engine
+(12) running...
+(11) 3rd barrier - starting the distributed computing engine
+(11) running...
+(19) 3rd barrier - starting the distributed computing engine
+(19) running...
+(17) 3rd barrier - starting the distributed computing engine
+(17) running...
+(1) 3rd barrier - starting the distributed computing engine
+(1) running...
+(5) 3rd barrier - starting the distributed computing engine
+(5) running...
+(31) idle loops set to 1000000000
+(31) 3rd barrier - starting the distributed computing engine
+(31) running...
+(10) 3rd barrier - starting the distributed computing engine
+(10) running...
+(8) 3rd barrier - starting the distributed computing engine
+(8) running...
+(4) 3rd barrier - starting the distributed computing engine
+(4) running...
+(6) 3rd barrier - starting the distributed computing engine
+(6) running...
+(3) 3rd barrier - starting the distributed computing engine
+(3) running...
+(9) 3rd barrier - starting the distributed computing engine
+(9) running...
+(2) 3rd barrier - starting the distributed computing engine
+(2) running...
+(4) ...ending
+(4) read back procedure call 
+(4) ********** principal port address (nil)
+(4) starting finalize 
+(4) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:55:58 2022
+
+(4) elapsed time        :  0
+(4) final nodes         :  49838
+(4) combusted nodes     :  72148
+(4) fires               :  70987
+(4) trivial             :  489 optimized
+(4) family reductions   :  0
+(4) loops               :  0
+(4) computing loops     :  0
+(4) idle loops          :  81841 (82020)
+(4) listen loops        :  0
+(4) received messages   :  96756
+(4) unsuccessful tests  :  (eot 0), (add 0)
+(4) dieflag             :  0
+ (4) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (4) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (4) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (4) THRESHOLD(left,right)  : 0000.8 0000.8
+ (4) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0058.3, average window = 0002.2 ,n. physical messages = 2914, n. applicative messages = 6293 
+SEND TO 1 : average timeout = 0059.9, average window = 0002.3 ,n. physical messages = 3133, n. applicative messages = 7208 
+SEND TO 2 : average timeout = 0055.4, average window = 0002.2 ,n. physical messages = 3207, n. applicative messages = 7127 
+SEND TO 3 : average timeout = 0058.1, average window = 0002.3 ,n. physical messages = 3186, n. applicative messages = 7211 
+SEND TO 5 : average timeout = 0051.0, average window = 0002.1 ,n. physical messages = 3010, n. applicative messages = 6178 
+SEND TO 6 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3340, n. applicative messages = 7549 
+SEND TO 7 : average timeout = 0059.8, average window = 0002.3 ,n. physical messages = 3335, n. applicative messages = 7567 
+SEND TO 8 : average timeout = 0070.4, average window = 0002.4 ,n. physical messages = 2970, n. applicative messages = 7046 
+SEND TO 9 : average timeout = 0058.0, average window = 0002.2 ,n. physical messages = 3244, n. applicative messages = 7244 
+SEND TO 10 : average timeout = 0063.3, average window = 0002.3 ,n. physical messages = 3261, n. applicative messages = 7619 
+SEND TO 11 : average timeout = 0064.8, average window = 0002.3 ,n. physical messages = 3086, n. applicative messages = 6976 
+SEND TO 12 : average timeout = 0061.2, average window = 0002.4 ,n. physical messages = 3171, n. applicative messages = 7591 
+SEND TO 13 : average timeout = 0061.0, average window = 0002.3 ,n. physical messages = 3191, n. applicative messages = 7197 
+SEND TO 14 : average timeout = 0066.2, average window = 0002.3 ,n. physical messages = 2999, n. applicative messages = 6966 
+SEND TO 15 : average timeout = 0063.4, average window = 0002.4 ,n. physical messages = 3399, n. applicative messages = 8048 
+SEND TO 16 : average timeout = 0059.6, average window = 0002.2 ,n. physical messages = 3140, n. applicative messages = 6873 
+SEND TO 17 : average timeout = 0064.7, average window = 0002.3 ,n. physical messages = 3118, n. applicative messages = 7225 
+SEND TO 18 : average timeout = 0058.9, average window = 0002.4 ,n. physical messages = 3488, n. applicative messages = 8312 
+SEND TO 19 : average timeout = 0053.9, average window = 0002.2 ,n. physical messages = 3232, n. applicative messages = 7175 
+SEND TO 20 : average timeout = 0061.1, average window = 0002.2 ,n. physical messages = 3156, n. applicative messages = 7042 
+SEND TO 21 : average timeout = 0058.0, average window = 0002.2 ,n. physical messages = 3085, n. applicative messages = 6765 
+SEND TO 22 : average timeout = 0065.1, average window = 0002.2 ,n. physical messages = 2930, n. applicative messages = 6364 
+SEND TO 23 : average timeout = 0055.1, average window = 0002.1 ,n. physical messages = 3082, n. applicative messages = 6623 
+SEND TO 24 : average timeout = 0048.9, average window = 0002.1 ,n. physical messages = 3284, n. applicative messages = 7035 
+SEND TO 25 : average timeout = 0060.1, average window = 0002.3 ,n. physical messages = 3222, n. applicative messages = 7302 
+SEND TO 26 : average timeout = 0048.9, average window = 0002.2 ,n. physical messages = 3287, n. applicative messages = 7173 
+SEND TO 27 : average timeout = 0069.0, average window = 0002.4 ,n. physical messages = 3081, n. applicative messages = 7375 
+SEND TO 28 : average timeout = 0062.0, average window = 0002.3 ,n. physical messages = 3192, n. applicative messages = 7392 
+SEND TO 29 : average timeout = 0062.0, average window = 0002.3 ,n. physical messages = 3233, n. applicative messages = 7553 
+SEND TO 30 : average timeout = 0060.1, average window = 0002.2 ,n. physical messages = 3105, n. applicative messages = 6975 
+SEND TO 31 : average timeout = 0062.9, average window = 0002.2 ,n. physical messages = 2964, n. applicative messages = 6451 
+
+(4) show the local symbol table post term evaluation
+(4) 	kindex  = -1 values-table is empty
+(4) 	fcounter= -1 functions-table is empty
+(4) 	findex  = -1 fdb-table f_db is empty
+(4) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(4) EVAL
+(26) ...ending
+(26) read back procedure call 
+(26) ********** principal port address (nil)
+(26) starting finalize 
+(26) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:00 2022
+
+(26) elapsed time        :  0
+(26) final nodes         :  49860
+(26) combusted nodes     :  71730
+(26) fires               :  71201
+(26) trivial             :  241 optimized
+(26) family reductions   :  0
+(26) loops               :  0
+(26) computing loops     :  0
+(26) idle loops          :  63252 (63251)
+(26) listen loops        :  0
+(26) received messages   :  96729
+(26) unsuccessful tests  :  (eot 0), (add 0)
+(26) dieflag             :  0
+ (26) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (26) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (26) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (26) THRESHOLD(left,right)  : 0000.8 0000.8
+ (26) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 1)
+SEND TO 0 : average timeout = 0065.7, average window = 0002.2 ,n. physical messages = 2935, n. applicative messages = 6482 
+SEND TO 1 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 3271, n. applicative messages = 7390 
+SEND TO 2 : average timeout = 0066.8, average window = 0002.3 ,n. physical messages = 3001, n. applicative messages = 6846 
+SEND TO 3 : average timeout = 0058.5, average window = 0002.3 ,n. physical messages = 3300, n. applicative messages = 7700 
+SEND TO 4 : average timeout = 0059.0, average window = 0002.3 ,n. physical messages = 3163, n. applicative messages = 7221 
+SEND TO 5 : average timeout = 0059.0, average window = 0002.3 ,n. physical messages = 3217, n. applicative messages = 7340 
+SEND TO 6 : average timeout = 0071.1, average window = 0002.5 ,n. physical messages = 3319, n. applicative messages = 8195 
+SEND TO 7 : average timeout = 0055.7, average window = 0002.3 ,n. physical messages = 3289, n. applicative messages = 7435 
+SEND TO 8 : average timeout = 0061.1, average window = 0002.2 ,n. physical messages = 3043, n. applicative messages = 6753 
+SEND TO 9 : average timeout = 0064.7, average window = 0002.4 ,n. physical messages = 3182, n. applicative messages = 7609 
+SEND TO 10 : average timeout = 0061.3, average window = 0002.3 ,n. physical messages = 3209, n. applicative messages = 7298 
+SEND TO 11 : average timeout = 0059.8, average window = 0002.2 ,n. physical messages = 3094, n. applicative messages = 6779 
+SEND TO 12 : average timeout = 0061.2, average window = 0002.2 ,n. physical messages = 2901, n. applicative messages = 6386 
+SEND TO 13 : average timeout = 0061.0, average window = 0002.4 ,n. physical messages = 3245, n. applicative messages = 7731 
+SEND TO 14 : average timeout = 0062.6, average window = 0002.3 ,n. physical messages = 3127, n. applicative messages = 7165 
+SEND TO 15 : average timeout = 0062.0, average window = 0002.2 ,n. physical messages = 3024, n. applicative messages = 6779 
+SEND TO 16 : average timeout = 0063.4, average window = 0002.3 ,n. physical messages = 3036, n. applicative messages = 6865 
+SEND TO 17 : average timeout = 0056.4, average window = 0002.2 ,n. physical messages = 3398, n. applicative messages = 7639 
+SEND TO 18 : average timeout = 0072.3, average window = 0002.3 ,n. physical messages = 3099, n. applicative messages = 7176 
+SEND TO 19 : average timeout = 0065.7, average window = 0002.3 ,n. physical messages = 3140, n. applicative messages = 7257 
+SEND TO 20 : average timeout = 0061.6, average window = 0002.3 ,n. physical messages = 3169, n. applicative messages = 7215 
+SEND TO 21 : average timeout = 0064.0, average window = 0002.3 ,n. physical messages = 3042, n. applicative messages = 7055 
+SEND TO 22 : average timeout = 0071.1, average window = 0002.4 ,n. physical messages = 3067, n. applicative messages = 7309 
+SEND TO 23 : average timeout = 0062.8, average window = 0002.3 ,n. physical messages = 3297, n. applicative messages = 7470 
+SEND TO 24 : average timeout = 0065.8, average window = 0002.2 ,n. physical messages = 3068, n. applicative messages = 6816 
+SEND TO 25 : average timeout = 0062.1, average window = 0002.3 ,n. physical messages = 3016, n. applicative messages = 6847 
+SEND TO 27 : average timeout = 0060.3, average window = 0002.3 ,n. physical messages = 3158, n. applicative messages = 7235 
+SEND TO 28 : average timeout = 0063.3, average window = 0002.4 ,n. physical messages = 3086, n. applicative messages = 7331 
+SEND TO 29 : average timeout = 0055.0, average window = 0002.2 ,n. physical messages = 3209, n. applicative messages = 7130 
+SEND TO 30 : average timeout = 0063.2, average window = 0002.3 ,n. physical messages = 3210, n. applicative messages = 7244 
+SEND TO 31 : average timeout = 0056.1, average window = 0002.2 ,n. physical messages = 3276, n. applicative messages = 7341 
+
+(26) show the local symbol table post term evaluation
+(26) 	kindex  = -1 values-table is empty
+(26) 	fcounter= -1 functions-table is empty
+(26) 	findex  = -1 fdb-table f_db is empty
+(26) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(26) EVAL
+(6) ...ending
+(6) read back procedure call 
+(6) ********** principal port address (nil)
+(6) starting finalize 
+(6) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:01 2022
+
+(6) elapsed time        :  0
+(6) final nodes         :  49612
+(6) combusted nodes     :  70777
+(6) fires               :  70257
+(6) trivial             :  208 optimized
+(6) family reductions   :  0
+(6) loops               :  0
+(6) computing loops     :  0
+(6) idle loops          :  51391 (51390)
+(6) listen loops        :  0
+(6) received messages   :  97263
+(6) unsuccessful tests  :  (eot 0), (add 0)
+(6) dieflag             :  0
+ (6) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (6) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (6) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (6) THRESHOLD(left,right)  : 0000.8 0000.8
+ (6) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0054.4, average window = 0002.3 ,n. physical messages = 3256, n. applicative messages = 7495 
+SEND TO 1 : average timeout = 0053.0, average window = 0002.1 ,n. physical messages = 3123, n. applicative messages = 6710 
+SEND TO 2 : average timeout = 0049.3, average window = 0002.2 ,n. physical messages = 3330, n. applicative messages = 7439 
+SEND TO 3 : average timeout = 0065.9, average window = 0002.2 ,n. physical messages = 3086, n. applicative messages = 6921 
+SEND TO 4 : average timeout = 0056.2, average window = 0002.3 ,n. physical messages = 3310, n. applicative messages = 7524 
+SEND TO 5 : average timeout = 0055.9, average window = 0002.2 ,n. physical messages = 3075, n. applicative messages = 6753 
+SEND TO 7 : average timeout = 0062.0, average window = 0002.3 ,n. physical messages = 3032, n. applicative messages = 6842 
+SEND TO 8 : average timeout = 0044.7, average window = 0002.1 ,n. physical messages = 3206, n. applicative messages = 6814 
+SEND TO 9 : average timeout = 0056.5, average window = 0002.3 ,n. physical messages = 3273, n. applicative messages = 7512 
+SEND TO 10 : average timeout = 0073.5, average window = 0002.4 ,n. physical messages = 3124, n. applicative messages = 7390 
+SEND TO 11 : average timeout = 0056.3, average window = 0002.2 ,n. physical messages = 3253, n. applicative messages = 7172 
+SEND TO 12 : average timeout = 0068.1, average window = 0002.3 ,n. physical messages = 3243, n. applicative messages = 7615 
+SEND TO 13 : average timeout = 0055.6, average window = 0002.1 ,n. physical messages = 3151, n. applicative messages = 6676 
+SEND TO 14 : average timeout = 0071.0, average window = 0002.3 ,n. physical messages = 3073, n. applicative messages = 7076 
+SEND TO 15 : average timeout = 0070.6, average window = 0002.4 ,n. physical messages = 3204, n. applicative messages = 7808 
+SEND TO 16 : average timeout = 0057.7, average window = 0002.2 ,n. physical messages = 3141, n. applicative messages = 6871 
+SEND TO 17 : average timeout = 0064.9, average window = 0002.3 ,n. physical messages = 3347, n. applicative messages = 7642 
+SEND TO 18 : average timeout = 0066.3, average window = 0002.2 ,n. physical messages = 2928, n. applicative messages = 6499 
+SEND TO 19 : average timeout = 0061.4, average window = 0002.3 ,n. physical messages = 3110, n. applicative messages = 7070 
+SEND TO 20 : average timeout = 0068.7, average window = 0002.3 ,n. physical messages = 2961, n. applicative messages = 6795 
+SEND TO 21 : average timeout = 0071.2, average window = 0002.3 ,n. physical messages = 3013, n. applicative messages = 7053 
+SEND TO 22 : average timeout = 0076.5, average window = 0002.4 ,n. physical messages = 2834, n. applicative messages = 6690 
+SEND TO 23 : average timeout = 0050.2, average window = 0002.2 ,n. physical messages = 3299, n. applicative messages = 7129 
+SEND TO 24 : average timeout = 0071.6, average window = 0002.3 ,n. physical messages = 2912, n. applicative messages = 6595 
+SEND TO 25 : average timeout = 0068.2, average window = 0002.3 ,n. physical messages = 3231, n. applicative messages = 7512 
+SEND TO 26 : average timeout = 0053.9, average window = 0002.3 ,n. physical messages = 3568, n. applicative messages = 8356 
+SEND TO 27 : average timeout = 0068.1, average window = 0002.3 ,n. physical messages = 3174, n. applicative messages = 7300 
+SEND TO 28 : average timeout = 0057.2, average window = 0002.3 ,n. physical messages = 3299, n. applicative messages = 7679 
+SEND TO 29 : average timeout = 0057.3, average window = 0002.2 ,n. physical messages = 3068, n. applicative messages = 6789 
+SEND TO 30 : average timeout = 0063.3, average window = 0002.2 ,n. physical messages = 3115, n. applicative messages = 6996 
+SEND TO 31 : average timeout = 0058.6, average window = 0002.3 ,n. physical messages = 3217, n. applicative messages = 7314 
+
+(6) show the local symbol table post term evaluation
+(6) 	kindex  = -1 values-table is empty
+(6) 	fcounter= -1 functions-table is empty
+(6) 	findex  = -1 fdb-table f_db is empty
+(6) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(6) EVAL
+(5) ...ending
+(5) read back procedure call 
+(5) ********** principal port address (nil)
+(5) starting finalize 
+(5) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:01 2022
+
+(5) elapsed time        :  0
+(5) final nodes         :  48470
+(5) combusted nodes     :  68969
+(5) fires               :  68250
+(5) trivial             :  269 optimized
+(5) family reductions   :  8
+(5) loops               :  0
+(5) computing loops     :  0
+(5) idle loops          :  70268 (70267)
+(5) listen loops        :  0
+(5) received messages   :  94927
+(5) unsuccessful tests  :  (eot 0), (add 0)
+(5) dieflag             :  0
+ (5) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (5) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (5) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (5) THRESHOLD(left,right)  : 0000.8 0000.8
+ (5) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0063.6, average window = 0002.4 ,n. physical messages = 3113, n. applicative messages = 7381 
+SEND TO 1 : average timeout = 0062.6, average window = 0002.2 ,n. physical messages = 2931, n. applicative messages = 6448 
+SEND TO 2 : average timeout = 0066.3, average window = 0002.4 ,n. physical messages = 2935, n. applicative messages = 6933 
+SEND TO 3 : average timeout = 0056.7, average window = 0002.2 ,n. physical messages = 3025, n. applicative messages = 6730 
+SEND TO 4 : average timeout = 0058.5, average window = 0002.3 ,n. physical messages = 2802, n. applicative messages = 6379 
+SEND TO 6 : average timeout = 0061.8, average window = 0002.3 ,n. physical messages = 2957, n. applicative messages = 6746 
+SEND TO 7 : average timeout = 0057.3, average window = 0002.4 ,n. physical messages = 3049, n. applicative messages = 7166 
+SEND TO 8 : average timeout = 0068.1, average window = 0002.3 ,n. physical messages = 3026, n. applicative messages = 7019 
+SEND TO 9 : average timeout = 0055.6, average window = 0002.2 ,n. physical messages = 3046, n. applicative messages = 6680 
+SEND TO 10 : average timeout = 0055.5, average window = 0002.2 ,n. physical messages = 2970, n. applicative messages = 6430 
+SEND TO 11 : average timeout = 0059.9, average window = 0002.1 ,n. physical messages = 2920, n. applicative messages = 6269 
+SEND TO 12 : average timeout = 0053.6, average window = 0002.2 ,n. physical messages = 3053, n. applicative messages = 6854 
+SEND TO 13 : average timeout = 0059.0, average window = 0002.3 ,n. physical messages = 3150, n. applicative messages = 7220 
+SEND TO 14 : average timeout = 0062.7, average window = 0002.2 ,n. physical messages = 2833, n. applicative messages = 6335 
+SEND TO 15 : average timeout = 0066.9, average window = 0002.3 ,n. physical messages = 2911, n. applicative messages = 6552 
+SEND TO 16 : average timeout = 0057.2, average window = 0002.4 ,n. physical messages = 3227, n. applicative messages = 7585 
+SEND TO 17 : average timeout = 0068.2, average window = 0002.3 ,n. physical messages = 2969, n. applicative messages = 6918 
+SEND TO 18 : average timeout = 0057.9, average window = 0002.3 ,n. physical messages = 3117, n. applicative messages = 7171 
+SEND TO 19 : average timeout = 0055.4, average window = 0002.3 ,n. physical messages = 3074, n. applicative messages = 6990 
+SEND TO 20 : average timeout = 0055.5, average window = 0002.2 ,n. physical messages = 2945, n. applicative messages = 6410 
+SEND TO 21 : average timeout = 0063.2, average window = 0002.2 ,n. physical messages = 3019, n. applicative messages = 6682 
+SEND TO 22 : average timeout = 0058.5, average window = 0002.3 ,n. physical messages = 3161, n. applicative messages = 7331 
+SEND TO 23 : average timeout = 0055.3, average window = 0002.0 ,n. physical messages = 3029, n. applicative messages = 6195 
+SEND TO 24 : average timeout = 0063.9, average window = 0002.4 ,n. physical messages = 3174, n. applicative messages = 7474 
+SEND TO 25 : average timeout = 0069.2, average window = 0002.5 ,n. physical messages = 3199, n. applicative messages = 7845 
+SEND TO 26 : average timeout = 0063.8, average window = 0002.3 ,n. physical messages = 3225, n. applicative messages = 7549 
+SEND TO 27 : average timeout = 0057.8, average window = 0002.2 ,n. physical messages = 2850, n. applicative messages = 6325 
+SEND TO 28 : average timeout = 0067.6, average window = 0002.3 ,n. physical messages = 2937, n. applicative messages = 6713 
+SEND TO 29 : average timeout = 0062.4, average window = 0002.4 ,n. physical messages = 3070, n. applicative messages = 7386 
+SEND TO 30 : average timeout = 0055.2, average window = 0002.2 ,n. physical messages = 3015, n. applicative messages = 6686 
+SEND TO 31 : average timeout = 0055.7, average window = 0002.3 ,n. physical messages = 3001, n. applicative messages = 6818 
+
+(5) show the local symbol table post term evaluation
+(5) 	kindex  = -1 values-table is empty
+(5) 	fcounter= -1 functions-table is empty
+(5) 	findex  = -1 fdb-table f_db is empty
+(5) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(5) EVAL
+(19) ...ending
+(19) read back procedure call 
+(19) ********** principal port address (nil)
+(19) starting finalize 
+(19) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:03 2022
+
+(19) elapsed time        :  0
+(19) final nodes         :  49480
+(19) combusted nodes     :  71757
+(19) fires               :  71289
+(19) trivial             :  178 optimized
+(19) family reductions   :  1
+(19) loops               :  0
+(19) computing loops     :  0
+(19) idle loops          :  84198 (84197)
+(19) listen loops        :  0
+(19) received messages   :  97306
+(19) unsuccessful tests  :  (eot 0), (add 0)
+(19) dieflag             :  0
+ (19) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (19) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (19) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (19) THRESHOLD(left,right)  : 0000.8 0000.8
+ (19) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0060.4, average window = 0002.2 ,n. physical messages = 3016, n. applicative messages = 6540 
+SEND TO 1 : average timeout = 0071.7, average window = 0002.3 ,n. physical messages = 3129, n. applicative messages = 7346 
+SEND TO 2 : average timeout = 0061.7, average window = 0002.3 ,n. physical messages = 2932, n. applicative messages = 6627 
+SEND TO 3 : average timeout = 0062.4, average window = 0002.3 ,n. physical messages = 3209, n. applicative messages = 7356 
+SEND TO 4 : average timeout = 0062.4, average window = 0002.3 ,n. physical messages = 3140, n. applicative messages = 7141 
+SEND TO 5 : average timeout = 0056.7, average window = 0002.2 ,n. physical messages = 3185, n. applicative messages = 7005 
+SEND TO 6 : average timeout = 0072.7, average window = 0002.3 ,n. physical messages = 3088, n. applicative messages = 7067 
+SEND TO 7 : average timeout = 0042.7, average window = 0002.2 ,n. physical messages = 3634, n. applicative messages = 8114 
+SEND TO 8 : average timeout = 0064.4, average window = 0002.2 ,n. physical messages = 2919, n. applicative messages = 6543 
+SEND TO 9 : average timeout = 0055.7, average window = 0002.2 ,n. physical messages = 3334, n. applicative messages = 7479 
+SEND TO 10 : average timeout = 0054.2, average window = 0002.2 ,n. physical messages = 3186, n. applicative messages = 7032 
+SEND TO 11 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 3143, n. applicative messages = 7176 
+SEND TO 12 : average timeout = 0057.7, average window = 0002.1 ,n. physical messages = 3121, n. applicative messages = 6678 
+SEND TO 13 : average timeout = 0062.7, average window = 0002.5 ,n. physical messages = 3610, n. applicative messages = 8869 
+SEND TO 14 : average timeout = 0061.5, average window = 0002.4 ,n. physical messages = 3326, n. applicative messages = 7830 
+SEND TO 15 : average timeout = 0067.0, average window = 0002.3 ,n. physical messages = 2867, n. applicative messages = 6480 
+SEND TO 16 : average timeout = 0068.5, average window = 0002.3 ,n. physical messages = 3000, n. applicative messages = 6978 
+SEND TO 17 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3167, n. applicative messages = 7137 
+SEND TO 18 : average timeout = 0063.2, average window = 0002.3 ,n. physical messages = 3084, n. applicative messages = 6991 
+SEND TO 20 : average timeout = 0057.6, average window = 0002.3 ,n. physical messages = 3386, n. applicative messages = 7873 
+SEND TO 21 : average timeout = 0063.8, average window = 0002.4 ,n. physical messages = 3139, n. applicative messages = 7427 
+SEND TO 22 : average timeout = 0073.4, average window = 0002.4 ,n. physical messages = 3033, n. applicative messages = 7385 
+SEND TO 23 : average timeout = 0057.1, average window = 0002.2 ,n. physical messages = 2973, n. applicative messages = 6567 
+SEND TO 24 : average timeout = 0054.3, average window = 0002.5 ,n. physical messages = 3446, n. applicative messages = 8506 
+SEND TO 25 : average timeout = 0072.2, average window = 0002.3 ,n. physical messages = 2991, n. applicative messages = 7013 
+SEND TO 26 : average timeout = 0069.7, average window = 0002.4 ,n. physical messages = 3061, n. applicative messages = 7243 
+SEND TO 27 : average timeout = 0059.3, average window = 0002.1 ,n. physical messages = 2886, n. applicative messages = 6097 
+SEND TO 28 : average timeout = 0052.6, average window = 0002.2 ,n. physical messages = 3113, n. applicative messages = 6883 
+SEND TO 29 : average timeout = 0073.5, average window = 0002.5 ,n. physical messages = 3195, n. applicative messages = 7856 
+SEND TO 30 : average timeout = 0070.0, average window = 0002.3 ,n. physical messages = 3083, n. applicative messages = 7222 
+SEND TO 31 : average timeout = 0061.6, average window = 0002.3 ,n. physical messages = 3164, n. applicative messages = 7257 
+
+(19) show the local symbol table post term evaluation
+(19) 	kindex  = -1 values-table is empty
+(19) 	fcounter= -1 functions-table is empty
+(19) 	findex  = -1 fdb-table f_db is empty
+(19) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(19) EVAL
+(14) ...ending
+(14) read back procedure call 
+(14) ********** principal port address (nil)
+(14) starting finalize 
+(14) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:09 2022
+
+(14) elapsed time        :  0
+(14) final nodes         :  48812
+(14) combusted nodes     :  70980
+(14) fires               :  70459
+(14) trivial             :  231 optimized
+(14) family reductions   :  1
+(14) loops               :  0
+(14) computing loops     :  0
+(14) idle loops          :  64253 (64252)
+(14) listen loops        :  0
+(14) received messages   :  96261
+(14) unsuccessful tests  :  (eot 0), (add 0)
+(14) dieflag             :  0
+ (14) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (14) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (14) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (14) THRESHOLD(left,right)  : 0000.8 0000.8
+ (14) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 3058, n. applicative messages = 6964 
+SEND TO 1 : average timeout = 0069.0, average window = 0002.4 ,n. physical messages = 3167, n. applicative messages = 7462 
+SEND TO 2 : average timeout = 0064.2, average window = 0002.2 ,n. physical messages = 2967, n. applicative messages = 6453 
+SEND TO 3 : average timeout = 0063.3, average window = 0002.3 ,n. physical messages = 3037, n. applicative messages = 6921 
+SEND TO 4 : average timeout = 0067.4, average window = 0002.3 ,n. physical messages = 3007, n. applicative messages = 7055 
+SEND TO 5 : average timeout = 0056.9, average window = 0002.1 ,n. physical messages = 2917, n. applicative messages = 6252 
+SEND TO 6 : average timeout = 0057.0, average window = 0002.2 ,n. physical messages = 3149, n. applicative messages = 7036 
+SEND TO 7 : average timeout = 0056.0, average window = 0002.3 ,n. physical messages = 3240, n. applicative messages = 7529 
+SEND TO 8 : average timeout = 0071.7, average window = 0002.3 ,n. physical messages = 2938, n. applicative messages = 6710 
+SEND TO 9 : average timeout = 0050.4, average window = 0002.1 ,n. physical messages = 3146, n. applicative messages = 6692 
+SEND TO 10 : average timeout = 0068.7, average window = 0002.4 ,n. physical messages = 3120, n. applicative messages = 7439 
+SEND TO 11 : average timeout = 0056.8, average window = 0002.1 ,n. physical messages = 2965, n. applicative messages = 6290 
+SEND TO 12 : average timeout = 0066.2, average window = 0002.2 ,n. physical messages = 3179, n. applicative messages = 7152 
+SEND TO 13 : average timeout = 0053.5, average window = 0002.3 ,n. physical messages = 3352, n. applicative messages = 7657 
+SEND TO 15 : average timeout = 0045.9, average window = 0002.1 ,n. physical messages = 3266, n. applicative messages = 6812 
+SEND TO 16 : average timeout = 0063.4, average window = 0002.3 ,n. physical messages = 3157, n. applicative messages = 7347 
+SEND TO 17 : average timeout = 0059.9, average window = 0002.4 ,n. physical messages = 3437, n. applicative messages = 8121 
+SEND TO 18 : average timeout = 0054.2, average window = 0002.3 ,n. physical messages = 3389, n. applicative messages = 7885 
+SEND TO 19 : average timeout = 0056.0, average window = 0002.4 ,n. physical messages = 3340, n. applicative messages = 7949 
+SEND TO 20 : average timeout = 0063.3, average window = 0002.3 ,n. physical messages = 3152, n. applicative messages = 7277 
+SEND TO 21 : average timeout = 0067.0, average window = 0002.2 ,n. physical messages = 2999, n. applicative messages = 6737 
+SEND TO 22 : average timeout = 0063.5, average window = 0002.3 ,n. physical messages = 3054, n. applicative messages = 6945 
+SEND TO 23 : average timeout = 0062.8, average window = 0002.1 ,n. physical messages = 2870, n. applicative messages = 6170 
+SEND TO 24 : average timeout = 0059.4, average window = 0002.2 ,n. physical messages = 3030, n. applicative messages = 6795 
+SEND TO 25 : average timeout = 0069.3, average window = 0002.3 ,n. physical messages = 3032, n. applicative messages = 7071 
+SEND TO 26 : average timeout = 0058.0, average window = 0002.2 ,n. physical messages = 3197, n. applicative messages = 7109 
+SEND TO 27 : average timeout = 0061.3, average window = 0002.3 ,n. physical messages = 3183, n. applicative messages = 7432 
+SEND TO 28 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 3062, n. applicative messages = 7031 
+SEND TO 29 : average timeout = 0065.0, average window = 0002.4 ,n. physical messages = 3130, n. applicative messages = 7492 
+SEND TO 30 : average timeout = 0051.0, average window = 0002.2 ,n. physical messages = 3231, n. applicative messages = 7089 
+SEND TO 31 : average timeout = 0053.9, average window = 0002.2 ,n. physical messages = 3085, n. applicative messages = 6858 
+
+(14) show the local symbol table post term evaluation
+(14) 	kindex  = -1 values-table is empty
+(14) 	fcounter= -1 functions-table is empty
+(14) 	findex  = -1 fdb-table f_db is empty
+(14) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(14) EVAL
+(10) ...ending
+(10) read back procedure call 
+(10) ********** principal port address (nil)
+(10) starting finalize 
+(10) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:11 2022
+
+(10) elapsed time        :  0
+(10) final nodes         :  49144
+(10) combusted nodes     :  70306
+(10) fires               :  69853
+(10) trivial             :  255 optimized
+(10) family reductions   :  1
+(10) loops               :  0
+(10) computing loops     :  0
+(10) idle loops          :  27384 (27400)
+(10) listen loops        :  0
+(10) received messages   :  96064
+(10) unsuccessful tests  :  (eot 0), (add 0)
+(10) dieflag             :  0
+ (10) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (10) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (10) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (10) THRESHOLD(left,right)  : 0000.8 0000.8
+ (10) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 1)
+SEND TO 0 : average timeout = 0061.2, average window = 0002.2 ,n. physical messages = 2758, n. applicative messages = 6000 
+SEND TO 1 : average timeout = 0071.3, average window = 0002.3 ,n. physical messages = 2770, n. applicative messages = 6379 
+SEND TO 2 : average timeout = 0052.5, average window = 0002.3 ,n. physical messages = 3426, n. applicative messages = 7833 
+SEND TO 3 : average timeout = 0064.5, average window = 0002.3 ,n. physical messages = 3099, n. applicative messages = 7135 
+SEND TO 4 : average timeout = 0051.0, average window = 0002.2 ,n. physical messages = 3311, n. applicative messages = 7398 
+SEND TO 5 : average timeout = 0074.7, average window = 0002.3 ,n. physical messages = 2896, n. applicative messages = 6567 
+SEND TO 6 : average timeout = 0044.6, average window = 0002.2 ,n. physical messages = 3405, n. applicative messages = 7467 
+SEND TO 7 : average timeout = 0052.3, average window = 0002.3 ,n. physical messages = 3575, n. applicative messages = 8388 
+SEND TO 8 : average timeout = 0056.9, average window = 0002.2 ,n. physical messages = 3098, n. applicative messages = 6685 
+SEND TO 9 : average timeout = 0068.1, average window = 0002.4 ,n. physical messages = 3028, n. applicative messages = 7229 
+SEND TO 11 : average timeout = 0062.1, average window = 0002.3 ,n. physical messages = 3201, n. applicative messages = 7452 
+SEND TO 12 : average timeout = 0050.0, average window = 0002.1 ,n. physical messages = 3263, n. applicative messages = 7006 
+SEND TO 13 : average timeout = 0052.0, average window = 0002.2 ,n. physical messages = 3250, n. applicative messages = 7306 
+SEND TO 14 : average timeout = 0061.7, average window = 0002.4 ,n. physical messages = 3171, n. applicative messages = 7615 
+SEND TO 15 : average timeout = 0052.5, average window = 0002.2 ,n. physical messages = 3029, n. applicative messages = 6556 
+SEND TO 16 : average timeout = 0069.9, average window = 0002.3 ,n. physical messages = 2816, n. applicative messages = 6414 
+SEND TO 17 : average timeout = 0062.4, average window = 0002.3 ,n. physical messages = 3111, n. applicative messages = 7154 
+SEND TO 18 : average timeout = 0061.8, average window = 0002.4 ,n. physical messages = 3245, n. applicative messages = 7848 
+SEND TO 19 : average timeout = 0065.8, average window = 0002.3 ,n. physical messages = 3072, n. applicative messages = 6971 
+SEND TO 20 : average timeout = 0057.5, average window = 0002.1 ,n. physical messages = 2903, n. applicative messages = 6238 
+SEND TO 21 : average timeout = 0068.3, average window = 0002.3 ,n. physical messages = 2977, n. applicative messages = 6857 
+SEND TO 22 : average timeout = 0063.7, average window = 0002.3 ,n. physical messages = 2987, n. applicative messages = 6763 
+SEND TO 23 : average timeout = 0066.9, average window = 0002.2 ,n. physical messages = 2955, n. applicative messages = 6575 
+SEND TO 24 : average timeout = 0055.9, average window = 0002.3 ,n. physical messages = 3504, n. applicative messages = 8017 
+SEND TO 25 : average timeout = 0070.1, average window = 0002.3 ,n. physical messages = 2918, n. applicative messages = 6652 
+SEND TO 26 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3202, n. applicative messages = 7400 
+SEND TO 27 : average timeout = 0052.6, average window = 0002.1 ,n. physical messages = 3174, n. applicative messages = 6644 
+SEND TO 28 : average timeout = 0069.7, average window = 0002.4 ,n. physical messages = 3119, n. applicative messages = 7365 
+SEND TO 29 : average timeout = 0075.4, average window = 0002.2 ,n. physical messages = 2785, n. applicative messages = 6244 
+SEND TO 30 : average timeout = 0049.0, average window = 0002.2 ,n. physical messages = 3436, n. applicative messages = 7685 
+SEND TO 31 : average timeout = 0046.5, average window = 0002.1 ,n. physical messages = 2958, n. applicative messages = 6126 
+
+(10) show the local symbol table post term evaluation
+(10) 	kindex  = -1 values-table is empty
+(10) 	fcounter= -1 functions-table is empty
+(10) 	findex  = -1 fdb-table f_db is empty
+(10) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(10) EVAL
+(1) ...ending
+(1) read back procedure call 
+(1) ********** principal port address (nil)
+(1) starting finalize 
+(1) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:14 2022
+
+(1) elapsed time        :  0
+(1) final nodes         :  49116
+(1) combusted nodes     :  70894
+(1) fires               :  70423
+(1) trivial             :  205 optimized
+(1) family reductions   :  1
+(1) loops               :  0
+(1) computing loops     :  0
+(1) idle loops          :  85394 (85499)
+(1) listen loops        :  0
+(1) received messages   :  95960
+(1) unsuccessful tests  :  (eot 0), (add 0)
+(1) dieflag             :  0
+ (1) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (1) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (1) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (1) THRESHOLD(left,right)  : 0000.8 0000.8
+ (1) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0055.5, average window = 0002.3 ,n. physical messages = 3074, n. applicative messages = 6930 
+SEND TO 2 : average timeout = 0058.6, average window = 0002.3 ,n. physical messages = 3000, n. applicative messages = 6776 
+SEND TO 3 : average timeout = 0059.6, average window = 0002.5 ,n. physical messages = 3384, n. applicative messages = 8335 
+SEND TO 4 : average timeout = 0055.0, average window = 0002.2 ,n. physical messages = 3223, n. applicative messages = 7073 
+SEND TO 5 : average timeout = 0060.6, average window = 0002.2 ,n. physical messages = 3034, n. applicative messages = 6677 
+SEND TO 6 : average timeout = 0062.8, average window = 0002.2 ,n. physical messages = 2992, n. applicative messages = 6717 
+SEND TO 7 : average timeout = 0060.1, average window = 0002.2 ,n. physical messages = 3226, n. applicative messages = 7164 
+SEND TO 8 : average timeout = 0063.1, average window = 0002.4 ,n. physical messages = 3232, n. applicative messages = 7788 
+SEND TO 9 : average timeout = 0067.9, average window = 0002.5 ,n. physical messages = 3210, n. applicative messages = 7886 
+SEND TO 10 : average timeout = 0062.3, average window = 0002.3 ,n. physical messages = 2846, n. applicative messages = 6413 
+SEND TO 11 : average timeout = 0071.8, average window = 0002.3 ,n. physical messages = 2950, n. applicative messages = 6871 
+SEND TO 12 : average timeout = 0057.4, average window = 0002.2 ,n. physical messages = 3101, n. applicative messages = 6939 
+SEND TO 13 : average timeout = 0056.1, average window = 0002.3 ,n. physical messages = 3230, n. applicative messages = 7444 
+SEND TO 14 : average timeout = 0069.2, average window = 0002.4 ,n. physical messages = 3210, n. applicative messages = 7665 
+SEND TO 15 : average timeout = 0056.8, average window = 0002.4 ,n. physical messages = 3344, n. applicative messages = 7918 
+SEND TO 16 : average timeout = 0061.2, average window = 0002.2 ,n. physical messages = 3002, n. applicative messages = 6506 
+SEND TO 17 : average timeout = 0052.6, average window = 0002.2 ,n. physical messages = 3064, n. applicative messages = 6766 
+SEND TO 18 : average timeout = 0052.6, average window = 0002.1 ,n. physical messages = 3047, n. applicative messages = 6548 
+SEND TO 19 : average timeout = 0060.0, average window = 0002.3 ,n. physical messages = 3248, n. applicative messages = 7506 
+SEND TO 20 : average timeout = 0066.7, average window = 0002.4 ,n. physical messages = 3059, n. applicative messages = 7228 
+SEND TO 21 : average timeout = 0061.3, average window = 0002.3 ,n. physical messages = 3075, n. applicative messages = 6979 
+SEND TO 22 : average timeout = 0066.4, average window = 0002.4 ,n. physical messages = 3120, n. applicative messages = 7361 
+SEND TO 23 : average timeout = 0062.4, average window = 0002.2 ,n. physical messages = 2873, n. applicative messages = 6412 
+SEND TO 24 : average timeout = 0067.5, average window = 0002.3 ,n. physical messages = 3093, n. applicative messages = 7108 
+SEND TO 25 : average timeout = 0070.8, average window = 0002.4 ,n. physical messages = 3267, n. applicative messages = 7937 
+SEND TO 26 : average timeout = 0061.5, average window = 0002.3 ,n. physical messages = 3238, n. applicative messages = 7590 
+SEND TO 27 : average timeout = 0057.1, average window = 0002.2 ,n. physical messages = 3002, n. applicative messages = 6543 
+SEND TO 28 : average timeout = 0060.8, average window = 0002.3 ,n. physical messages = 2942, n. applicative messages = 6631 
+SEND TO 29 : average timeout = 0045.5, average window = 0002.1 ,n. physical messages = 3291, n. applicative messages = 7058 
+SEND TO 30 : average timeout = 0066.2, average window = 0002.2 ,n. physical messages = 2935, n. applicative messages = 6518 
+SEND TO 31 : average timeout = 0057.2, average window = 0002.2 ,n. physical messages = 3146, n. applicative messages = 6964 
+
+(1) show the local symbol table post term evaluation
+(1) 	kindex  = -1 values-table is empty
+(1) 	fcounter= -1 functions-table is empty
+(1) 	findex  = -1 fdb-table f_db is empty
+(1) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(1) EVAL
+(16) ...ending
+(16) read back procedure call 
+(16) ********** principal port address (nil)
+(16) starting finalize 
+(16) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:22 2022
+
+(16) elapsed time        :  0
+(16) final nodes         :  49579
+(16) combusted nodes     :  70712
+(16) fires               :  70211
+(16) trivial             :  185 optimized
+(16) family reductions   :  1
+(16) loops               :  0
+(16) computing loops     :  0
+(16) idle loops          :  99225 (99224)
+(16) listen loops        :  0
+(16) received messages   :  96867
+(16) unsuccessful tests  :  (eot 0), (add 0)
+(16) dieflag             :  0
+ (16) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (16) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (16) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (16) THRESHOLD(left,right)  : 0000.8 0000.8
+ (16) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0060.0, average window = 0002.3 ,n. physical messages = 3080, n. applicative messages = 7058 
+SEND TO 1 : average timeout = 0068.9, average window = 0002.3 ,n. physical messages = 2928, n. applicative messages = 6769 
+SEND TO 2 : average timeout = 0074.6, average window = 0002.3 ,n. physical messages = 2951, n. applicative messages = 6787 
+SEND TO 3 : average timeout = 0052.4, average window = 0002.2 ,n. physical messages = 3362, n. applicative messages = 7366 
+SEND TO 4 : average timeout = 0053.8, average window = 0002.2 ,n. physical messages = 3145, n. applicative messages = 6835 
+SEND TO 5 : average timeout = 0069.3, average window = 0002.3 ,n. physical messages = 3201, n. applicative messages = 7487 
+SEND TO 6 : average timeout = 0056.7, average window = 0002.2 ,n. physical messages = 3115, n. applicative messages = 6897 
+SEND TO 7 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 3225, n. applicative messages = 7418 
+SEND TO 8 : average timeout = 0070.1, average window = 0002.4 ,n. physical messages = 3245, n. applicative messages = 7656 
+SEND TO 9 : average timeout = 0063.4, average window = 0002.2 ,n. physical messages = 2832, n. applicative messages = 6327 
+SEND TO 10 : average timeout = 0064.2, average window = 0002.2 ,n. physical messages = 2848, n. applicative messages = 6203 
+SEND TO 11 : average timeout = 0061.8, average window = 0002.3 ,n. physical messages = 3178, n. applicative messages = 7343 
+SEND TO 12 : average timeout = 0060.9, average window = 0002.2 ,n. physical messages = 3118, n. applicative messages = 6810 
+SEND TO 13 : average timeout = 0062.1, average window = 0002.2 ,n. physical messages = 3294, n. applicative messages = 7309 
+SEND TO 14 : average timeout = 0074.3, average window = 0002.3 ,n. physical messages = 3211, n. applicative messages = 7454 
+SEND TO 15 : average timeout = 0055.2, average window = 0002.2 ,n. physical messages = 3169, n. applicative messages = 6913 
+SEND TO 17 : average timeout = 0069.5, average window = 0002.5 ,n. physical messages = 3362, n. applicative messages = 8437 
+SEND TO 18 : average timeout = 0052.9, average window = 0002.1 ,n. physical messages = 3115, n. applicative messages = 6588 
+SEND TO 19 : average timeout = 0055.5, average window = 0002.2 ,n. physical messages = 3190, n. applicative messages = 7027 
+SEND TO 20 : average timeout = 0051.4, average window = 0002.2 ,n. physical messages = 3219, n. applicative messages = 7062 
+SEND TO 21 : average timeout = 0055.1, average window = 0002.3 ,n. physical messages = 3198, n. applicative messages = 7298 
+SEND TO 22 : average timeout = 0065.4, average window = 0002.3 ,n. physical messages = 3150, n. applicative messages = 7168 
+SEND TO 23 : average timeout = 0063.4, average window = 0002.3 ,n. physical messages = 3068, n. applicative messages = 7000 
+SEND TO 24 : average timeout = 0065.1, average window = 0002.4 ,n. physical messages = 3200, n. applicative messages = 7587 
+SEND TO 25 : average timeout = 0074.3, average window = 0002.3 ,n. physical messages = 3013, n. applicative messages = 6989 
+SEND TO 26 : average timeout = 0065.7, average window = 0002.3 ,n. physical messages = 3011, n. applicative messages = 6819 
+SEND TO 27 : average timeout = 0060.8, average window = 0002.3 ,n. physical messages = 3099, n. applicative messages = 7234 
+SEND TO 28 : average timeout = 0067.4, average window = 0002.3 ,n. physical messages = 3089, n. applicative messages = 7080 
+SEND TO 29 : average timeout = 0047.5, average window = 0002.1 ,n. physical messages = 3104, n. applicative messages = 6542 
+SEND TO 30 : average timeout = 0063.2, average window = 0002.3 ,n. physical messages = 3172, n. applicative messages = 7319 
+SEND TO 31 : average timeout = 0051.4, average window = 0002.2 ,n. physical messages = 3318, n. applicative messages = 7339 
+
+(16) show the local symbol table post term evaluation
+(16) 	kindex  = -1 values-table is empty
+(16) 	fcounter= -1 functions-table is empty
+(16) 	findex  = -1 fdb-table f_db is empty
+(16) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(16) EVAL
+(25) ...ending
+(25) read back procedure call 
+(25) ********** principal port address (nil)
+(25) starting finalize 
+(25) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:22 2022
+
+(25) elapsed time        :  0
+(25) final nodes         :  49774
+(25) combusted nodes     :  70855
+(25) fires               :  70249
+(25) trivial             :  282 optimized
+(25) family reductions   :  0
+(25) loops               :  0
+(25) computing loops     :  0
+(25) idle loops          :  93575 (93574)
+(25) listen loops        :  0
+(25) received messages   :  95755
+(25) unsuccessful tests  :  (eot 0), (add 0)
+(25) dieflag             :  0
+ (25) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (25) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (25) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (25) THRESHOLD(left,right)  : 0000.8 0000.8
+ (25) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0059.1, average window = 0002.2 ,n. physical messages = 3105, n. applicative messages = 6964 
+SEND TO 1 : average timeout = 0060.4, average window = 0002.4 ,n. physical messages = 3368, n. applicative messages = 8120 
+SEND TO 2 : average timeout = 0063.6, average window = 0002.3 ,n. physical messages = 3112, n. applicative messages = 7198 
+SEND TO 3 : average timeout = 0065.2, average window = 0002.3 ,n. physical messages = 2879, n. applicative messages = 6532 
+SEND TO 4 : average timeout = 0058.3, average window = 0002.3 ,n. physical messages = 3169, n. applicative messages = 7165 
+SEND TO 5 : average timeout = 0064.7, average window = 0002.3 ,n. physical messages = 3262, n. applicative messages = 7567 
+SEND TO 6 : average timeout = 0058.9, average window = 0002.4 ,n. physical messages = 3296, n. applicative messages = 7845 
+SEND TO 7 : average timeout = 0064.0, average window = 0002.2 ,n. physical messages = 2972, n. applicative messages = 6602 
+SEND TO 8 : average timeout = 0063.5, average window = 0002.2 ,n. physical messages = 3122, n. applicative messages = 7002 
+SEND TO 9 : average timeout = 0056.6, average window = 0002.1 ,n. physical messages = 3035, n. applicative messages = 6438 
+SEND TO 10 : average timeout = 0064.7, average window = 0002.3 ,n. physical messages = 2820, n. applicative messages = 6553 
+SEND TO 11 : average timeout = 0061.3, average window = 0002.2 ,n. physical messages = 3035, n. applicative messages = 6752 
+SEND TO 12 : average timeout = 0066.4, average window = 0002.4 ,n. physical messages = 3020, n. applicative messages = 7140 
+SEND TO 13 : average timeout = 0057.5, average window = 0002.3 ,n. physical messages = 3409, n. applicative messages = 7970 
+SEND TO 14 : average timeout = 0062.1, average window = 0002.3 ,n. physical messages = 3125, n. applicative messages = 7090 
+SEND TO 15 : average timeout = 0066.4, average window = 0002.3 ,n. physical messages = 3002, n. applicative messages = 6910 
+SEND TO 16 : average timeout = 0054.6, average window = 0002.2 ,n. physical messages = 3229, n. applicative messages = 7245 
+SEND TO 17 : average timeout = 0072.5, average window = 0002.4 ,n. physical messages = 3268, n. applicative messages = 7893 
+SEND TO 18 : average timeout = 0068.5, average window = 0002.4 ,n. physical messages = 3051, n. applicative messages = 7302 
+SEND TO 19 : average timeout = 0075.4, average window = 0002.4 ,n. physical messages = 2875, n. applicative messages = 6799 
+SEND TO 20 : average timeout = 0061.2, average window = 0002.2 ,n. physical messages = 2950, n. applicative messages = 6437 
+SEND TO 21 : average timeout = 0052.3, average window = 0002.1 ,n. physical messages = 3237, n. applicative messages = 6938 
+SEND TO 22 : average timeout = 0063.8, average window = 0002.3 ,n. physical messages = 3050, n. applicative messages = 6959 
+SEND TO 23 : average timeout = 0059.2, average window = 0002.2 ,n. physical messages = 3029, n. applicative messages = 6710 
+SEND TO 24 : average timeout = 0062.4, average window = 0002.3 ,n. physical messages = 3195, n. applicative messages = 7473 
+SEND TO 26 : average timeout = 0064.1, average window = 0002.2 ,n. physical messages = 3048, n. applicative messages = 6793 
+SEND TO 27 : average timeout = 0068.3, average window = 0002.3 ,n. physical messages = 3146, n. applicative messages = 7265 
+SEND TO 28 : average timeout = 0067.5, average window = 0002.3 ,n. physical messages = 2954, n. applicative messages = 6650 
+SEND TO 29 : average timeout = 0065.6, average window = 0002.3 ,n. physical messages = 3064, n. applicative messages = 7107 
+SEND TO 30 : average timeout = 0064.0, average window = 0002.3 ,n. physical messages = 3182, n. applicative messages = 7167 
+SEND TO 31 : average timeout = 0066.7, average window = 0002.3 ,n. physical messages = 2945, n. applicative messages = 6913 
+
+(25) show the local symbol table post term evaluation
+(25) 	kindex  = -1 values-table is empty
+(25) 	fcounter= -1 functions-table is empty
+(25) 	findex  = -1 fdb-table f_db is empty
+(25) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(25) EVAL
+(15) ...ending
+(15) read back procedure call 
+(15) ********** principal port address (nil)
+(15) starting finalize 
+(15) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:22 2022
+
+(15) elapsed time        :  0
+(15) final nodes         :  50044
+(15) combusted nodes     :  71483
+(15) fires               :  70803
+(15) trivial             :  210 optimized
+(15) family reductions   :  1
+(15) loops               :  0
+(15) computing loops     :  0
+(15) idle loops          :  53508 (53533)
+(15) listen loops        :  0
+(15) received messages   :  97389
+(15) unsuccessful tests  :  (eot 0), (add 0)
+(15) dieflag             :  0
+ (15) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (15) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (15) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (15) THRESHOLD(left,right)  : 0000.8 0000.8
+ (15) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0061.1, average window = 0002.2 ,n. physical messages = 2983, n. applicative messages = 6536 
+SEND TO 1 : average timeout = 0062.6, average window = 0002.4 ,n. physical messages = 3302, n. applicative messages = 7768 
+SEND TO 2 : average timeout = 0066.4, average window = 0002.3 ,n. physical messages = 3145, n. applicative messages = 7195 
+SEND TO 3 : average timeout = 0048.4, average window = 0002.1 ,n. physical messages = 3304, n. applicative messages = 6880 
+SEND TO 4 : average timeout = 0065.7, average window = 0002.4 ,n. physical messages = 3364, n. applicative messages = 8119 
+SEND TO 5 : average timeout = 0069.3, average window = 0002.3 ,n. physical messages = 2903, n. applicative messages = 6636 
+SEND TO 6 : average timeout = 0071.2, average window = 0002.4 ,n. physical messages = 3198, n. applicative messages = 7582 
+SEND TO 7 : average timeout = 0059.4, average window = 0002.3 ,n. physical messages = 3304, n. applicative messages = 7524 
+SEND TO 8 : average timeout = 0067.0, average window = 0002.3 ,n. physical messages = 3076, n. applicative messages = 7008 
+SEND TO 9 : average timeout = 0052.5, average window = 0002.3 ,n. physical messages = 3325, n. applicative messages = 7649 
+SEND TO 10 : average timeout = 0072.2, average window = 0002.2 ,n. physical messages = 2940, n. applicative messages = 6610 
+SEND TO 11 : average timeout = 0074.7, average window = 0002.4 ,n. physical messages = 3041, n. applicative messages = 7252 
+SEND TO 12 : average timeout = 0054.2, average window = 0002.3 ,n. physical messages = 3417, n. applicative messages = 7780 
+SEND TO 13 : average timeout = 0063.5, average window = 0002.3 ,n. physical messages = 3285, n. applicative messages = 7664 
+SEND TO 14 : average timeout = 0061.4, average window = 0002.2 ,n. physical messages = 3071, n. applicative messages = 6795 
+SEND TO 16 : average timeout = 0073.9, average window = 0002.4 ,n. physical messages = 2911, n. applicative messages = 6982 
+SEND TO 17 : average timeout = 0055.1, average window = 0002.2 ,n. physical messages = 3250, n. applicative messages = 7296 
+SEND TO 18 : average timeout = 0066.1, average window = 0002.4 ,n. physical messages = 3257, n. applicative messages = 7868 
+SEND TO 19 : average timeout = 0069.2, average window = 0002.3 ,n. physical messages = 2951, n. applicative messages = 6697 
+SEND TO 20 : average timeout = 0058.1, average window = 0002.3 ,n. physical messages = 3224, n. applicative messages = 7286 
+SEND TO 21 : average timeout = 0061.5, average window = 0002.3 ,n. physical messages = 3205, n. applicative messages = 7456 
+SEND TO 22 : average timeout = 0057.7, average window = 0002.2 ,n. physical messages = 3133, n. applicative messages = 6874 
+SEND TO 23 : average timeout = 0069.7, average window = 0002.4 ,n. physical messages = 3128, n. applicative messages = 7502 
+SEND TO 24 : average timeout = 0062.0, average window = 0002.2 ,n. physical messages = 2860, n. applicative messages = 6369 
+SEND TO 25 : average timeout = 0058.8, average window = 0002.3 ,n. physical messages = 3030, n. applicative messages = 6905 
+SEND TO 26 : average timeout = 0061.8, average window = 0002.3 ,n. physical messages = 2971, n. applicative messages = 6698 
+SEND TO 27 : average timeout = 0050.6, average window = 0002.2 ,n. physical messages = 3132, n. applicative messages = 6800 
+SEND TO 28 : average timeout = 0059.6, average window = 0002.3 ,n. physical messages = 3224, n. applicative messages = 7341 
+SEND TO 29 : average timeout = 0053.6, average window = 0002.3 ,n. physical messages = 3470, n. applicative messages = 7812 
+SEND TO 30 : average timeout = 0068.2, average window = 0002.3 ,n. physical messages = 2985, n. applicative messages = 6830 
+SEND TO 31 : average timeout = 0064.6, average window = 0002.2 ,n. physical messages = 2920, n. applicative messages = 6531 
+
+(15) show the local symbol table post term evaluation
+(15) 	kindex  = -1 values-table is empty
+(15) 	fcounter= -1 functions-table is empty
+(15) 	findex  = -1 fdb-table f_db is empty
+(15) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(15) EVAL
+(18) ...ending
+(18) read back procedure call 
+(18) ********** principal port address (nil)
+(18) starting finalize 
+(18) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:24 2022
+
+(18) elapsed time        :  0
+(18) final nodes         :  49850
+(18) combusted nodes     :  71587
+(18) fires               :  70965
+(18) trivial             :  240 optimized
+(18) family reductions   :  1
+(18) loops               :  0
+(18) computing loops     :  0
+(18) idle loops          :  42753 (42754)
+(18) listen loops        :  0
+(18) received messages   :  97461
+(18) unsuccessful tests  :  (eot 0), (add 0)
+(18) dieflag             :  0
+ (18) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (18) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (18) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (18) THRESHOLD(left,right)  : 0000.8 0000.8
+ (18) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 1)
+SEND TO 0 : average timeout = 0072.8, average window = 0002.4 ,n. physical messages = 3044, n. applicative messages = 7158 
+SEND TO 1 : average timeout = 0067.5, average window = 0002.3 ,n. physical messages = 2927, n. applicative messages = 6617 
+SEND TO 2 : average timeout = 0080.7, average window = 0002.5 ,n. physical messages = 3178, n. applicative messages = 7867 
+SEND TO 3 : average timeout = 0068.6, average window = 0002.2 ,n. physical messages = 2810, n. applicative messages = 6123 
+SEND TO 4 : average timeout = 0056.6, average window = 0002.3 ,n. physical messages = 3502, n. applicative messages = 8144 
+SEND TO 5 : average timeout = 0049.6, average window = 0002.2 ,n. physical messages = 3295, n. applicative messages = 7130 
+SEND TO 6 : average timeout = 0071.4, average window = 0002.4 ,n. physical messages = 2837, n. applicative messages = 6680 
+SEND TO 7 : average timeout = 0060.9, average window = 0002.3 ,n. physical messages = 3137, n. applicative messages = 7095 
+SEND TO 8 : average timeout = 0055.5, average window = 0002.2 ,n. physical messages = 3044, n. applicative messages = 6683 
+SEND TO 9 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 3142, n. applicative messages = 7327 
+SEND TO 10 : average timeout = 0075.4, average window = 0002.3 ,n. physical messages = 3217, n. applicative messages = 7512 
+SEND TO 11 : average timeout = 0058.5, average window = 0002.2 ,n. physical messages = 3158, n. applicative messages = 7091 
+SEND TO 12 : average timeout = 0072.6, average window = 0002.6 ,n. physical messages = 3315, n. applicative messages = 8622 
+SEND TO 13 : average timeout = 0062.2, average window = 0002.3 ,n. physical messages = 3132, n. applicative messages = 7295 
+SEND TO 14 : average timeout = 0063.8, average window = 0002.4 ,n. physical messages = 3246, n. applicative messages = 7761 
+SEND TO 15 : average timeout = 0061.8, average window = 0002.3 ,n. physical messages = 3366, n. applicative messages = 7894 
+SEND TO 16 : average timeout = 0053.1, average window = 0002.1 ,n. physical messages = 3104, n. applicative messages = 6574 
+SEND TO 17 : average timeout = 0062.7, average window = 0002.3 ,n. physical messages = 3226, n. applicative messages = 7559 
+SEND TO 19 : average timeout = 0076.7, average window = 0002.3 ,n. physical messages = 2928, n. applicative messages = 6793 
+SEND TO 20 : average timeout = 0066.2, average window = 0002.3 ,n. physical messages = 3080, n. applicative messages = 7177 
+SEND TO 21 : average timeout = 0051.3, average window = 0002.2 ,n. physical messages = 3270, n. applicative messages = 7175 
+SEND TO 22 : average timeout = 0056.1, average window = 0002.3 ,n. physical messages = 3172, n. applicative messages = 7160 
+SEND TO 23 : average timeout = 0055.5, average window = 0002.2 ,n. physical messages = 3037, n. applicative messages = 6709 
+SEND TO 24 : average timeout = 0057.7, average window = 0002.2 ,n. physical messages = 3205, n. applicative messages = 6968 
+SEND TO 25 : average timeout = 0059.0, average window = 0002.4 ,n. physical messages = 3204, n. applicative messages = 7539 
+SEND TO 26 : average timeout = 0056.7, average window = 0002.2 ,n. physical messages = 3321, n. applicative messages = 7460 
+SEND TO 27 : average timeout = 0067.0, average window = 0002.3 ,n. physical messages = 2933, n. applicative messages = 6709 
+SEND TO 28 : average timeout = 0063.7, average window = 0002.2 ,n. physical messages = 3175, n. applicative messages = 7014 
+SEND TO 29 : average timeout = 0062.0, average window = 0002.2 ,n. physical messages = 3038, n. applicative messages = 6682 
+SEND TO 30 : average timeout = 0063.2, average window = 0002.3 ,n. physical messages = 3183, n. applicative messages = 7369 
+SEND TO 31 : average timeout = 0064.0, average window = 0002.3 ,n. physical messages = 3126, n. applicative messages = 7175 
+
+(18) show the local symbol table post term evaluation
+(18) 	kindex  = -1 values-table is empty
+(18) 	fcounter= -1 functions-table is empty
+(18) 	findex  = -1 fdb-table f_db is empty
+(18) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(18) EVAL
+(17) ...ending
+(17) read back procedure call 
+(17) ********** principal port address (nil)
+(17) starting finalize 
+(17) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:25 2022
+
+(17) elapsed time        :  0
+(17) final nodes         :  50822
+(17) combusted nodes     :  73357
+(17) fires               :  72611
+(17) trivial             :  288 optimized
+(17) family reductions   :  1
+(17) loops               :  0
+(17) computing loops     :  0
+(17) idle loops          :  38807 (38806)
+(17) listen loops        :  0
+(17) received messages   :  99166
+(17) unsuccessful tests  :  (eot 0), (add 0)
+(17) dieflag             :  0
+ (17) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (17) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (17) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (17) THRESHOLD(left,right)  : 0000.8 0000.8
+ (17) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0068.8, average window = 0002.2 ,n. physical messages = 3208, n. applicative messages = 7201 
+SEND TO 1 : average timeout = 0075.3, average window = 0002.3 ,n. physical messages = 2939, n. applicative messages = 6752 
+SEND TO 2 : average timeout = 0055.6, average window = 0002.1 ,n. physical messages = 3107, n. applicative messages = 6677 
+SEND TO 3 : average timeout = 0071.1, average window = 0002.3 ,n. physical messages = 3019, n. applicative messages = 6886 
+SEND TO 4 : average timeout = 0068.1, average window = 0002.3 ,n. physical messages = 3176, n. applicative messages = 7288 
+SEND TO 5 : average timeout = 0064.3, average window = 0002.2 ,n. physical messages = 3070, n. applicative messages = 6792 
+SEND TO 6 : average timeout = 0064.1, average window = 0002.3 ,n. physical messages = 3322, n. applicative messages = 7573 
+SEND TO 7 : average timeout = 0053.0, average window = 0002.2 ,n. physical messages = 3365, n. applicative messages = 7262 
+SEND TO 8 : average timeout = 0063.0, average window = 0002.1 ,n. physical messages = 3032, n. applicative messages = 6475 
+SEND TO 9 : average timeout = 0072.0, average window = 0002.4 ,n. physical messages = 3211, n. applicative messages = 7581 
+SEND TO 10 : average timeout = 0060.1, average window = 0002.3 ,n. physical messages = 3242, n. applicative messages = 7478 
+SEND TO 11 : average timeout = 0054.4, average window = 0002.3 ,n. physical messages = 3343, n. applicative messages = 7554 
+SEND TO 12 : average timeout = 0067.8, average window = 0002.3 ,n. physical messages = 2976, n. applicative messages = 6731 
+SEND TO 13 : average timeout = 0063.5, average window = 0002.4 ,n. physical messages = 3346, n. applicative messages = 7982 
+SEND TO 14 : average timeout = 0049.8, average window = 0002.3 ,n. physical messages = 3543, n. applicative messages = 8064 
+SEND TO 15 : average timeout = 0063.9, average window = 0002.3 ,n. physical messages = 3212, n. applicative messages = 7255 
+SEND TO 16 : average timeout = 0057.5, average window = 0002.3 ,n. physical messages = 3555, n. applicative messages = 8324 
+SEND TO 18 : average timeout = 0056.7, average window = 0002.3 ,n. physical messages = 3323, n. applicative messages = 7628 
+SEND TO 19 : average timeout = 0069.3, average window = 0002.3 ,n. physical messages = 3054, n. applicative messages = 7175 
+SEND TO 20 : average timeout = 0061.4, average window = 0002.4 ,n. physical messages = 3474, n. applicative messages = 8476 
+SEND TO 21 : average timeout = 0062.3, average window = 0002.2 ,n. physical messages = 3154, n. applicative messages = 7009 
+SEND TO 22 : average timeout = 0057.2, average window = 0002.2 ,n. physical messages = 3281, n. applicative messages = 7255 
+SEND TO 23 : average timeout = 0056.2, average window = 0002.3 ,n. physical messages = 3376, n. applicative messages = 7629 
+SEND TO 24 : average timeout = 0052.3, average window = 0002.3 ,n. physical messages = 3499, n. applicative messages = 7887 
+SEND TO 25 : average timeout = 0060.0, average window = 0002.3 ,n. physical messages = 3403, n. applicative messages = 7968 
+SEND TO 26 : average timeout = 0060.7, average window = 0002.2 ,n. physical messages = 3330, n. applicative messages = 7374 
+SEND TO 27 : average timeout = 0068.1, average window = 0002.4 ,n. physical messages = 3301, n. applicative messages = 7826 
+SEND TO 28 : average timeout = 0058.2, average window = 0002.2 ,n. physical messages = 3199, n. applicative messages = 6932 
+SEND TO 29 : average timeout = 0055.9, average window = 0002.2 ,n. physical messages = 3267, n. applicative messages = 7304 
+SEND TO 30 : average timeout = 0065.4, average window = 0002.4 ,n. physical messages = 3364, n. applicative messages = 8074 
+SEND TO 31 : average timeout = 0055.6, average window = 0002.1 ,n. physical messages = 3090, n. applicative messages = 6549 
+
+(17) show the local symbol table post term evaluation
+(17) 	kindex  = -1 values-table is empty
+(17) 	fcounter= -1 functions-table is empty
+(17) 	findex  = -1 fdb-table f_db is empty
+(17) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(17) EVAL
+(31) ...ending
+(31) read back procedure call 
+(31) ********** principal port address (nil)
+(31) starting finalize 
+(31) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:26 2022
+
+(31) elapsed time        :  0
+(31) final nodes         :  49137
+(31) combusted nodes     :  70238
+(31) fires               :  69483
+(31) trivial             :  299 optimized
+(31) family reductions   :  0
+(31) loops               :  0
+(31) computing loops     :  0
+(31) idle loops          :  74161 (74160)
+(31) listen loops        :  0
+(31) received messages   :  96576
+(31) unsuccessful tests  :  (eot 0), (add 0)
+(31) dieflag             :  0
+ (31) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (31) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (31) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (31) THRESHOLD(left,right)  : 0000.8 0000.8
+ (31) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0061.4, average window = 0002.2 ,n. physical messages = 2955, n. applicative messages = 6571 
+SEND TO 1 : average timeout = 0072.3, average window = 0002.4 ,n. physical messages = 2999, n. applicative messages = 7123 
+SEND TO 2 : average timeout = 0062.1, average window = 0002.3 ,n. physical messages = 3158, n. applicative messages = 7166 
+SEND TO 3 : average timeout = 0063.0, average window = 0002.3 ,n. physical messages = 3012, n. applicative messages = 6922 
+SEND TO 4 : average timeout = 0069.8, average window = 0002.3 ,n. physical messages = 2865, n. applicative messages = 6466 
+SEND TO 5 : average timeout = 0060.7, average window = 0002.3 ,n. physical messages = 3001, n. applicative messages = 6877 
+SEND TO 6 : average timeout = 0055.3, average window = 0002.2 ,n. physical messages = 3244, n. applicative messages = 7297 
+SEND TO 7 : average timeout = 0058.8, average window = 0002.3 ,n. physical messages = 3223, n. applicative messages = 7403 
+SEND TO 8 : average timeout = 0068.2, average window = 0002.3 ,n. physical messages = 2985, n. applicative messages = 6908 
+SEND TO 9 : average timeout = 0048.1, average window = 0002.1 ,n. physical messages = 3109, n. applicative messages = 6593 
+SEND TO 10 : average timeout = 0068.4, average window = 0002.2 ,n. physical messages = 2743, n. applicative messages = 5907 
+SEND TO 11 : average timeout = 0054.1, average window = 0002.2 ,n. physical messages = 3064, n. applicative messages = 6648 
+SEND TO 12 : average timeout = 0067.5, average window = 0002.4 ,n. physical messages = 3221, n. applicative messages = 7827 
+SEND TO 13 : average timeout = 0070.0, average window = 0002.5 ,n. physical messages = 3235, n. applicative messages = 8053 
+SEND TO 14 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 2994, n. applicative messages = 6823 
+SEND TO 15 : average timeout = 0054.8, average window = 0002.2 ,n. physical messages = 3128, n. applicative messages = 6761 
+SEND TO 16 : average timeout = 0063.8, average window = 0002.3 ,n. physical messages = 3137, n. applicative messages = 7239 
+SEND TO 17 : average timeout = 0058.1, average window = 0002.2 ,n. physical messages = 3025, n. applicative messages = 6526 
+SEND TO 18 : average timeout = 0062.5, average window = 0002.2 ,n. physical messages = 3089, n. applicative messages = 6939 
+SEND TO 19 : average timeout = 0044.3, average window = 0002.2 ,n. physical messages = 3333, n. applicative messages = 7166 
+SEND TO 20 : average timeout = 0058.1, average window = 0002.2 ,n. physical messages = 3110, n. applicative messages = 6962 
+SEND TO 21 : average timeout = 0055.9, average window = 0002.3 ,n. physical messages = 3160, n. applicative messages = 7265 
+SEND TO 22 : average timeout = 0059.5, average window = 0002.2 ,n. physical messages = 3147, n. applicative messages = 6900 
+SEND TO 23 : average timeout = 0068.5, average window = 0002.2 ,n. physical messages = 2878, n. applicative messages = 6421 
+SEND TO 24 : average timeout = 0062.3, average window = 0002.3 ,n. physical messages = 3036, n. applicative messages = 6879 
+SEND TO 25 : average timeout = 0058.2, average window = 0002.2 ,n. physical messages = 3040, n. applicative messages = 6829 
+SEND TO 26 : average timeout = 0071.2, average window = 0002.4 ,n. physical messages = 3045, n. applicative messages = 7207 
+SEND TO 27 : average timeout = 0070.2, average window = 0002.4 ,n. physical messages = 3126, n. applicative messages = 7353 
+SEND TO 28 : average timeout = 0059.5, average window = 0002.4 ,n. physical messages = 3264, n. applicative messages = 7817 
+SEND TO 29 : average timeout = 0072.5, average window = 0002.4 ,n. physical messages = 2924, n. applicative messages = 6909 
+SEND TO 30 : average timeout = 0062.7, average window = 0002.3 ,n. physical messages = 3278, n. applicative messages = 7521 
+
+(31) show the local symbol table post term evaluation
+(31) 	kindex  = -1 values-table is empty
+(31) 	fcounter= -1 functions-table is empty
+(31) 	findex  = -1 fdb-table f_db is empty
+(31) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(31) EVAL
+(13) ...ending
+(13) read back procedure call 
+(13) ********** principal port address (nil)
+(13) starting finalize 
+(13) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:30 2022
+
+(13) elapsed time        :  0
+(13) final nodes         :  50357
+(13) combusted nodes     :  72523
+(13) fires               :  71830
+(13) trivial             :  235 optimized
+(13) family reductions   :  1
+(13) loops               :  0
+(13) computing loops     :  0
+(13) idle loops          :  62903 (62902)
+(13) listen loops        :  0
+(13) received messages   :  98516
+(13) unsuccessful tests  :  (eot 0), (add 0)
+(13) dieflag             :  0
+ (13) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (13) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (13) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (13) THRESHOLD(left,right)  : 0000.8 0000.8
+ (13) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0055.3, average window = 0002.1 ,n. physical messages = 3015, n. applicative messages = 6275 
+SEND TO 1 : average timeout = 0064.4, average window = 0002.3 ,n. physical messages = 3239, n. applicative messages = 7523 
+SEND TO 2 : average timeout = 0058.4, average window = 0002.3 ,n. physical messages = 3259, n. applicative messages = 7505 
+SEND TO 3 : average timeout = 0057.9, average window = 0002.2 ,n. physical messages = 3234, n. applicative messages = 7049 
+SEND TO 4 : average timeout = 0057.1, average window = 0002.3 ,n. physical messages = 3253, n. applicative messages = 7561 
+SEND TO 5 : average timeout = 0062.0, average window = 0002.3 ,n. physical messages = 3255, n. applicative messages = 7577 
+SEND TO 6 : average timeout = 0059.5, average window = 0002.2 ,n. physical messages = 3133, n. applicative messages = 6853 
+SEND TO 7 : average timeout = 0067.1, average window = 0002.4 ,n. physical messages = 3255, n. applicative messages = 7765 
+SEND TO 8 : average timeout = 0079.2, average window = 0002.3 ,n. physical messages = 2972, n. applicative messages = 6788 
+SEND TO 9 : average timeout = 0062.5, average window = 0002.2 ,n. physical messages = 2965, n. applicative messages = 6411 
+SEND TO 10 : average timeout = 0053.4, average window = 0002.2 ,n. physical messages = 3290, n. applicative messages = 7253 
+SEND TO 11 : average timeout = 0057.1, average window = 0002.2 ,n. physical messages = 3154, n. applicative messages = 6837 
+SEND TO 12 : average timeout = 0049.5, average window = 0002.2 ,n. physical messages = 3315, n. applicative messages = 7343 
+SEND TO 14 : average timeout = 0049.3, average window = 0002.1 ,n. physical messages = 3401, n. applicative messages = 7288 
+SEND TO 15 : average timeout = 0076.1, average window = 0002.4 ,n. physical messages = 3184, n. applicative messages = 7554 
+SEND TO 16 : average timeout = 0063.4, average window = 0002.3 ,n. physical messages = 3280, n. applicative messages = 7500 
+SEND TO 17 : average timeout = 0064.5, average window = 0002.3 ,n. physical messages = 3366, n. applicative messages = 7896 
+SEND TO 18 : average timeout = 0055.6, average window = 0002.2 ,n. physical messages = 3295, n. applicative messages = 7375 
+SEND TO 19 : average timeout = 0060.0, average window = 0002.5 ,n. physical messages = 3517, n. applicative messages = 8669 
+SEND TO 20 : average timeout = 0054.8, average window = 0002.2 ,n. physical messages = 3075, n. applicative messages = 6893 
+SEND TO 21 : average timeout = 0054.6, average window = 0002.2 ,n. physical messages = 3141, n. applicative messages = 7048 
+SEND TO 22 : average timeout = 0067.9, average window = 0002.3 ,n. physical messages = 3135, n. applicative messages = 7078 
+SEND TO 23 : average timeout = 0065.0, average window = 0002.2 ,n. physical messages = 2999, n. applicative messages = 6659 
+SEND TO 24 : average timeout = 0068.2, average window = 0002.2 ,n. physical messages = 3070, n. applicative messages = 6876 
+SEND TO 25 : average timeout = 0049.1, average window = 0002.2 ,n. physical messages = 3572, n. applicative messages = 7944 
+SEND TO 26 : average timeout = 0053.2, average window = 0002.3 ,n. physical messages = 3323, n. applicative messages = 7628 
+SEND TO 27 : average timeout = 0070.0, average window = 0002.4 ,n. physical messages = 3149, n. applicative messages = 7508 
+SEND TO 28 : average timeout = 0066.0, average window = 0002.3 ,n. physical messages = 3090, n. applicative messages = 7184 
+SEND TO 29 : average timeout = 0063.8, average window = 0002.3 ,n. physical messages = 3120, n. applicative messages = 7101 
+SEND TO 30 : average timeout = 0064.3, average window = 0002.3 ,n. physical messages = 3172, n. applicative messages = 7205 
+SEND TO 31 : average timeout = 0067.4, average window = 0002.4 ,n. physical messages = 3296, n. applicative messages = 7866 
+
+(13) show the local symbol table post term evaluation
+(13) 	kindex  = -1 values-table is empty
+(13) 	fcounter= -1 functions-table is empty
+(13) 	findex  = -1 fdb-table f_db is empty
+(13) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(13) EVAL
+(9) ...ending
+(9) read back procedure call 
+(9) ********** principal port address (nil)
+(9) starting finalize 
+(9) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:31 2022
+
+(9) elapsed time        :  0
+(9) final nodes         :  49046
+(9) combusted nodes     :  69613
+(9) fires               :  69170
+(9) trivial             :  147 optimized
+(9) family reductions   :  2
+(9) loops               :  0
+(9) computing loops     :  0
+(9) idle loops          :  44221 (44221)
+(9) listen loops        :  0
+(9) received messages   :  96406
+(9) unsuccessful tests  :  (eot 0), (add 0)
+(9) dieflag             :  0
+ (9) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (9) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (9) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (9) THRESHOLD(left,right)  : 0000.8 0000.8
+ (9) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 3)
+SEND TO 0 : average timeout = 0066.7, average window = 0002.5 ,n. physical messages = 3101, n. applicative messages = 7635 
+SEND TO 1 : average timeout = 0063.2, average window = 0002.3 ,n. physical messages = 3204, n. applicative messages = 7528 
+SEND TO 2 : average timeout = 0062.3, average window = 0002.3 ,n. physical messages = 3208, n. applicative messages = 7478 
+SEND TO 3 : average timeout = 0056.5, average window = 0002.2 ,n. physical messages = 3233, n. applicative messages = 7242 
+SEND TO 4 : average timeout = 0056.0, average window = 0002.3 ,n. physical messages = 3194, n. applicative messages = 7468 
+SEND TO 5 : average timeout = 0065.5, average window = 0002.2 ,n. physical messages = 2976, n. applicative messages = 6681 
+SEND TO 6 : average timeout = 0066.2, average window = 0002.3 ,n. physical messages = 3207, n. applicative messages = 7295 
+SEND TO 7 : average timeout = 0066.6, average window = 0002.2 ,n. physical messages = 3048, n. applicative messages = 6835 
+SEND TO 8 : average timeout = 0056.0, average window = 0002.2 ,n. physical messages = 3171, n. applicative messages = 6892 
+SEND TO 10 : average timeout = 0060.3, average window = 0002.3 ,n. physical messages = 3138, n. applicative messages = 7243 
+SEND TO 11 : average timeout = 0061.1, average window = 0002.4 ,n. physical messages = 3207, n. applicative messages = 7584 
+SEND TO 12 : average timeout = 0062.3, average window = 0002.2 ,n. physical messages = 3032, n. applicative messages = 6790 
+SEND TO 13 : average timeout = 0060.8, average window = 0002.1 ,n. physical messages = 2973, n. applicative messages = 6348 
+SEND TO 14 : average timeout = 0057.6, average window = 0002.2 ,n. physical messages = 2990, n. applicative messages = 6659 
+SEND TO 15 : average timeout = 0055.3, average window = 0002.3 ,n. physical messages = 3262, n. applicative messages = 7403 
+SEND TO 16 : average timeout = 0065.3, average window = 0002.2 ,n. physical messages = 2859, n. applicative messages = 6256 
+SEND TO 17 : average timeout = 0065.4, average window = 0002.4 ,n. physical messages = 3082, n. applicative messages = 7296 
+SEND TO 18 : average timeout = 0064.7, average window = 0002.3 ,n. physical messages = 3125, n. applicative messages = 7183 
+SEND TO 19 : average timeout = 0044.6, average window = 0002.2 ,n. physical messages = 3432, n. applicative messages = 7587 
+SEND TO 20 : average timeout = 0061.1, average window = 0002.2 ,n. physical messages = 3105, n. applicative messages = 6951 
+SEND TO 21 : average timeout = 0061.6, average window = 0002.3 ,n. physical messages = 3226, n. applicative messages = 7299 
+SEND TO 22 : average timeout = 0068.0, average window = 0002.3 ,n. physical messages = 2940, n. applicative messages = 6626 
+SEND TO 23 : average timeout = 0057.8, average window = 0002.2 ,n. physical messages = 2964, n. applicative messages = 6415 
+SEND TO 24 : average timeout = 0057.6, average window = 0002.2 ,n. physical messages = 2993, n. applicative messages = 6537 
+SEND TO 25 : average timeout = 0064.2, average window = 0002.2 ,n. physical messages = 2895, n. applicative messages = 6484 
+SEND TO 26 : average timeout = 0062.2, average window = 0002.3 ,n. physical messages = 3147, n. applicative messages = 7391 
+SEND TO 27 : average timeout = 0060.1, average window = 0002.2 ,n. physical messages = 2908, n. applicative messages = 6284 
+SEND TO 28 : average timeout = 0054.6, average window = 0002.3 ,n. physical messages = 3293, n. applicative messages = 7554 
+SEND TO 29 : average timeout = 0063.5, average window = 0002.1 ,n. physical messages = 2778, n. applicative messages = 5926 
+SEND TO 30 : average timeout = 0059.4, average window = 0002.3 ,n. physical messages = 3138, n. applicative messages = 7107 
+SEND TO 31 : average timeout = 0056.3, average window = 0002.2 ,n. physical messages = 2997, n. applicative messages = 6681 
+
+(9) show the local symbol table post term evaluation
+(9) 	kindex  = -1 values-table is empty
+(9) 	fcounter= -1 functions-table is empty
+(9) 	findex  = -1 fdb-table f_db is empty
+(9) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(9) EVAL
+(12) ...ending
+(12) read back procedure call 
+(12) ********** principal port address (nil)
+(12) starting finalize 
+(12) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:32 2022
+
+(12) elapsed time        :  0
+(12) final nodes         :  50561
+(12) combusted nodes     :  73247
+(12) fires               :  72422
+(12) trivial             :  299 optimized
+(12) family reductions   :  5
+(12) loops               :  0
+(12) computing loops     :  0
+(12) idle loops          :  55775 (55774)
+(12) listen loops        :  0
+(12) received messages   :  98135
+(12) unsuccessful tests  :  (eot 0), (add 0)
+(12) dieflag             :  0
+ (12) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (12) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (12) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (12) THRESHOLD(left,right)  : 0000.8 0000.8
+ (12) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 1)
+SEND TO 0 : average timeout = 0059.0, average window = 0002.4 ,n. physical messages = 3009, n. applicative messages = 7215 
+SEND TO 1 : average timeout = 0054.8, average window = 0002.3 ,n. physical messages = 3202, n. applicative messages = 7240 
+SEND TO 2 : average timeout = 0062.2, average window = 0002.4 ,n. physical messages = 3279, n. applicative messages = 7787 
+SEND TO 3 : average timeout = 0059.2, average window = 0002.2 ,n. physical messages = 3034, n. applicative messages = 6779 
+SEND TO 4 : average timeout = 0075.8, average window = 0002.3 ,n. physical messages = 3105, n. applicative messages = 7243 
+SEND TO 5 : average timeout = 0064.9, average window = 0002.3 ,n. physical messages = 3047, n. applicative messages = 6969 
+SEND TO 6 : average timeout = 0053.0, average window = 0002.2 ,n. physical messages = 3452, n. applicative messages = 7708 
+SEND TO 7 : average timeout = 0062.9, average window = 0002.4 ,n. physical messages = 3425, n. applicative messages = 8318 
+SEND TO 8 : average timeout = 0066.5, average window = 0002.3 ,n. physical messages = 3121, n. applicative messages = 7216 
+SEND TO 9 : average timeout = 0064.7, average window = 0002.2 ,n. physical messages = 2999, n. applicative messages = 6699 
+SEND TO 10 : average timeout = 0064.8, average window = 0002.3 ,n. physical messages = 3082, n. applicative messages = 6938 
+SEND TO 11 : average timeout = 0068.7, average window = 0002.2 ,n. physical messages = 2961, n. applicative messages = 6597 
+SEND TO 13 : average timeout = 0060.2, average window = 0002.2 ,n. physical messages = 3269, n. applicative messages = 7318 
+SEND TO 14 : average timeout = 0060.2, average window = 0002.2 ,n. physical messages = 3214, n. applicative messages = 7196 
+SEND TO 15 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 3294, n. applicative messages = 7689 
+SEND TO 16 : average timeout = 0070.4, average window = 0002.3 ,n. physical messages = 2971, n. applicative messages = 6948 
+SEND TO 17 : average timeout = 0051.4, average window = 0002.1 ,n. physical messages = 3144, n. applicative messages = 6699 
+SEND TO 18 : average timeout = 0055.7, average window = 0002.4 ,n. physical messages = 3504, n. applicative messages = 8399 
+SEND TO 19 : average timeout = 0057.8, average window = 0002.2 ,n. physical messages = 3067, n. applicative messages = 6623 
+SEND TO 20 : average timeout = 0052.6, average window = 0002.3 ,n. physical messages = 3240, n. applicative messages = 7540 
+SEND TO 21 : average timeout = 0055.3, average window = 0002.2 ,n. physical messages = 3339, n. applicative messages = 7332 
+SEND TO 22 : average timeout = 0058.2, average window = 0002.2 ,n. physical messages = 3358, n. applicative messages = 7538 
+SEND TO 23 : average timeout = 0056.8, average window = 0002.2 ,n. physical messages = 3226, n. applicative messages = 7231 
+SEND TO 24 : average timeout = 0054.3, average window = 0002.2 ,n. physical messages = 3314, n. applicative messages = 7375 
+SEND TO 25 : average timeout = 0063.9, average window = 0002.3 ,n. physical messages = 3181, n. applicative messages = 7203 
+SEND TO 26 : average timeout = 0077.2, average window = 0002.3 ,n. physical messages = 2793, n. applicative messages = 6508 
+SEND TO 27 : average timeout = 0066.7, average window = 0002.4 ,n. physical messages = 3160, n. applicative messages = 7707 
+SEND TO 28 : average timeout = 0062.4, average window = 0002.2 ,n. physical messages = 3177, n. applicative messages = 7043 
+SEND TO 29 : average timeout = 0060.0, average window = 0002.2 ,n. physical messages = 2996, n. applicative messages = 6552 
+SEND TO 30 : average timeout = 0065.9, average window = 0002.4 ,n. physical messages = 3308, n. applicative messages = 8047 
+SEND TO 31 : average timeout = 0061.9, average window = 0002.4 ,n. physical messages = 3335, n. applicative messages = 7863 
+
+(12) show the local symbol table post term evaluation
+(12) 	kindex  = -1 values-table is empty
+(12) 	fcounter= -1 functions-table is empty
+(12) 	findex  = -1 fdb-table f_db is empty
+(12) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(12) EVAL
+(21) ...ending
+(21) read back procedure call 
+(21) ********** principal port address (nil)
+(21) starting finalize 
+(21) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:33 2022
+
+(21) elapsed time        :  0
+(21) final nodes         :  49171
+(21) combusted nodes     :  70098
+(21) fires               :  69325
+(21) trivial             :  327 optimized
+(21) family reductions   :  1
+(21) loops               :  0
+(21) computing loops     :  0
+(21) idle loops          :  46117 (46116)
+(21) listen loops        :  0
+(21) received messages   :  96523
+(21) unsuccessful tests  :  (eot 0), (add 0)
+(21) dieflag             :  0
+ (21) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (21) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (21) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (21) THRESHOLD(left,right)  : 0000.8 0000.8
+ (21) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0058.1, average window = 0002.2 ,n. physical messages = 3036, n. applicative messages = 6695 
+SEND TO 1 : average timeout = 0062.5, average window = 0002.2 ,n. physical messages = 3069, n. applicative messages = 6642 
+SEND TO 2 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3365, n. applicative messages = 7785 
+SEND TO 3 : average timeout = 0056.1, average window = 0002.2 ,n. physical messages = 3155, n. applicative messages = 6909 
+SEND TO 4 : average timeout = 0054.3, average window = 0002.2 ,n. physical messages = 3125, n. applicative messages = 6803 
+SEND TO 5 : average timeout = 0055.5, average window = 0002.2 ,n. physical messages = 3077, n. applicative messages = 6770 
+SEND TO 6 : average timeout = 0070.9, average window = 0002.3 ,n. physical messages = 2975, n. applicative messages = 6990 
+SEND TO 7 : average timeout = 0058.8, average window = 0002.3 ,n. physical messages = 3245, n. applicative messages = 7593 
+SEND TO 8 : average timeout = 0067.0, average window = 0002.3 ,n. physical messages = 3222, n. applicative messages = 7524 
+SEND TO 9 : average timeout = 0057.6, average window = 0002.3 ,n. physical messages = 3151, n. applicative messages = 7259 
+SEND TO 10 : average timeout = 0066.6, average window = 0002.3 ,n. physical messages = 2975, n. applicative messages = 6959 
+SEND TO 11 : average timeout = 0067.4, average window = 0002.3 ,n. physical messages = 2919, n. applicative messages = 6711 
+SEND TO 12 : average timeout = 0057.0, average window = 0002.3 ,n. physical messages = 3212, n. applicative messages = 7447 
+SEND TO 13 : average timeout = 0054.8, average window = 0002.2 ,n. physical messages = 3128, n. applicative messages = 7000 
+SEND TO 14 : average timeout = 0069.7, average window = 0002.3 ,n. physical messages = 2975, n. applicative messages = 6849 
+SEND TO 15 : average timeout = 0061.1, average window = 0002.3 ,n. physical messages = 3209, n. applicative messages = 7416 
+SEND TO 16 : average timeout = 0068.9, average window = 0002.4 ,n. physical messages = 3102, n. applicative messages = 7348 
+SEND TO 17 : average timeout = 0080.5, average window = 0002.4 ,n. physical messages = 3006, n. applicative messages = 7232 
+SEND TO 18 : average timeout = 0061.0, average window = 0002.3 ,n. physical messages = 3108, n. applicative messages = 7228 
+SEND TO 19 : average timeout = 0055.9, average window = 0002.3 ,n. physical messages = 3162, n. applicative messages = 7344 
+SEND TO 20 : average timeout = 0048.1, average window = 0002.2 ,n. physical messages = 3213, n. applicative messages = 6913 
+SEND TO 22 : average timeout = 0062.4, average window = 0002.3 ,n. physical messages = 2888, n. applicative messages = 6780 
+SEND TO 23 : average timeout = 0050.4, average window = 0002.2 ,n. physical messages = 3055, n. applicative messages = 6614 
+SEND TO 24 : average timeout = 0062.6, average window = 0002.3 ,n. physical messages = 3017, n. applicative messages = 6946 
+SEND TO 25 : average timeout = 0067.1, average window = 0002.3 ,n. physical messages = 3089, n. applicative messages = 7154 
+SEND TO 26 : average timeout = 0066.8, average window = 0002.3 ,n. physical messages = 2971, n. applicative messages = 6685 
+SEND TO 27 : average timeout = 0056.3, average window = 0002.2 ,n. physical messages = 2867, n. applicative messages = 6295 
+SEND TO 28 : average timeout = 0054.9, average window = 0002.2 ,n. physical messages = 3118, n. applicative messages = 6919 
+SEND TO 29 : average timeout = 0062.5, average window = 0002.2 ,n. physical messages = 3014, n. applicative messages = 6650 
+SEND TO 30 : average timeout = 0062.7, average window = 0002.2 ,n. physical messages = 3157, n. applicative messages = 7067 
+SEND TO 31 : average timeout = 0061.7, average window = 0002.3 ,n. physical messages = 3133, n. applicative messages = 7241 
+
+(21) show the local symbol table post term evaluation
+(21) 	kindex  = -1 values-table is empty
+(21) 	fcounter= -1 functions-table is empty
+(21) 	findex  = -1 fdb-table f_db is empty
+(21) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(21) EVAL
+(28) ...ending
+(28) read back procedure call 
+(28) ********** principal port address (nil)
+(28) starting finalize 
+(28) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:35 2022
+
+(28) elapsed time        :  0
+(28) final nodes         :  49800
+(28) combusted nodes     :  71740
+(28) fires               :  71152
+(28) trivial             :  252 optimized
+(28) family reductions   :  0
+(28) loops               :  0
+(28) computing loops     :  0
+(28) idle loops          :  70947 (70946)
+(28) listen loops        :  0
+(28) received messages   :  97410
+(28) unsuccessful tests  :  (eot 0), (add 0)
+(28) dieflag             :  0
+ (28) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (28) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (28) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (28) THRESHOLD(left,right)  : 0000.8 0000.8
+ (28) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0062.5, average window = 0002.5 ,n. physical messages = 3563, n. applicative messages = 8763 
+SEND TO 1 : average timeout = 0064.7, average window = 0002.2 ,n. physical messages = 3009, n. applicative messages = 6619 
+SEND TO 2 : average timeout = 0067.3, average window = 0002.3 ,n. physical messages = 3125, n. applicative messages = 7204 
+SEND TO 3 : average timeout = 0063.7, average window = 0002.3 ,n. physical messages = 3025, n. applicative messages = 6922 
+SEND TO 4 : average timeout = 0055.7, average window = 0002.2 ,n. physical messages = 3265, n. applicative messages = 7250 
+SEND TO 5 : average timeout = 0057.9, average window = 0002.2 ,n. physical messages = 3087, n. applicative messages = 6682 
+SEND TO 6 : average timeout = 0064.1, average window = 0002.4 ,n. physical messages = 3265, n. applicative messages = 7723 
+SEND TO 7 : average timeout = 0066.4, average window = 0002.3 ,n. physical messages = 3139, n. applicative messages = 7250 
+SEND TO 8 : average timeout = 0068.5, average window = 0002.2 ,n. physical messages = 2949, n. applicative messages = 6567 
+SEND TO 9 : average timeout = 0062.9, average window = 0002.3 ,n. physical messages = 3292, n. applicative messages = 7643 
+SEND TO 10 : average timeout = 0068.4, average window = 0002.4 ,n. physical messages = 3176, n. applicative messages = 7543 
+SEND TO 11 : average timeout = 0066.2, average window = 0002.4 ,n. physical messages = 3038, n. applicative messages = 7373 
+SEND TO 12 : average timeout = 0060.0, average window = 0002.3 ,n. physical messages = 3110, n. applicative messages = 7036 
+SEND TO 13 : average timeout = 0071.8, average window = 0002.3 ,n. physical messages = 3056, n. applicative messages = 7072 
+SEND TO 14 : average timeout = 0063.3, average window = 0002.2 ,n. physical messages = 3017, n. applicative messages = 6718 
+SEND TO 15 : average timeout = 0052.1, average window = 0002.1 ,n. physical messages = 3364, n. applicative messages = 7150 
+SEND TO 16 : average timeout = 0054.2, average window = 0002.3 ,n. physical messages = 3213, n. applicative messages = 7295 
+SEND TO 17 : average timeout = 0054.9, average window = 0002.2 ,n. physical messages = 3222, n. applicative messages = 7030 
+SEND TO 18 : average timeout = 0066.1, average window = 0002.2 ,n. physical messages = 3164, n. applicative messages = 7098 
+SEND TO 19 : average timeout = 0048.4, average window = 0002.2 ,n. physical messages = 3254, n. applicative messages = 7154 
+SEND TO 20 : average timeout = 0057.5, average window = 0002.3 ,n. physical messages = 3451, n. applicative messages = 7947 
+SEND TO 21 : average timeout = 0058.8, average window = 0002.2 ,n. physical messages = 3125, n. applicative messages = 7007 
+SEND TO 22 : average timeout = 0058.9, average window = 0002.3 ,n. physical messages = 3342, n. applicative messages = 7554 
+SEND TO 23 : average timeout = 0059.0, average window = 0002.1 ,n. physical messages = 2915, n. applicative messages = 6066 
+SEND TO 24 : average timeout = 0060.1, average window = 0002.3 ,n. physical messages = 3182, n. applicative messages = 7206 
+SEND TO 25 : average timeout = 0075.8, average window = 0002.3 ,n. physical messages = 2840, n. applicative messages = 6489 
+SEND TO 26 : average timeout = 0076.2, average window = 0002.3 ,n. physical messages = 3086, n. applicative messages = 7141 
+SEND TO 27 : average timeout = 0054.4, average window = 0002.2 ,n. physical messages = 3322, n. applicative messages = 7339 
+SEND TO 29 : average timeout = 0066.0, average window = 0002.3 ,n. physical messages = 3216, n. applicative messages = 7267 
+SEND TO 30 : average timeout = 0067.9, average window = 0002.2 ,n. physical messages = 2940, n. applicative messages = 6580 
+SEND TO 31 : average timeout = 0051.3, average window = 0002.3 ,n. physical messages = 3373, n. applicative messages = 7844 
+
+(28) show the local symbol table post term evaluation
+(28) 	kindex  = -1 values-table is empty
+(28) 	fcounter= -1 functions-table is empty
+(28) 	findex  = -1 fdb-table f_db is empty
+(28) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(28) EVAL
+(0) ...ending
+(0) read back procedure call 
+(0) ********** principal port address 0x561da6cc6000
+(0) starting finalize 
+(0) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:35 2022
+
+(0) elapsed time        :  0
+(0) final nodes         :  49160
+(0) combusted nodes     :  70627
+(0) fires               :  69813
+(0) trivial             :  375 optimized
+(0) family reductions   :  29
+(0) loops               :  0
+(0) computing loops     :  0
+(0) idle loops          :  88386 (88385)
+(0) listen loops        :  0
+(0) received messages   :  94638
+(0) unsuccessful tests  :  (eot 0), (add 0)
+(0) dieflag             :  0
+ (0) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (0) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (0) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (0) THRESHOLD(left,right)  : 0000.8 0000.8
+ (0) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 1)
+SEND TO 1 : average timeout = 0073.6, average window = 0002.4 ,n. physical messages = 2891, n. applicative messages = 6908 
+SEND TO 2 : average timeout = 0057.5, average window = 0002.2 ,n. physical messages = 3018, n. applicative messages = 6610 
+SEND TO 3 : average timeout = 0059.5, average window = 0002.3 ,n. physical messages = 3248, n. applicative messages = 7548 
+SEND TO 4 : average timeout = 0071.0, average window = 0002.3 ,n. physical messages = 2766, n. applicative messages = 6334 
+SEND TO 5 : average timeout = 0058.1, average window = 0002.5 ,n. physical messages = 3140, n. applicative messages = 7702 
+SEND TO 6 : average timeout = 0058.4, average window = 0002.4 ,n. physical messages = 3163, n. applicative messages = 7674 
+SEND TO 7 : average timeout = 0063.2, average window = 0002.2 ,n. physical messages = 2986, n. applicative messages = 6602 
+SEND TO 8 : average timeout = 0067.0, average window = 0002.5 ,n. physical messages = 2978, n. applicative messages = 7362 
+SEND TO 9 : average timeout = 0071.2, average window = 0002.5 ,n. physical messages = 3124, n. applicative messages = 7670 
+SEND TO 10 : average timeout = 0068.4, average window = 0002.2 ,n. physical messages = 2704, n. applicative messages = 6078 
+SEND TO 11 : average timeout = 0062.1, average window = 0002.3 ,n. physical messages = 3000, n. applicative messages = 6785 
+SEND TO 12 : average timeout = 0060.8, average window = 0002.4 ,n. physical messages = 3019, n. applicative messages = 7181 
+SEND TO 13 : average timeout = 0053.9, average window = 0002.1 ,n. physical messages = 2996, n. applicative messages = 6273 
+SEND TO 14 : average timeout = 0066.7, average window = 0002.3 ,n. physical messages = 3040, n. applicative messages = 6935 
+SEND TO 15 : average timeout = 0065.2, average window = 0002.3 ,n. physical messages = 2928, n. applicative messages = 6743 
+SEND TO 16 : average timeout = 0057.7, average window = 0002.2 ,n. physical messages = 3202, n. applicative messages = 7102 
+SEND TO 17 : average timeout = 0064.2, average window = 0002.4 ,n. physical messages = 3137, n. applicative messages = 7480 
+SEND TO 18 : average timeout = 0060.0, average window = 0002.3 ,n. physical messages = 3160, n. applicative messages = 7122 
+SEND TO 19 : average timeout = 0070.4, average window = 0002.3 ,n. physical messages = 2812, n. applicative messages = 6417 
+SEND TO 20 : average timeout = 0053.2, average window = 0002.2 ,n. physical messages = 3168, n. applicative messages = 6885 
+SEND TO 21 : average timeout = 0066.7, average window = 0002.3 ,n. physical messages = 2877, n. applicative messages = 6565 
+SEND TO 22 : average timeout = 0060.2, average window = 0002.4 ,n. physical messages = 3138, n. applicative messages = 7384 
+SEND TO 23 : average timeout = 0065.1, average window = 0002.3 ,n. physical messages = 3078, n. applicative messages = 6933 
+SEND TO 24 : average timeout = 0065.0, average window = 0002.3 ,n. physical messages = 3043, n. applicative messages = 6901 
+SEND TO 25 : average timeout = 0052.3, average window = 0002.2 ,n. physical messages = 3166, n. applicative messages = 6940 
+SEND TO 26 : average timeout = 0060.7, average window = 0002.2 ,n. physical messages = 3015, n. applicative messages = 6595 
+SEND TO 27 : average timeout = 0062.3, average window = 0002.3 ,n. physical messages = 3020, n. applicative messages = 6895 
+SEND TO 28 : average timeout = 0064.2, average window = 0002.4 ,n. physical messages = 3536, n. applicative messages = 8482 
+SEND TO 29 : average timeout = 0060.3, average window = 0002.3 ,n. physical messages = 3010, n. applicative messages = 6831 
+SEND TO 30 : average timeout = 0067.9, average window = 0002.3 ,n. physical messages = 2829, n. applicative messages = 6555 
+SEND TO 31 : average timeout = 0052.5, average window = 0002.1 ,n. physical messages = 2962, n. applicative messages = 6320 
+
+(0) show the local symbol table post term evaluation
+(0) 	kindex  = -1 values-table is empty
+(0) 	fcounter= -1 functions-table is empty
+(0) 	findex  = -1 fdb-table f_db is empty
+(0) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(0) EVAL
+(0) PELCR 10.0> (22) ...ending
+(22) read back procedure call 
+(22) ********** principal port address (nil)
+(22) starting finalize 
+(22) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:36 2022
+
+(22) elapsed time        :  0
+(22) final nodes         :  48809
+(22) combusted nodes     :  70605
+(22) fires               :  69740
+(22) trivial             :  343 optimized
+(22) family reductions   :  0
+(22) loops               :  0
+(22) computing loops     :  0
+(22) idle loops          :  45063 (45062)
+(22) listen loops        :  0
+(22) received messages   :  95927
+(22) unsuccessful tests  :  (eot 0), (add 0)
+(22) dieflag             :  0
+ (22) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (22) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (22) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (22) THRESHOLD(left,right)  : 0000.8 0000.8
+ (22) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0057.8, average window = 0002.2 ,n. physical messages = 3268, n. applicative messages = 7266 
+SEND TO 1 : average timeout = 0069.4, average window = 0002.3 ,n. physical messages = 3130, n. applicative messages = 7339 
+SEND TO 2 : average timeout = 0054.5, average window = 0002.3 ,n. physical messages = 3222, n. applicative messages = 7446 
+SEND TO 3 : average timeout = 0058.9, average window = 0002.3 ,n. physical messages = 3226, n. applicative messages = 7462 
+SEND TO 4 : average timeout = 0061.8, average window = 0002.2 ,n. physical messages = 2889, n. applicative messages = 6495 
+SEND TO 5 : average timeout = 0059.9, average window = 0002.4 ,n. physical messages = 3096, n. applicative messages = 7431 
+SEND TO 6 : average timeout = 0061.7, average window = 0002.2 ,n. physical messages = 2873, n. applicative messages = 6366 
+SEND TO 7 : average timeout = 0051.0, average window = 0002.2 ,n. physical messages = 3040, n. applicative messages = 6674 
+SEND TO 8 : average timeout = 0064.5, average window = 0002.2 ,n. physical messages = 2982, n. applicative messages = 6646 
+SEND TO 9 : average timeout = 0064.2, average window = 0002.3 ,n. physical messages = 2934, n. applicative messages = 6687 
+SEND TO 10 : average timeout = 0057.5, average window = 0002.2 ,n. physical messages = 2978, n. applicative messages = 6675 
+SEND TO 11 : average timeout = 0064.4, average window = 0002.2 ,n. physical messages = 3124, n. applicative messages = 6939 
+SEND TO 12 : average timeout = 0057.8, average window = 0002.3 ,n. physical messages = 3304, n. applicative messages = 7595 
+SEND TO 13 : average timeout = 0064.1, average window = 0002.4 ,n. physical messages = 3069, n. applicative messages = 7224 
+SEND TO 14 : average timeout = 0064.2, average window = 0002.2 ,n. physical messages = 3013, n. applicative messages = 6582 
+SEND TO 15 : average timeout = 0056.4, average window = 0002.2 ,n. physical messages = 3152, n. applicative messages = 6926 
+SEND TO 16 : average timeout = 0059.9, average window = 0002.3 ,n. physical messages = 3188, n. applicative messages = 7274 
+SEND TO 17 : average timeout = 0062.2, average window = 0002.3 ,n. physical messages = 3184, n. applicative messages = 7333 
+SEND TO 18 : average timeout = 0050.8, average window = 0002.2 ,n. physical messages = 3257, n. applicative messages = 7212 
+SEND TO 19 : average timeout = 0060.1, average window = 0002.2 ,n. physical messages = 3228, n. applicative messages = 7191 
+SEND TO 20 : average timeout = 0060.4, average window = 0002.4 ,n. physical messages = 3211, n. applicative messages = 7741 
+SEND TO 21 : average timeout = 0064.7, average window = 0002.3 ,n. physical messages = 3035, n. applicative messages = 6993 
+SEND TO 23 : average timeout = 0069.1, average window = 0002.4 ,n. physical messages = 2906, n. applicative messages = 6999 
+SEND TO 24 : average timeout = 0068.3, average window = 0002.4 ,n. physical messages = 3244, n. applicative messages = 7772 
+SEND TO 25 : average timeout = 0060.8, average window = 0002.3 ,n. physical messages = 3047, n. applicative messages = 7021 
+SEND TO 26 : average timeout = 0072.2, average window = 0002.4 ,n. physical messages = 3020, n. applicative messages = 7189 
+SEND TO 27 : average timeout = 0067.1, average window = 0002.4 ,n. physical messages = 3063, n. applicative messages = 7370 
+SEND TO 28 : average timeout = 0056.7, average window = 0002.3 ,n. physical messages = 3252, n. applicative messages = 7449 
+SEND TO 29 : average timeout = 0061.8, average window = 0002.2 ,n. physical messages = 2872, n. applicative messages = 6195 
+SEND TO 30 : average timeout = 0064.2, average window = 0002.2 ,n. physical messages = 2926, n. applicative messages = 6477 
+SEND TO 31 : average timeout = 0054.5, average window = 0002.2 ,n. physical messages = 3239, n. applicative messages = 7092 
+
+(22) show the local symbol table post term evaluation
+(22) 	kindex  = -1 values-table is empty
+(22) 	fcounter= -1 functions-table is empty
+(22) 	findex  = -1 fdb-table f_db is empty
+(22) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(22) EVAL
+(29) ...ending
+(29) read back procedure call 
+(29) ********** principal port address (nil)
+(29) starting finalize 
+(29) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:38 2022
+
+(29) elapsed time        :  0
+(29) final nodes         :  49652
+(29) combusted nodes     :  70217
+(29) fires               :  69592
+(29) trivial             :  241 optimized
+(29) family reductions   :  0
+(29) loops               :  0
+(29) computing loops     :  0
+(29) idle loops          :  73985 (74118)
+(29) listen loops        :  0
+(29) received messages   :  96088
+(29) unsuccessful tests  :  (eot 0), (add 0)
+(29) dieflag             :  0
+ (29) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (29) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (29) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (29) THRESHOLD(left,right)  : 0000.8 0000.8
+ (29) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3039, n. applicative messages = 6998 
+SEND TO 1 : average timeout = 0071.5, average window = 0002.3 ,n. physical messages = 3036, n. applicative messages = 7049 
+SEND TO 2 : average timeout = 0058.1, average window = 0002.2 ,n. physical messages = 3139, n. applicative messages = 7032 
+SEND TO 3 : average timeout = 0064.2, average window = 0002.3 ,n. physical messages = 3067, n. applicative messages = 7043 
+SEND TO 4 : average timeout = 0073.2, average window = 0002.4 ,n. physical messages = 3060, n. applicative messages = 7406 
+SEND TO 5 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3168, n. applicative messages = 7342 
+SEND TO 6 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 3009, n. applicative messages = 6781 
+SEND TO 7 : average timeout = 0063.0, average window = 0002.3 ,n. physical messages = 2972, n. applicative messages = 6743 
+SEND TO 8 : average timeout = 0050.9, average window = 0002.3 ,n. physical messages = 3373, n. applicative messages = 7745 
+SEND TO 9 : average timeout = 0068.1, average window = 0002.2 ,n. physical messages = 2695, n. applicative messages = 5834 
+SEND TO 10 : average timeout = 0051.8, average window = 0002.1 ,n. physical messages = 2900, n. applicative messages = 6228 
+SEND TO 11 : average timeout = 0061.6, average window = 0002.1 ,n. physical messages = 3012, n. applicative messages = 6473 
+SEND TO 12 : average timeout = 0054.8, average window = 0002.1 ,n. physical messages = 3013, n. applicative messages = 6347 
+SEND TO 13 : average timeout = 0057.7, average window = 0002.3 ,n. physical messages = 3143, n. applicative messages = 7082 
+SEND TO 14 : average timeout = 0062.7, average window = 0002.3 ,n. physical messages = 3199, n. applicative messages = 7198 
+SEND TO 15 : average timeout = 0060.4, average window = 0002.4 ,n. physical messages = 3311, n. applicative messages = 7931 
+SEND TO 16 : average timeout = 0060.5, average window = 0002.3 ,n. physical messages = 2897, n. applicative messages = 6572 
+SEND TO 17 : average timeout = 0048.5, average window = 0002.2 ,n. physical messages = 3262, n. applicative messages = 7281 
+SEND TO 18 : average timeout = 0066.9, average window = 0002.3 ,n. physical messages = 2937, n. applicative messages = 6640 
+SEND TO 19 : average timeout = 0064.6, average window = 0002.3 ,n. physical messages = 3247, n. applicative messages = 7551 
+SEND TO 20 : average timeout = 0058.8, average window = 0002.3 ,n. physical messages = 3075, n. applicative messages = 6945 
+SEND TO 21 : average timeout = 0053.3, average window = 0002.2 ,n. physical messages = 3121, n. applicative messages = 6728 
+SEND TO 22 : average timeout = 0053.5, average window = 0002.2 ,n. physical messages = 2938, n. applicative messages = 6326 
+SEND TO 23 : average timeout = 0063.0, average window = 0002.4 ,n. physical messages = 3212, n. applicative messages = 7668 
+SEND TO 24 : average timeout = 0059.5, average window = 0002.3 ,n. physical messages = 3182, n. applicative messages = 7243 
+SEND TO 25 : average timeout = 0068.0, average window = 0002.3 ,n. physical messages = 2989, n. applicative messages = 6739 
+SEND TO 26 : average timeout = 0070.5, average window = 0002.3 ,n. physical messages = 3046, n. applicative messages = 7063 
+SEND TO 27 : average timeout = 0061.9, average window = 0002.4 ,n. physical messages = 3412, n. applicative messages = 8077 
+SEND TO 28 : average timeout = 0060.4, average window = 0002.3 ,n. physical messages = 3321, n. applicative messages = 7555 
+SEND TO 30 : average timeout = 0066.2, average window = 0002.2 ,n. physical messages = 3048, n. applicative messages = 6644 
+SEND TO 31 : average timeout = 0067.3, average window = 0002.3 ,n. physical messages = 2960, n. applicative messages = 6697 
+
+(29) show the local symbol table post term evaluation
+(29) 	kindex  = -1 values-table is empty
+(29) 	fcounter= -1 functions-table is empty
+(29) 	findex  = -1 fdb-table f_db is empty
+(29) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(29) EVAL
+(3) ...ending
+(3) read back procedure call 
+(3) ********** principal port address (nil)
+(3) starting finalize 
+(3) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:39 2022
+
+(3) elapsed time        :  0
+(3) final nodes         :  49271
+(3) combusted nodes     :  70831
+(3) fires               :  70147
+(3) trivial             :  296 optimized
+(3) family reductions   :  1
+(3) loops               :  0
+(3) computing loops     :  0
+(3) idle loops          :  93661 (93767)
+(3) listen loops        :  0
+(3) received messages   :  96749
+(3) unsuccessful tests  :  (eot 0), (add 0)
+(3) dieflag             :  0
+ (3) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (3) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (3) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (3) THRESHOLD(left,right)  : 0000.8 0000.8
+ (3) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0065.7, average window = 0002.3 ,n. physical messages = 3264, n. applicative messages = 7516 
+SEND TO 1 : average timeout = 0067.6, average window = 0002.4 ,n. physical messages = 3377, n. applicative messages = 8192 
+SEND TO 2 : average timeout = 0054.5, average window = 0002.3 ,n. physical messages = 3333, n. applicative messages = 7614 
+SEND TO 4 : average timeout = 0057.5, average window = 0002.2 ,n. physical messages = 3237, n. applicative messages = 7159 
+SEND TO 5 : average timeout = 0062.0, average window = 0002.2 ,n. physical messages = 3005, n. applicative messages = 6683 
+SEND TO 6 : average timeout = 0062.6, average window = 0002.3 ,n. physical messages = 3078, n. applicative messages = 7040 
+SEND TO 7 : average timeout = 0057.7, average window = 0002.2 ,n. physical messages = 3158, n. applicative messages = 7085 
+SEND TO 8 : average timeout = 0080.3, average window = 0002.6 ,n. physical messages = 2969, n. applicative messages = 7653 
+SEND TO 9 : average timeout = 0057.6, average window = 0002.3 ,n. physical messages = 3252, n. applicative messages = 7458 
+SEND TO 10 : average timeout = 0059.1, average window = 0002.3 ,n. physical messages = 3243, n. applicative messages = 7381 
+SEND TO 11 : average timeout = 0058.7, average window = 0002.2 ,n. physical messages = 3080, n. applicative messages = 6778 
+SEND TO 12 : average timeout = 0049.6, average window = 0002.1 ,n. physical messages = 3193, n. applicative messages = 6740 
+SEND TO 13 : average timeout = 0065.9, average window = 0002.3 ,n. physical messages = 3123, n. applicative messages = 7082 
+SEND TO 14 : average timeout = 0065.9, average window = 0002.3 ,n. physical messages = 2988, n. applicative messages = 6872 
+SEND TO 15 : average timeout = 0071.2, average window = 0002.4 ,n. physical messages = 3036, n. applicative messages = 7189 
+SEND TO 16 : average timeout = 0054.9, average window = 0002.3 ,n. physical messages = 3331, n. applicative messages = 7567 
+SEND TO 17 : average timeout = 0058.7, average window = 0002.2 ,n. physical messages = 3056, n. applicative messages = 6739 
+SEND TO 18 : average timeout = 0064.4, average window = 0002.2 ,n. physical messages = 2807, n. applicative messages = 6166 
+SEND TO 19 : average timeout = 0044.5, average window = 0002.2 ,n. physical messages = 3446, n. applicative messages = 7411 
+SEND TO 20 : average timeout = 0060.6, average window = 0002.3 ,n. physical messages = 3265, n. applicative messages = 7421 
+SEND TO 21 : average timeout = 0070.0, average window = 0002.3 ,n. physical messages = 3079, n. applicative messages = 7118 
+SEND TO 22 : average timeout = 0063.8, average window = 0002.3 ,n. physical messages = 3175, n. applicative messages = 7279 
+SEND TO 23 : average timeout = 0072.3, average window = 0002.2 ,n. physical messages = 2780, n. applicative messages = 6140 
+SEND TO 24 : average timeout = 0076.3, average window = 0002.4 ,n. physical messages = 3127, n. applicative messages = 7505 
+SEND TO 25 : average timeout = 0071.5, average window = 0002.3 ,n. physical messages = 2905, n. applicative messages = 6624 
+SEND TO 26 : average timeout = 0062.6, average window = 0002.4 ,n. physical messages = 3177, n. applicative messages = 7470 
+SEND TO 27 : average timeout = 0063.0, average window = 0002.3 ,n. physical messages = 3081, n. applicative messages = 7190 
+SEND TO 28 : average timeout = 0062.4, average window = 0002.2 ,n. physical messages = 3025, n. applicative messages = 6765 
+SEND TO 29 : average timeout = 0057.7, average window = 0002.2 ,n. physical messages = 3135, n. applicative messages = 6973 
+SEND TO 30 : average timeout = 0057.1, average window = 0002.2 ,n. physical messages = 3200, n. applicative messages = 7003 
+SEND TO 31 : average timeout = 0065.5, average window = 0002.3 ,n. physical messages = 2997, n. applicative messages = 7017 
+
+(3) show the local symbol table post term evaluation
+(3) 	kindex  = -1 values-table is empty
+(3) 	fcounter= -1 functions-table is empty
+(3) 	findex  = -1 fdb-table f_db is empty
+(3) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(3) EVAL
+(11) ...ending
+(11) read back procedure call 
+(11) ********** principal port address (nil)
+(11) starting finalize 
+(11) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:39 2022
+
+(11) elapsed time        :  0
+(11) final nodes         :  48196
+(11) combusted nodes     :  69312
+(11) fires               :  68819
+(11) trivial             :  229 optimized
+(11) family reductions   :  1
+(11) loops               :  0
+(11) computing loops     :  0
+(11) idle loops          :  52426 (52533)
+(11) listen loops        :  0
+(11) received messages   :  96056
+(11) unsuccessful tests  :  (eot 0), (add 0)
+(11) dieflag             :  0
+ (11) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.2
+ (11) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (11) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (11) THRESHOLD(left,right)  : 0000.8 0000.8
+ (11) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0066.9, average window = 0002.3 ,n. physical messages = 2895, n. applicative messages = 6587 
+SEND TO 1 : average timeout = 0059.5, average window = 0002.2 ,n. physical messages = 3013, n. applicative messages = 6713 
+SEND TO 2 : average timeout = 0061.9, average window = 0002.2 ,n. physical messages = 2910, n. applicative messages = 6291 
+SEND TO 3 : average timeout = 0063.6, average window = 0002.3 ,n. physical messages = 2920, n. applicative messages = 6733 
+SEND TO 4 : average timeout = 0056.3, average window = 0002.3 ,n. physical messages = 3174, n. applicative messages = 7410 
+SEND TO 5 : average timeout = 0057.5, average window = 0002.2 ,n. physical messages = 2939, n. applicative messages = 6449 
+SEND TO 6 : average timeout = 0058.1, average window = 0002.4 ,n. physical messages = 3189, n. applicative messages = 7504 
+SEND TO 7 : average timeout = 0057.5, average window = 0002.3 ,n. physical messages = 3069, n. applicative messages = 7143 
+SEND TO 8 : average timeout = 0061.9, average window = 0002.3 ,n. physical messages = 3008, n. applicative messages = 6945 
+SEND TO 9 : average timeout = 0061.8, average window = 0002.3 ,n. physical messages = 3233, n. applicative messages = 7531 
+SEND TO 10 : average timeout = 0052.4, average window = 0002.3 ,n. physical messages = 3406, n. applicative messages = 7775 
+SEND TO 12 : average timeout = 0050.1, average window = 0002.1 ,n. physical messages = 3052, n. applicative messages = 6425 
+SEND TO 13 : average timeout = 0060.6, average window = 0002.2 ,n. physical messages = 3027, n. applicative messages = 6704 
+SEND TO 14 : average timeout = 0064.9, average window = 0002.2 ,n. physical messages = 2841, n. applicative messages = 6172 
+SEND TO 15 : average timeout = 0060.6, average window = 0002.3 ,n. physical messages = 3051, n. applicative messages = 7164 
+SEND TO 16 : average timeout = 0057.4, average window = 0002.3 ,n. physical messages = 3156, n. applicative messages = 7271 
+SEND TO 17 : average timeout = 0052.0, average window = 0002.3 ,n. physical messages = 3280, n. applicative messages = 7384 
+SEND TO 18 : average timeout = 0065.2, average window = 0002.3 ,n. physical messages = 3080, n. applicative messages = 7027 
+SEND TO 19 : average timeout = 0064.2, average window = 0002.3 ,n. physical messages = 2978, n. applicative messages = 6916 
+SEND TO 20 : average timeout = 0047.5, average window = 0002.2 ,n. physical messages = 3184, n. applicative messages = 6915 
+SEND TO 21 : average timeout = 0056.0, average window = 0002.2 ,n. physical messages = 3034, n. applicative messages = 6817 
+SEND TO 22 : average timeout = 0057.4, average window = 0002.3 ,n. physical messages = 3103, n. applicative messages = 7007 
+SEND TO 23 : average timeout = 0060.4, average window = 0002.3 ,n. physical messages = 3041, n. applicative messages = 6911 
+SEND TO 24 : average timeout = 0066.8, average window = 0002.3 ,n. physical messages = 3083, n. applicative messages = 7181 
+SEND TO 25 : average timeout = 0060.8, average window = 0002.3 ,n. physical messages = 3037, n. applicative messages = 6970 
+SEND TO 26 : average timeout = 0068.0, average window = 0002.3 ,n. physical messages = 2980, n. applicative messages = 6973 
+SEND TO 27 : average timeout = 0063.3, average window = 0002.4 ,n. physical messages = 3188, n. applicative messages = 7585 
+SEND TO 28 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3204, n. applicative messages = 7336 
+SEND TO 29 : average timeout = 0052.9, average window = 0002.2 ,n. physical messages = 3013, n. applicative messages = 6566 
+SEND TO 30 : average timeout = 0065.0, average window = 0002.4 ,n. physical messages = 2996, n. applicative messages = 7110 
+SEND TO 31 : average timeout = 0067.7, average window = 0002.3 ,n. physical messages = 2889, n. applicative messages = 6511 
+
+(11) show the local symbol table post term evaluation
+(11) 	kindex  = -1 values-table is empty
+(11) 	fcounter= -1 functions-table is empty
+(11) 	findex  = -1 fdb-table f_db is empty
+(11) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(11) EVAL
+(8) ...ending
+(8) read back procedure call 
+(8) ********** principal port address (nil)
+(8) starting finalize 
+(8) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:41 2022
+
+(8) elapsed time        :  0
+(8) final nodes         :  48840
+(8) combusted nodes     :  70141
+(8) fires               :  69185
+(8) trivial             :  384 optimized
+(8) family reductions   :  2
+(8) loops               :  0
+(8) computing loops     :  0
+(8) idle loops          :  108814 (108813)
+(8) listen loops        :  0
+(8) received messages   :  95147
+(8) unsuccessful tests  :  (eot 0), (add 0)
+(8) dieflag             :  0
+ (8) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (8) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (8) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (8) THRESHOLD(left,right)  : 0000.8 0000.8
+ (8) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 5)
+SEND TO 0 : average timeout = 0066.1, average window = 0002.6 ,n. physical messages = 2928, n. applicative messages = 7497 
+SEND TO 1 : average timeout = 0055.8, average window = 0002.3 ,n. physical messages = 3387, n. applicative messages = 7827 
+SEND TO 2 : average timeout = 0065.4, average window = 0002.4 ,n. physical messages = 3109, n. applicative messages = 7531 
+SEND TO 3 : average timeout = 0076.7, average window = 0002.4 ,n. physical messages = 3121, n. applicative messages = 7641 
+SEND TO 4 : average timeout = 0071.9, average window = 0002.4 ,n. physical messages = 2998, n. applicative messages = 7064 
+SEND TO 5 : average timeout = 0066.1, average window = 0002.3 ,n. physical messages = 3111, n. applicative messages = 7196 
+SEND TO 6 : average timeout = 0070.4, average window = 0002.3 ,n. physical messages = 2901, n. applicative messages = 6736 
+SEND TO 7 : average timeout = 0059.4, average window = 0002.3 ,n. physical messages = 3159, n. applicative messages = 7136 
+SEND TO 9 : average timeout = 0059.0, average window = 0002.3 ,n. physical messages = 3104, n. applicative messages = 6986 
+SEND TO 10 : average timeout = 0066.4, average window = 0002.3 ,n. physical messages = 2949, n. applicative messages = 6683 
+SEND TO 11 : average timeout = 0055.3, average window = 0002.2 ,n. physical messages = 3062, n. applicative messages = 6656 
+SEND TO 12 : average timeout = 0068.4, average window = 0002.3 ,n. physical messages = 3064, n. applicative messages = 7070 
+SEND TO 13 : average timeout = 0051.8, average window = 0002.2 ,n. physical messages = 3107, n. applicative messages = 6909 
+SEND TO 14 : average timeout = 0058.4, average window = 0002.2 ,n. physical messages = 2967, n. applicative messages = 6550 
+SEND TO 15 : average timeout = 0072.5, average window = 0002.4 ,n. physical messages = 2955, n. applicative messages = 7061 
+SEND TO 16 : average timeout = 0054.6, average window = 0002.4 ,n. physical messages = 3304, n. applicative messages = 7785 
+SEND TO 17 : average timeout = 0051.6, average window = 0002.1 ,n. physical messages = 2962, n. applicative messages = 6294 
+SEND TO 18 : average timeout = 0059.2, average window = 0002.2 ,n. physical messages = 2977, n. applicative messages = 6433 
+SEND TO 19 : average timeout = 0071.6, average window = 0002.3 ,n. physical messages = 2877, n. applicative messages = 6488 
+SEND TO 20 : average timeout = 0067.6, average window = 0002.3 ,n. physical messages = 3160, n. applicative messages = 7262 
+SEND TO 21 : average timeout = 0058.4, average window = 0002.3 ,n. physical messages = 3319, n. applicative messages = 7648 
+SEND TO 22 : average timeout = 0059.5, average window = 0002.2 ,n. physical messages = 3009, n. applicative messages = 6695 
+SEND TO 23 : average timeout = 0053.5, average window = 0002.2 ,n. physical messages = 2972, n. applicative messages = 6449 
+SEND TO 24 : average timeout = 0050.1, average window = 0002.2 ,n. physical messages = 3255, n. applicative messages = 7221 
+SEND TO 25 : average timeout = 0066.5, average window = 0002.4 ,n. physical messages = 2933, n. applicative messages = 6935 
+SEND TO 26 : average timeout = 0075.0, average window = 0002.3 ,n. physical messages = 2934, n. applicative messages = 6888 
+SEND TO 27 : average timeout = 0064.5, average window = 0002.2 ,n. physical messages = 2870, n. applicative messages = 6344 
+SEND TO 28 : average timeout = 0061.4, average window = 0002.1 ,n. physical messages = 2840, n. applicative messages = 6094 
+SEND TO 29 : average timeout = 0066.1, average window = 0002.4 ,n. physical messages = 3262, n. applicative messages = 7836 
+SEND TO 30 : average timeout = 0052.0, average window = 0002.2 ,n. physical messages = 3090, n. applicative messages = 6833 
+SEND TO 31 : average timeout = 0072.8, average window = 0002.4 ,n. physical messages = 2914, n. applicative messages = 6907 
+
+(8) show the local symbol table post term evaluation
+(8) 	kindex  = -1 values-table is empty
+(8) 	fcounter= -1 functions-table is empty
+(8) 	findex  = -1 fdb-table f_db is empty
+(8) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(8) EVAL
+(2) ...ending
+(2) read back procedure call 
+(2) ********** principal port address (nil)
+(2) starting finalize 
+(2) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:44 2022
+
+(2) elapsed time        :  0
+(2) final nodes         :  49609
+(2) combusted nodes     :  70606
+(2) fires               :  69624
+(2) trivial             :  402 optimized
+(2) family reductions   :  1
+(2) loops               :  0
+(2) computing loops     :  0
+(2) idle loops          :  97736 (97739)
+(2) listen loops        :  0
+(2) received messages   :  97117
+(2) unsuccessful tests  :  (eot 0), (add 0)
+(2) dieflag             :  0
+ (2) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (2) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (2) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (2) THRESHOLD(left,right)  : 0000.8 0000.8
+ (2) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0071.5, average window = 0002.4 ,n. physical messages = 2912, n. applicative messages = 6932 
+SEND TO 1 : average timeout = 0053.0, average window = 0002.2 ,n. physical messages = 3064, n. applicative messages = 6689 
+SEND TO 3 : average timeout = 0066.3, average window = 0002.4 ,n. physical messages = 3138, n. applicative messages = 7531 
+SEND TO 4 : average timeout = 0071.6, average window = 0002.3 ,n. physical messages = 2993, n. applicative messages = 6885 
+SEND TO 5 : average timeout = 0056.9, average window = 0002.2 ,n. physical messages = 3113, n. applicative messages = 6833 
+SEND TO 6 : average timeout = 0057.9, average window = 0002.2 ,n. physical messages = 3305, n. applicative messages = 7377 
+SEND TO 7 : average timeout = 0060.5, average window = 0002.2 ,n. physical messages = 3089, n. applicative messages = 6760 
+SEND TO 8 : average timeout = 0058.9, average window = 0002.3 ,n. physical messages = 3220, n. applicative messages = 7491 
+SEND TO 9 : average timeout = 0052.8, average window = 0002.2 ,n. physical messages = 3296, n. applicative messages = 7405 
+SEND TO 10 : average timeout = 0065.5, average window = 0002.4 ,n. physical messages = 3206, n. applicative messages = 7852 
+SEND TO 11 : average timeout = 0062.8, average window = 0002.2 ,n. physical messages = 2969, n. applicative messages = 6548 
+SEND TO 12 : average timeout = 0056.5, average window = 0002.3 ,n. physical messages = 3299, n. applicative messages = 7748 
+SEND TO 13 : average timeout = 0064.7, average window = 0002.2 ,n. physical messages = 3193, n. applicative messages = 7141 
+SEND TO 14 : average timeout = 0060.6, average window = 0002.2 ,n. physical messages = 2999, n. applicative messages = 6550 
+SEND TO 15 : average timeout = 0065.5, average window = 0002.3 ,n. physical messages = 3094, n. applicative messages = 7225 
+SEND TO 16 : average timeout = 0067.7, average window = 0002.3 ,n. physical messages = 2910, n. applicative messages = 6631 
+SEND TO 17 : average timeout = 0070.4, average window = 0002.3 ,n. physical messages = 2900, n. applicative messages = 6692 
+SEND TO 18 : average timeout = 0065.1, average window = 0002.3 ,n. physical messages = 3238, n. applicative messages = 7584 
+SEND TO 19 : average timeout = 0062.3, average window = 0002.2 ,n. physical messages = 2965, n. applicative messages = 6411 
+SEND TO 20 : average timeout = 0055.2, average window = 0002.2 ,n. physical messages = 2943, n. applicative messages = 6352 
+SEND TO 21 : average timeout = 0056.3, average window = 0002.3 ,n. physical messages = 3373, n. applicative messages = 7850 
+SEND TO 22 : average timeout = 0057.3, average window = 0002.2 ,n. physical messages = 3248, n. applicative messages = 7239 
+SEND TO 23 : average timeout = 0064.6, average window = 0002.2 ,n. physical messages = 3017, n. applicative messages = 6609 
+SEND TO 24 : average timeout = 0063.0, average window = 0002.4 ,n. physical messages = 3290, n. applicative messages = 7846 
+SEND TO 25 : average timeout = 0068.6, average window = 0002.3 ,n. physical messages = 3084, n. applicative messages = 7007 
+SEND TO 26 : average timeout = 0067.1, average window = 0002.3 ,n. physical messages = 2966, n. applicative messages = 6927 
+SEND TO 27 : average timeout = 0070.6, average window = 0002.3 ,n. physical messages = 3047, n. applicative messages = 6921 
+SEND TO 28 : average timeout = 0065.6, average window = 0002.3 ,n. physical messages = 3072, n. applicative messages = 7193 
+SEND TO 29 : average timeout = 0060.4, average window = 0002.3 ,n. physical messages = 3123, n. applicative messages = 7116 
+SEND TO 30 : average timeout = 0057.5, average window = 0002.2 ,n. physical messages = 3219, n. applicative messages = 7152 
+SEND TO 31 : average timeout = 0062.8, average window = 0002.3 ,n. physical messages = 3117, n. applicative messages = 7240 
+
+(2) show the local symbol table post term evaluation
+(2) 	kindex  = -1 values-table is empty
+(2) 	fcounter= -1 functions-table is empty
+(2) 	findex  = -1 fdb-table f_db is empty
+(2) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(2) EVAL
+(30) ...ending
+(30) read back procedure call 
+(30) ********** principal port address (nil)
+(30) starting finalize 
+(30) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:44 2022
+
+(30) elapsed time        :  0
+(30) final nodes         :  48912
+(30) combusted nodes     :  70330
+(30) fires               :  69627
+(30) trivial             :  307 optimized
+(30) family reductions   :  0
+(30) loops               :  0
+(30) computing loops     :  0
+(30) idle loops          :  51968 (51999)
+(30) listen loops        :  0
+(30) received messages   :  96804
+(30) unsuccessful tests  :  (eot 0), (add 0)
+(30) dieflag             :  0
+ (30) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (30) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (30) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (30) THRESHOLD(left,right)  : 0000.8 0000.8
+ (30) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0068.0, average window = 0002.3 ,n. physical messages = 2838, n. applicative messages = 6467 
+SEND TO 1 : average timeout = 0061.8, average window = 0002.2 ,n. physical messages = 2904, n. applicative messages = 6489 
+SEND TO 2 : average timeout = 0056.2, average window = 0002.2 ,n. physical messages = 3282, n. applicative messages = 7220 
+SEND TO 3 : average timeout = 0063.5, average window = 0002.3 ,n. physical messages = 3028, n. applicative messages = 7065 
+SEND TO 4 : average timeout = 0067.5, average window = 0002.4 ,n. physical messages = 2977, n. applicative messages = 7021 
+SEND TO 5 : average timeout = 0063.2, average window = 0002.3 ,n. physical messages = 2973, n. applicative messages = 6870 
+SEND TO 6 : average timeout = 0062.7, average window = 0002.3 ,n. physical messages = 3068, n. applicative messages = 6997 
+SEND TO 7 : average timeout = 0056.5, average window = 0002.3 ,n. physical messages = 3284, n. applicative messages = 7482 
+SEND TO 8 : average timeout = 0057.8, average window = 0002.1 ,n. physical messages = 3130, n. applicative messages = 6573 
+SEND TO 9 : average timeout = 0051.3, average window = 0002.1 ,n. physical messages = 3196, n. applicative messages = 6699 
+SEND TO 10 : average timeout = 0049.7, average window = 0002.2 ,n. physical messages = 3427, n. applicative messages = 7507 
+SEND TO 11 : average timeout = 0056.3, average window = 0002.2 ,n. physical messages = 3273, n. applicative messages = 7163 
+SEND TO 12 : average timeout = 0068.4, average window = 0002.6 ,n. physical messages = 3221, n. applicative messages = 8243 
+SEND TO 13 : average timeout = 0069.5, average window = 0002.4 ,n. physical messages = 3013, n. applicative messages = 7232 
+SEND TO 14 : average timeout = 0055.6, average window = 0002.3 ,n. physical messages = 3103, n. applicative messages = 7137 
+SEND TO 15 : average timeout = 0060.7, average window = 0002.2 ,n. physical messages = 3096, n. applicative messages = 6830 
+SEND TO 16 : average timeout = 0066.4, average window = 0002.3 ,n. physical messages = 3090, n. applicative messages = 7211 
+SEND TO 17 : average timeout = 0064.3, average window = 0002.5 ,n. physical messages = 3250, n. applicative messages = 7981 
+SEND TO 18 : average timeout = 0058.2, average window = 0002.2 ,n. physical messages = 3168, n. applicative messages = 7120 
+SEND TO 19 : average timeout = 0067.9, average window = 0002.4 ,n. physical messages = 3018, n. applicative messages = 7267 
+SEND TO 20 : average timeout = 0056.8, average window = 0002.2 ,n. physical messages = 3105, n. applicative messages = 6761 
+SEND TO 21 : average timeout = 0055.9, average window = 0002.3 ,n. physical messages = 3144, n. applicative messages = 7261 
+SEND TO 22 : average timeout = 0057.7, average window = 0002.2 ,n. physical messages = 3057, n. applicative messages = 6627 
+SEND TO 23 : average timeout = 0065.1, average window = 0002.3 ,n. physical messages = 2873, n. applicative messages = 6524 
+SEND TO 24 : average timeout = 0046.2, average window = 0002.1 ,n. physical messages = 3334, n. applicative messages = 7101 
+SEND TO 25 : average timeout = 0064.2, average window = 0002.4 ,n. physical messages = 3091, n. applicative messages = 7359 
+SEND TO 26 : average timeout = 0069.5, average window = 0002.4 ,n. physical messages = 3093, n. applicative messages = 7288 
+SEND TO 27 : average timeout = 0065.4, average window = 0002.3 ,n. physical messages = 3053, n. applicative messages = 7101 
+SEND TO 28 : average timeout = 0064.4, average window = 0002.1 ,n. physical messages = 2989, n. applicative messages = 6425 
+SEND TO 29 : average timeout = 0072.9, average window = 0002.3 ,n. physical messages = 2907, n. applicative messages = 6817 
+SEND TO 31 : average timeout = 0067.1, average window = 0002.4 ,n. physical messages = 3212, n. applicative messages = 7590 
+
+(30) show the local symbol table post term evaluation
+(30) 	kindex  = -1 values-table is empty
+(30) 	fcounter= -1 functions-table is empty
+(30) 	findex  = -1 fdb-table f_db is empty
+(30) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(30) EVAL
+(7) ...ending
+(7) read back procedure call 
+(7) ********** principal port address (nil)
+(7) starting finalize 
+(7) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:47 2022
+
+(7) elapsed time        :  0
+(7) final nodes         :  50199
+(7) combusted nodes     :  72660
+(7) fires               :  71999
+(7) trivial             :  277 optimized
+(7) family reductions   :  12
+(7) loops               :  0
+(7) computing loops     :  0
+(7) idle loops          :  45187 (45187)
+(7) listen loops        :  0
+(7) received messages   :  98743
+(7) unsuccessful tests  :  (eot 0), (add 0)
+(7) dieflag             :  0
+ (7) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (7) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (7) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (7) THRESHOLD(left,right)  : 0000.8 0000.8
+ (7) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0061.3, average window = 0002.2 ,n. physical messages = 2990, n. applicative messages = 6634 
+SEND TO 1 : average timeout = 0054.9, average window = 0002.2 ,n. physical messages = 3277, n. applicative messages = 7181 
+SEND TO 2 : average timeout = 0060.9, average window = 0002.2 ,n. physical messages = 3023, n. applicative messages = 6636 
+SEND TO 3 : average timeout = 0058.9, average window = 0002.3 ,n. physical messages = 3129, n. applicative messages = 7079 
+SEND TO 4 : average timeout = 0071.1, average window = 0002.3 ,n. physical messages = 3217, n. applicative messages = 7447 
+SEND TO 5 : average timeout = 0068.2, average window = 0002.4 ,n. physical messages = 3066, n. applicative messages = 7225 
+SEND TO 6 : average timeout = 0071.8, average window = 0002.4 ,n. physical messages = 3049, n. applicative messages = 7197 
+SEND TO 8 : average timeout = 0067.4, average window = 0002.3 ,n. physical messages = 3108, n. applicative messages = 7251 
+SEND TO 9 : average timeout = 0054.9, average window = 0002.2 ,n. physical messages = 3061, n. applicative messages = 6715 
+SEND TO 10 : average timeout = 0045.6, average window = 0002.2 ,n. physical messages = 3668, n. applicative messages = 8223 
+SEND TO 11 : average timeout = 0053.7, average window = 0002.2 ,n. physical messages = 3157, n. applicative messages = 7067 
+SEND TO 12 : average timeout = 0059.1, average window = 0002.3 ,n. physical messages = 3463, n. applicative messages = 8113 
+SEND TO 13 : average timeout = 0062.2, average window = 0002.4 ,n. physical messages = 3283, n. applicative messages = 7977 
+SEND TO 14 : average timeout = 0065.2, average window = 0002.2 ,n. physical messages = 3239, n. applicative messages = 7265 
+SEND TO 15 : average timeout = 0053.3, average window = 0002.3 ,n. physical messages = 3389, n. applicative messages = 7642 
+SEND TO 16 : average timeout = 0056.9, average window = 0002.2 ,n. physical messages = 3344, n. applicative messages = 7433 
+SEND TO 17 : average timeout = 0051.1, average window = 0002.2 ,n. physical messages = 3408, n. applicative messages = 7470 
+SEND TO 18 : average timeout = 0057.8, average window = 0002.3 ,n. physical messages = 3238, n. applicative messages = 7317 
+SEND TO 19 : average timeout = 0069.9, average window = 0002.4 ,n. physical messages = 3377, n. applicative messages = 7975 
+SEND TO 20 : average timeout = 0055.4, average window = 0002.3 ,n. physical messages = 3374, n. applicative messages = 7650 
+SEND TO 21 : average timeout = 0065.8, average window = 0002.4 ,n. physical messages = 3166, n. applicative messages = 7481 
+SEND TO 22 : average timeout = 0067.2, average window = 0002.3 ,n. physical messages = 2990, n. applicative messages = 6730 
+SEND TO 23 : average timeout = 0059.4, average window = 0002.3 ,n. physical messages = 3282, n. applicative messages = 7446 
+SEND TO 24 : average timeout = 0059.5, average window = 0002.3 ,n. physical messages = 3162, n. applicative messages = 7157 
+SEND TO 25 : average timeout = 0056.3, average window = 0002.1 ,n. physical messages = 3120, n. applicative messages = 6699 
+SEND TO 26 : average timeout = 0065.4, average window = 0002.3 ,n. physical messages = 3225, n. applicative messages = 7461 
+SEND TO 27 : average timeout = 0065.8, average window = 0002.2 ,n. physical messages = 2854, n. applicative messages = 6410 
+SEND TO 28 : average timeout = 0063.3, average window = 0002.3 ,n. physical messages = 3169, n. applicative messages = 7288 
+SEND TO 29 : average timeout = 0064.2, average window = 0002.3 ,n. physical messages = 3013, n. applicative messages = 6808 
+SEND TO 30 : average timeout = 0063.0, average window = 0002.3 ,n. physical messages = 3219, n. applicative messages = 7432 
+SEND TO 31 : average timeout = 0053.1, average window = 0002.3 ,n. physical messages = 3292, n. applicative messages = 7634 
+
+(7) show the local symbol table post term evaluation
+(7) 	kindex  = -1 values-table is empty
+(7) 	fcounter= -1 functions-table is empty
+(7) 	findex  = -1 fdb-table f_db is empty
+(7) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(7) EVAL
+(24) ...ending
+(24) read back procedure call 
+(24) ********** principal port address (nil)
+(24) starting finalize 
+(24) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:51 2022
+
+(24) elapsed time        :  0
+(24) final nodes         :  49656
+(24) combusted nodes     :  72413
+(24) fires               :  71612
+(24) trivial             :  309 optimized
+(24) family reductions   :  0
+(24) loops               :  0
+(24) computing loops     :  0
+(24) idle loops          :  55395 (55394)
+(24) listen loops        :  0
+(24) received messages   :  98025
+(24) unsuccessful tests  :  (eot 0), (add 0)
+(24) dieflag             :  0
+ (24) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (24) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (24) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (24) THRESHOLD(left,right)  : 0000.8 0000.8
+ (24) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0065.3, average window = 0002.3 ,n. physical messages = 3058, n. applicative messages = 6959 
+SEND TO 1 : average timeout = 0058.6, average window = 0002.2 ,n. physical messages = 3124, n. applicative messages = 6935 
+SEND TO 2 : average timeout = 0055.8, average window = 0002.3 ,n. physical messages = 3455, n. applicative messages = 7992 
+SEND TO 3 : average timeout = 0060.8, average window = 0002.3 ,n. physical messages = 3360, n. applicative messages = 7887 
+SEND TO 4 : average timeout = 0053.9, average window = 0002.2 ,n. physical messages = 3189, n. applicative messages = 7096 
+SEND TO 5 : average timeout = 0061.5, average window = 0002.3 ,n. physical messages = 3217, n. applicative messages = 7493 
+SEND TO 6 : average timeout = 0054.9, average window = 0002.2 ,n. physical messages = 2965, n. applicative messages = 6397 
+SEND TO 7 : average timeout = 0074.2, average window = 0002.4 ,n. physical messages = 3057, n. applicative messages = 7214 
+SEND TO 8 : average timeout = 0067.2, average window = 0002.3 ,n. physical messages = 3208, n. applicative messages = 7435 
+SEND TO 9 : average timeout = 0065.3, average window = 0002.2 ,n. physical messages = 2980, n. applicative messages = 6620 
+SEND TO 10 : average timeout = 0063.2, average window = 0002.4 ,n. physical messages = 3315, n. applicative messages = 8050 
+SEND TO 11 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3272, n. applicative messages = 7453 
+SEND TO 12 : average timeout = 0061.1, average window = 0002.3 ,n. physical messages = 3259, n. applicative messages = 7507 
+SEND TO 13 : average timeout = 0063.9, average window = 0002.2 ,n. physical messages = 3149, n. applicative messages = 7009 
+SEND TO 14 : average timeout = 0053.8, average window = 0002.1 ,n. physical messages = 3266, n. applicative messages = 6931 
+SEND TO 15 : average timeout = 0051.6, average window = 0002.1 ,n. physical messages = 3007, n. applicative messages = 6446 
+SEND TO 16 : average timeout = 0056.6, average window = 0002.2 ,n. physical messages = 3279, n. applicative messages = 7353 
+SEND TO 17 : average timeout = 0059.3, average window = 0002.3 ,n. physical messages = 3398, n. applicative messages = 7702 
+SEND TO 18 : average timeout = 0057.7, average window = 0002.3 ,n. physical messages = 3194, n. applicative messages = 7274 
+SEND TO 19 : average timeout = 0064.0, average window = 0002.4 ,n. physical messages = 3512, n. applicative messages = 8545 
+SEND TO 20 : average timeout = 0064.2, average window = 0002.2 ,n. physical messages = 3063, n. applicative messages = 6759 
+SEND TO 21 : average timeout = 0064.1, average window = 0002.3 ,n. physical messages = 3136, n. applicative messages = 7148 
+SEND TO 22 : average timeout = 0058.6, average window = 0002.4 ,n. physical messages = 3337, n. applicative messages = 7850 
+SEND TO 23 : average timeout = 0062.5, average window = 0002.3 ,n. physical messages = 3099, n. applicative messages = 7128 
+SEND TO 25 : average timeout = 0060.4, average window = 0002.3 ,n. physical messages = 3227, n. applicative messages = 7308 
+SEND TO 26 : average timeout = 0065.1, average window = 0002.2 ,n. physical messages = 3073, n. applicative messages = 6776 
+SEND TO 27 : average timeout = 0073.2, average window = 0002.4 ,n. physical messages = 3075, n. applicative messages = 7275 
+SEND TO 28 : average timeout = 0056.3, average window = 0002.2 ,n. physical messages = 3191, n. applicative messages = 7141 
+SEND TO 29 : average timeout = 0066.2, average window = 0002.3 ,n. physical messages = 3152, n. applicative messages = 7290 
+SEND TO 30 : average timeout = 0055.9, average window = 0002.2 ,n. physical messages = 3230, n. applicative messages = 7164 
+SEND TO 31 : average timeout = 0048.5, average window = 0002.1 ,n. physical messages = 3243, n. applicative messages = 6697 
+
+(24) show the local symbol table post term evaluation
+(24) 	kindex  = -1 values-table is empty
+(24) 	fcounter= -1 functions-table is empty
+(24) 	findex  = -1 fdb-table f_db is empty
+(24) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(24) EVAL
+(20) ...ending
+(20) read back procedure call 
+(20) ********** principal port address (nil)
+(20) starting finalize 
+(20) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:55 2022
+
+(20) elapsed time        :  0
+(20) final nodes         :  49312
+(20) combusted nodes     :  70783
+(20) fires               :  70310
+(20) trivial             :  159 optimized
+(20) family reductions   :  1
+(20) loops               :  0
+(20) computing loops     :  0
+(20) idle loops          :  63880 (63879)
+(20) listen loops        :  0
+(20) received messages   :  97737
+(20) unsuccessful tests  :  (eot 0), (add 0)
+(20) dieflag             :  0
+ (20) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (20) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (20) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (20) THRESHOLD(left,right)  : 0000.8 0000.8
+ (20) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0069.9, average window = 0002.3 ,n. physical messages = 3037, n. applicative messages = 6953 
+SEND TO 1 : average timeout = 0052.8, average window = 0002.3 ,n. physical messages = 3229, n. applicative messages = 7280 
+SEND TO 2 : average timeout = 0060.2, average window = 0002.2 ,n. physical messages = 2877, n. applicative messages = 6326 
+SEND TO 3 : average timeout = 0057.9, average window = 0002.3 ,n. physical messages = 3300, n. applicative messages = 7483 
+SEND TO 4 : average timeout = 0072.3, average window = 0002.3 ,n. physical messages = 3087, n. applicative messages = 7254 
+SEND TO 5 : average timeout = 0062.5, average window = 0002.2 ,n. physical messages = 2941, n. applicative messages = 6334 
+SEND TO 6 : average timeout = 0061.6, average window = 0002.3 ,n. physical messages = 3078, n. applicative messages = 6947 
+SEND TO 7 : average timeout = 0053.5, average window = 0002.2 ,n. physical messages = 3322, n. applicative messages = 7238 
+SEND TO 8 : average timeout = 0065.0, average window = 0002.3 ,n. physical messages = 3180, n. applicative messages = 7364 
+SEND TO 9 : average timeout = 0060.7, average window = 0002.3 ,n. physical messages = 3062, n. applicative messages = 6907 
+SEND TO 10 : average timeout = 0062.9, average window = 0002.2 ,n. physical messages = 2955, n. applicative messages = 6363 
+SEND TO 11 : average timeout = 0049.6, average window = 0002.1 ,n. physical messages = 3250, n. applicative messages = 6910 
+SEND TO 12 : average timeout = 0056.3, average window = 0002.2 ,n. physical messages = 3200, n. applicative messages = 7120 
+SEND TO 13 : average timeout = 0051.9, average window = 0002.1 ,n. physical messages = 3165, n. applicative messages = 6778 
+SEND TO 14 : average timeout = 0073.3, average window = 0002.4 ,n. physical messages = 3036, n. applicative messages = 7311 
+SEND TO 15 : average timeout = 0065.5, average window = 0002.3 ,n. physical messages = 3086, n. applicative messages = 7243 
+SEND TO 16 : average timeout = 0058.6, average window = 0002.3 ,n. physical messages = 3215, n. applicative messages = 7249 
+SEND TO 17 : average timeout = 0053.6, average window = 0002.4 ,n. physical messages = 3482, n. applicative messages = 8292 
+SEND TO 18 : average timeout = 0062.9, average window = 0002.3 ,n. physical messages = 3155, n. applicative messages = 7289 
+SEND TO 19 : average timeout = 0058.0, average window = 0002.3 ,n. physical messages = 3327, n. applicative messages = 7670 
+SEND TO 21 : average timeout = 0059.9, average window = 0002.2 ,n. physical messages = 3163, n. applicative messages = 6907 
+SEND TO 22 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3242, n. applicative messages = 7487 
+SEND TO 23 : average timeout = 0056.0, average window = 0002.3 ,n. physical messages = 3263, n. applicative messages = 7649 
+SEND TO 24 : average timeout = 0060.0, average window = 0002.2 ,n. physical messages = 3018, n. applicative messages = 6747 
+SEND TO 25 : average timeout = 0061.0, average window = 0002.3 ,n. physical messages = 2881, n. applicative messages = 6528 
+SEND TO 26 : average timeout = 0051.6, average window = 0002.2 ,n. physical messages = 3220, n. applicative messages = 7101 
+SEND TO 27 : average timeout = 0059.2, average window = 0002.3 ,n. physical messages = 3210, n. applicative messages = 7271 
+SEND TO 28 : average timeout = 0056.2, average window = 0002.4 ,n. physical messages = 3386, n. applicative messages = 8174 
+SEND TO 29 : average timeout = 0068.0, average window = 0002.3 ,n. physical messages = 3026, n. applicative messages = 6959 
+SEND TO 30 : average timeout = 0049.4, average window = 0002.2 ,n. physical messages = 3216, n. applicative messages = 6927 
+SEND TO 31 : average timeout = 0062.4, average window = 0002.3 ,n. physical messages = 3124, n. applicative messages = 7251 
+
+(20) show the local symbol table post term evaluation
+(20) 	kindex  = -1 values-table is empty
+(20) 	fcounter= -1 functions-table is empty
+(20) 	findex  = -1 fdb-table f_db is empty
+(20) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(20) EVAL
+(27) ...ending
+(27) read back procedure call 
+(27) ********** principal port address (nil)
+(27) starting finalize 
+(27) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:56 2022
+
+(27) elapsed time        :  0
+(27) final nodes         :  48388
+(27) combusted nodes     :  70579
+(27) fires               :  69839
+(27) trivial             :  272 optimized
+(27) family reductions   :  0
+(27) loops               :  0
+(27) computing loops     :  0
+(27) idle loops          :  71695 (71694)
+(27) listen loops        :  0
+(27) received messages   :  95319
+(27) unsuccessful tests  :  (eot 0), (add 0)
+(27) dieflag             :  0
+ (27) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.3
+ (27) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (27) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (27) THRESHOLD(left,right)  : 0000.8 0000.8
+ (27) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0057.2, average window = 0002.2 ,n. physical messages = 3109, n. applicative messages = 6855 
+SEND TO 1 : average timeout = 0060.9, average window = 0002.3 ,n. physical messages = 2959, n. applicative messages = 6784 
+SEND TO 2 : average timeout = 0061.4, average window = 0002.3 ,n. physical messages = 3146, n. applicative messages = 7256 
+SEND TO 3 : average timeout = 0060.5, average window = 0002.3 ,n. physical messages = 3119, n. applicative messages = 7217 
+SEND TO 4 : average timeout = 0059.3, average window = 0002.3 ,n. physical messages = 3108, n. applicative messages = 7112 
+SEND TO 5 : average timeout = 0072.4, average window = 0002.3 ,n. physical messages = 2780, n. applicative messages = 6414 
+SEND TO 6 : average timeout = 0065.2, average window = 0002.4 ,n. physical messages = 3091, n. applicative messages = 7294 
+SEND TO 7 : average timeout = 0065.8, average window = 0002.2 ,n. physical messages = 2846, n. applicative messages = 6358 
+SEND TO 8 : average timeout = 0070.0, average window = 0002.3 ,n. physical messages = 2838, n. applicative messages = 6501 
+SEND TO 9 : average timeout = 0051.0, average window = 0002.2 ,n. physical messages = 3012, n. applicative messages = 6487 
+SEND TO 10 : average timeout = 0058.4, average window = 0002.2 ,n. physical messages = 3083, n. applicative messages = 6796 
+SEND TO 11 : average timeout = 0061.0, average window = 0002.3 ,n. physical messages = 3178, n. applicative messages = 7427 
+SEND TO 12 : average timeout = 0058.5, average window = 0002.3 ,n. physical messages = 3300, n. applicative messages = 7573 
+SEND TO 13 : average timeout = 0072.3, average window = 0002.4 ,n. physical messages = 3116, n. applicative messages = 7503 
+SEND TO 14 : average timeout = 0053.9, average window = 0002.3 ,n. physical messages = 3285, n. applicative messages = 7404 
+SEND TO 15 : average timeout = 0065.6, average window = 0002.3 ,n. physical messages = 3014, n. applicative messages = 6972 
+SEND TO 16 : average timeout = 0066.6, average window = 0002.3 ,n. physical messages = 3067, n. applicative messages = 7087 
+SEND TO 17 : average timeout = 0071.9, average window = 0002.5 ,n. physical messages = 3225, n. applicative messages = 8103 
+SEND TO 18 : average timeout = 0068.2, average window = 0002.3 ,n. physical messages = 2947, n. applicative messages = 6911 
+SEND TO 19 : average timeout = 0067.6, average window = 0002.2 ,n. physical messages = 2769, n. applicative messages = 6178 
+SEND TO 20 : average timeout = 0064.9, average window = 0002.3 ,n. physical messages = 3138, n. applicative messages = 7220 
+SEND TO 21 : average timeout = 0067.4, average window = 0002.3 ,n. physical messages = 2786, n. applicative messages = 6494 
+SEND TO 22 : average timeout = 0064.9, average window = 0002.3 ,n. physical messages = 3109, n. applicative messages = 7187 
+SEND TO 23 : average timeout = 0063.6, average window = 0002.2 ,n. physical messages = 2834, n. applicative messages = 6239 
+SEND TO 24 : average timeout = 0066.2, average window = 0002.3 ,n. physical messages = 3072, n. applicative messages = 7116 
+SEND TO 25 : average timeout = 0063.3, average window = 0002.4 ,n. physical messages = 3244, n. applicative messages = 7714 
+SEND TO 26 : average timeout = 0078.6, average window = 0002.4 ,n. physical messages = 3004, n. applicative messages = 7151 
+SEND TO 28 : average timeout = 0055.4, average window = 0002.2 ,n. physical messages = 3248, n. applicative messages = 7301 
+SEND TO 29 : average timeout = 0058.9, average window = 0002.4 ,n. physical messages = 3417, n. applicative messages = 8343 
+SEND TO 30 : average timeout = 0072.2, average window = 0002.3 ,n. physical messages = 2962, n. applicative messages = 6921 
+SEND TO 31 : average timeout = 0050.7, average window = 0002.2 ,n. physical messages = 3364, n. applicative messages = 7564 
+
+(27) show the local symbol table post term evaluation
+(27) 	kindex  = -1 values-table is empty
+(27) 	fcounter= -1 functions-table is empty
+(27) 	findex  = -1 fdb-table f_db is empty
+(27) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(27) EVAL
+(23) ...ending
+(23) read back procedure call 
+(23) ********** principal port address (nil)
+(23) starting finalize 
+(23) finished - collecting results
+user   : marpedicini
+host   : dgx-1
+domain : (none)
+date   : Tue Jun  7 14:56:57 2022
+
+(23) elapsed time        :  0
+(23) final nodes         :  47782
+(23) combusted nodes     :  66867
+(23) fires               :  66498
+(23) trivial             :  201 optimized
+(23) family reductions   :  0
+(23) loops               :  0
+(23) computing loops     :  0
+(23) idle loops          :  41897 (41960)
+(23) listen loops        :  0
+(23) received messages   :  94410
+(23) unsuccessful tests  :  (eot 0), (add 0)
+(23) dieflag             :  0
+ (23) AVERAGE AGGREGATION in RECEIVED MESSAGES: 0002.2
+ (23) TIMEOUT(max,min,delta) : 000500 000005 -010.0 0010.0
+ (23) WINDOW(max,min,delta)  : 000200 000020 0002.0 -002.0
+ (23) THRESHOLD(left,right)  : 0000.8 0000.8
+ (23) FULLNESS COEFFICIENT   : 0000.0 (full physical messages 0)
+SEND TO 0 : average timeout = 0054.6, average window = 0002.2 ,n. physical messages = 3077, n. applicative messages = 6860 
+SEND TO 1 : average timeout = 0059.4, average window = 0002.3 ,n. physical messages = 2859, n. applicative messages = 6452 
+SEND TO 2 : average timeout = 0066.4, average window = 0002.3 ,n. physical messages = 2918, n. applicative messages = 6616 
+SEND TO 3 : average timeout = 0068.6, average window = 0002.3 ,n. physical messages = 2700, n. applicative messages = 6119 
+SEND TO 4 : average timeout = 0060.4, average window = 0002.3 ,n. physical messages = 2942, n. applicative messages = 6658 
+SEND TO 5 : average timeout = 0062.5, average window = 0002.2 ,n. physical messages = 2870, n. applicative messages = 6296 
+SEND TO 6 : average timeout = 0058.2, average window = 0002.2 ,n. physical messages = 3200, n. applicative messages = 6997 
+SEND TO 7 : average timeout = 0069.8, average window = 0002.4 ,n. physical messages = 3043, n. applicative messages = 7408 
+SEND TO 8 : average timeout = 0064.7, average window = 0002.2 ,n. physical messages = 2782, n. applicative messages = 6089 
+SEND TO 9 : average timeout = 0057.4, average window = 0002.2 ,n. physical messages = 2933, n. applicative messages = 6489 
+SEND TO 10 : average timeout = 0054.5, average window = 0002.2 ,n. physical messages = 3043, n. applicative messages = 6611 
+SEND TO 11 : average timeout = 0066.1, average window = 0002.3 ,n. physical messages = 2969, n. applicative messages = 6940 
+SEND TO 12 : average timeout = 0072.6, average window = 0002.4 ,n. physical messages = 2980, n. applicative messages = 7273 
+SEND TO 13 : average timeout = 0071.4, average window = 0002.3 ,n. physical messages = 2826, n. applicative messages = 6522 
+SEND TO 14 : average timeout = 0068.1, average window = 0002.2 ,n. physical messages = 2759, n. applicative messages = 6036 
+SEND TO 15 : average timeout = 0061.4, average window = 0002.5 ,n. physical messages = 3036, n. applicative messages = 7509 
+SEND TO 16 : average timeout = 0065.8, average window = 0002.3 ,n. physical messages = 3004, n. applicative messages = 6908 
+SEND TO 17 : average timeout = 0065.8, average window = 0002.4 ,n. physical messages = 3060, n. applicative messages = 7478 
+SEND TO 18 : average timeout = 0070.9, average window = 0002.3 ,n. physical messages = 2875, n. applicative messages = 6653 
+SEND TO 19 : average timeout = 0071.4, average window = 0002.3 ,n. physical messages = 2771, n. applicative messages = 6301 
+SEND TO 20 : average timeout = 0058.0, average window = 0002.3 ,n. physical messages = 3179, n. applicative messages = 7365 
+SEND TO 21 : average timeout = 0059.6, average window = 0002.2 ,n. physical messages = 2886, n. applicative messages = 6449 
+SEND TO 22 : average timeout = 0075.8, average window = 0002.4 ,n. physical messages = 2799, n. applicative messages = 6839 
+SEND TO 24 : average timeout = 0053.6, average window = 0002.3 ,n. physical messages = 3133, n. applicative messages = 7166 
+SEND TO 25 : average timeout = 0056.3, average window = 0002.3 ,n. physical messages = 2888, n. applicative messages = 6562 
+SEND TO 26 : average timeout = 0059.2, average window = 0002.4 ,n. physical messages = 3152, n. applicative messages = 7418 
+SEND TO 27 : average timeout = 0064.7, average window = 0002.2 ,n. physical messages = 2795, n. applicative messages = 6199 
+SEND TO 28 : average timeout = 0056.6, average window = 0002.2 ,n. physical messages = 2844, n. applicative messages = 6197 
+SEND TO 29 : average timeout = 0062.6, average window = 0002.3 ,n. physical messages = 3186, n. applicative messages = 7331 
+SEND TO 30 : average timeout = 0062.2, average window = 0002.2 ,n. physical messages = 2860, n. applicative messages = 6411 
+SEND TO 31 : average timeout = 0058.1, average window = 0002.2 ,n. physical messages = 2919, n. applicative messages = 6508 
+
+(23) show the local symbol table post term evaluation
+(23) 	kindex  = -1 values-table is empty
+(23) 	fcounter= -1 functions-table is empty
+(23) 	findex  = -1 fdb-table f_db is empty
+(23) 	term table is:
+		2	0
+		2	1
+		1	0
+		1	1
+(23) EVAL
+
+(23) QUIT
+(23) logging out -> enter mpi_finalize
+
+(5) QUIT
+(5) logging out -> enter mpi_finalize
+
+(12) QUIT
+(12) logging out -> enter mpi_finalize
+
+(21) QUIT
+(21) logging out -> enter mpi_finalize
+
+(16) QUIT
+(16) logging out -> enter mpi_finalize
+
+(2) QUIT
+(2) logging out -> enter mpi_finalize
+
+(18) QUIT
+(18) logging out -> enter mpi_finalize
+
+(20) QUIT
+(20) logging out -> enter mpi_finalize
+
+(10) QUIT
+(10) logging out -> enter mpi_finalize
+
+(7) QUIT
+(7) logging out -> enter mpi_finalize
+
+(22) QUIT
+(22) logging out -> enter mpi_finalize
+
+(6) QUIT
+(6) logging out -> enter mpi_finalize
+
+(17) QUIT
+(17) logging out -> enter mpi_finalize
+
+(14) QUIT
+(14) logging out -> enter mpi_finalize
+
+(28) QUIT
+(28) logging out -> enter mpi_finalize
+
+(11) QUIT
+(11) logging out -> enter mpi_finalize
+
+(8) QUIT
+(8) logging out -> enter mpi_finalize
+
+(26) QUIT
+(26) logging out -> enter mpi_finalize
+
+(29) QUIT
+(29) logging out -> enter mpi_finalize
+
+(13) QUIT
+(13) logging out -> enter mpi_finalize
+
+(27) QUIT
+(27) logging out -> enter mpi_finalize
+
+(30) QUIT
+(30) logging out -> enter mpi_finalize
+
+(25) QUIT
+(25) logging out -> enter mpi_finalize
+
+(1) QUIT
+(1) logging out -> enter mpi_finalize
+
+(15) QUIT
+(15) logging out -> enter mpi_finalize
+
+(24) QUIT
+(24) logging out -> enter mpi_finalize
+
+(4) QUIT
+(4) logging out -> enter mpi_finalize
+
+(0) QUIT
+(0) logging out -> enter mpi_finalize
+
+(31) QUIT
+(31) logging out -> enter mpi_finalize
+
+(19) QUIT
+(19) logging out -> enter mpi_finalize
+
+(9) QUIT
+(9) logging out -> enter mpi_finalize
+
+(3) QUIT
+(3) logging out -> enter mpi_finalize
+(5) [OK] out from MPI
+EXIT ...
+
+(21) [OK] out from MPI
+EXIT ...
+
+(12) [OK] out from MPI
+EXIT ...
+
+(22) [OK] out from MPI
+EXIT ...
+
+(28) [OK] out from MPI
+EXIT ...
+
+(8) [OK] out from MPI
+EXIT ...
+
+(26) [OK] out from MPI
+EXIT ...
+
+(24) [OK] out from MPI
+EXIT ...
+
+(4) [OK] out from MPI
+EXIT ...
+
+(16) [OK] out from MPI
+EXIT ...
+
+(2) [OK] out from MPI
+EXIT ...
+
+(18) [OK] out from MPI
+EXIT ...
+
+(10) [OK] out from MPI
+EXIT ...
+
+(6) [OK] out from MPI
+EXIT ...
+
+(17) [OK] out from MPI
+EXIT ...
+
+(13) [OK] out from MPI
+EXIT ...
+
+(27) [OK] out from MPI
+EXIT ...
+
+(0) [OK] out from MPI
+EXIT ...
+
+(19) [OK] out from MPI
+EXIT ...
+
+(29) [OK] out from MPI
+EXIT ...
+
+(25) [OK] out from MPI
+EXIT ...
+
+(15) [OK] out from MPI
+EXIT ...
+
+(3) [OK] out from MPI
+EXIT ...
+
+(14) [OK] out from MPI
+EXIT ...
+
+(11) [OK] out from MPI
+EXIT ...
+
+(30) [OK] out from MPI
+EXIT ...
+
+(1) [OK] out from MPI
+EXIT ...
+
+(23) [OK] out from MPI
+EXIT ...
+
+(20) [OK] out from MPI
+EXIT ...
+
+(7) [OK] out from MPI
+EXIT ...
+
+(31) [OK] out from MPI
+EXIT ...
+
+(9) [OK] out from MPI
+EXIT ...
+

@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
 	timestamp=0;
 	outtimestamp=1;
 
-	maxloop= 10000000;
+	maxloop= 1000000000;
 	maxfires= 0;
 
 	fires= 0;

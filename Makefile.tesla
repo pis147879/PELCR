@@ -4,12 +4,18 @@ ALL: default
 
 ARCH        = LINUX
 BASETYPE    = 'long long'
-MPIR_HOME   = /usr/
+MPIR_HOME   = /home/marpedicini/space/opt/openmpi
+#MPIR_HOME   = /usr
 CC          = $(MPIR_HOME)/bin/mpicc
 CCP         = $(MPIR_HOME)/bin/mpiCC
 CLINKER     = $(CC)
 CCC         = $(MPIR_HOME)/bin/mpiCC
 COMPILINGRDIR = ./
+INCLUDEDIR = -I$(COMPILINGRDIR)h -I$(COMPILINGRDIR)
+LIB_PATH    =
+LIB_LIST    = -ldl -lm -ll -lc -lpthread
+
+
 CCLINKER    = $(CCC)
 PROFILING   = $(PMPILIB)
 #OPTFLAGS    = -DDEBUG -DWDEBUG -DMEMDEBUG -Wall -g -pg
@@ -26,7 +32,7 @@ OSFLAGS	  = -DLINUX
 CFLAGS    = $(OPTFLAGS)
 CCFLAGS   = $(CFLAGS)
 FFLAGS    = $(OPTFLAGS)
-OBJECTS	  = read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o lex.yy.o 
-SRCS	  = read_back.c dvm.c  io.c graph.c symbolic.c distribution.c print.c parser.tab.c main.c buildgraph.c combustion.c lex.yy.c
+OBJECTS	  = parser.tab.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o lex.yy.o 
+SRCS	  = parser.tab.c read_back.c dvm.c  io.c graph.c symbolic.c distribution.c print.c parser.tab.c main.c buildgraph.c combustion.c lex.yy.c
 PARSERSRC = lex.yy.c parser.tab.c
 EXECS     = combustion.linux
