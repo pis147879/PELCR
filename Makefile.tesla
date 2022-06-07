@@ -23,16 +23,14 @@ OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG  -DUSERTYPE=$(BASETYPE) -Wall -g -Wl,
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG 
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 
+INCLUDEDIR = -I$(COMPILINGRDIR)h -I$(COMPILINGRDIR)
+LIB_PATH    =
+LIB_LIST    = -ldl -lm -ll -lc -lpthread
+
 ########per il parser
 LEX= lex
 YACC = bison
 
 ### End User configurable options ###
 OSFLAGS	  = -DLINUX
-CFLAGS    = $(OPTFLAGS)
-CCFLAGS   = $(CFLAGS)
-FFLAGS    = $(OPTFLAGS)
-OBJECTS	  = parser.tab.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o lex.yy.o 
-SRCS	  = parser.tab.c read_back.c dvm.c  io.c graph.c symbolic.c distribution.c print.c parser.tab.c main.c buildgraph.c combustion.c lex.yy.c
-PARSERSRC = lex.yy.c parser.tab.c
 EXECS     = combustion.linux
