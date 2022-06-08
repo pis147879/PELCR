@@ -1,15 +1,10 @@
 include Makefile.head
 
-################ common part
+############### common part
 
 OBJECTS   = parser.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o
-<<<<<<< HEAD
-PARSERSRC = lex.yy.c parser.tab.c
-SRCS      = lex.yy.c parser.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c
-=======
 PARSERSRC = $(COMPILINGRDIR)lex.yy.c $(COMPILINGRDIR)parser.tab.c
 SRCS      = $(PARSERSRC) $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c
->>>>>>> 79055815631987b45c53dca3cb4bd9eb82ca98a3
 
 BASETYPE='long long'
 TESTFILE    = "dd4.plcr"

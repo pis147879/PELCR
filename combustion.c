@@ -363,16 +363,18 @@ int BDump(struct mbuffer* b) {
 	int i;
 
 	i=b->first;
-	TRACING  fprintf(logfile,"\nSTACK DUMP(%d-%d) VVVV: ",b->first,b->last);
+    TRACING {
+        
+     fprintf(logfile,"\nSTACK DUMP(%d-%d) VVVV: ",b->first,b->last);
 
 	while(i!=b->last) {
-		TRACING    fprintf(logfile,"%s ",(b->stack[i]).weight);
+        fprintf(logfile,"%s ",(b->stack[i]).weight);
 		i=(i+1)%MAXPENDING;
 	}
 
 
-	TRACING  fprintf(logfile,"\n");
-
+	  fprintf(logfile,"\n");
+    }
 	i=(b->last - b->first);
 	if (i<0)  i=MAXPENDING+i;
 
