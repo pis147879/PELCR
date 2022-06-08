@@ -26,7 +26,7 @@ lex.yy.c: $(COMPILINGRDIR)les.fl
 	$(LEX) $(COMPILINGRDIR)les.fl
 
 parser.tab.c: $(COMPILINGRDIR)parser.y
-	$(YACC) -d -v $(COMPILINGRDIR)parser.y -b y
+	$(YACC) -d -v $(COMPILINGRDIR)parser.y -b $@ 
 
 objects: $(SRCS)
 	$(CC) $(CFLAGS) $(OSFLAGS) $(INCLUDEDIR) -c $(SRCS)
