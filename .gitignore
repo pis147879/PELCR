@@ -24,3 +24,9 @@
 *.log
 /Makefile.head
 /.vscode/
+/.DS_Store
+/parser.tab.o
+/out.err
+*.gml
+/pelcrexamples/ciccio.graphml
+/pelcrexamples/.DS_Store
