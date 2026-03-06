@@ -30,3 +30,4 @@
 *.gml
 /pelcrexamples/ciccio.graphml
 /pelcrexamples/.DS_Store
+*.dat
