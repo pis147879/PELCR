@@ -1,0 +1,12 @@
+BasedOnStyle: GNU
+SortIncludes: Never
+IndentWidth: 4
+TabWidth: 4
+UseTab: ForIndentation
+BreakBeforeBraces: Attach
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+ColumnLimit: 120
+SpaceBeforeParens: ControlStatements
+PointerAlignment: Right
+IndentCaseLabels: true

@@ -10,7 +10,7 @@ BASETYPE='long long'
 TESTFILE    = "dd4.plcr"
 
 RUN1= echo "\#setdir \"$(PEXDIR)\" ; \#open \"$(TESTFILE)\""
-RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS) -- -I ciccio -loop 10000000 -o GML/prova -v -t
+RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS) -- -I ciccio -loop 10000000 -o GML/prova -v
 RUNTEST = $(RUN1)|$(RUN)
 LIB_PATH    =
 LIB_LIST    = -ldl -lm -ll -lc
@@ -44,10 +44,12 @@ go2:
 
 test: NP=1
 test:
+	mkdir -p GML
 	$(RUNTEST)
 
 test2: NP=2
 test2:
+	mkdir -p GML
 	$(RUNTEST)
 
 test4: NP=4
