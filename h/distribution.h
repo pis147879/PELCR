@@ -26,14 +26,7 @@ void InitTable(); /**/
 void buf_flush(); /**/
 
 void SendAddEdge(edge *N, edge *E, char *sw, int sto); /**/
-int SendLightProcess(void);                            /**/
-int LightProcess(int dest);                            /**/
-int LightProcess2(int dest);                           /**/
-int LightProcess3(int dest);                           /**/
-int LightProcess5(int dest);                           /**/
-int LightProcess6(int dest);                           /**/
 int LightProcess7(int dest);                           /**/
-int LightProcess8(int dest);                           /**/
 
 void SendCreateNewNode(int dest, int sto, edge *nS); /**/
 int NouvelleReservation(int dest);                   /**/

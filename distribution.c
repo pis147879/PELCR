@@ -289,6 +289,7 @@ SendCreateNewNode(int dest, int sto, edge *nS) {
 	return;
 }
 
+/*
 int
 SendLightProcess() {
 	return LightProcess(rank);
@@ -312,9 +313,6 @@ LightProcess2(int dest) {
 
 	min++;
 
-	/*
-	  if (temp > 500000) return 0;
-	*/
 	if (TempProcess[min % size] >= temp) {
 		return rank;
 	} else {
@@ -334,6 +332,7 @@ LightProcess3(int dest) {
 		return min % size;
 	};
 }
+*/
 
 /*
   int LightProcess4(dest)
@@ -348,6 +347,7 @@ LightProcess3(int dest) {
   }
 */
 
+/*
 int
 LightProcess5(int dest) {
 	static int index = 0;
@@ -368,6 +368,7 @@ LightProcess6(int dest) {
 
 	return min % size;
 }
+*/
 
 int
 LightProcess7(int dest) {
@@ -384,12 +385,12 @@ LightProcess7(int dest) {
 	};
 }
 
+/*
 int
 LightProcess8(int dest) {
 	static int min = 1;
 	static int flag = 0;
 	int temp;
-	/*  if(((float)TempProcess[min%size])>=((float)1.1*nhot)) */
 
 	if (flag < BURST) {
 		flag++;
@@ -401,6 +402,7 @@ LightProcess8(int dest) {
 		return temp % size;
 	};
 }
+*/
 
 void
 buf_flush() {

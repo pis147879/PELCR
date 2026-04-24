@@ -700,7 +700,8 @@ ComputeResult() {
 	printf("(%d) ...ending\n", rank);
 	printf("(%d) read back procedure call \n", rank);
 	read_back(principal);
-	OUTPUTFILE Print(G, incoming, 1000000);
+	/* Temporarily skip the final graph dump while validating multi-rank runs. */
+	/* OUTPUTFILE Print(G, incoming, 1000000); */
 	printf("(%d) starting finalize \n", rank);
 }
 
