@@ -19,6 +19,12 @@
 #ifndef LAMBDASTAR_H
 #define LAMBDASTAR_H
 
+#ifdef PELCR_DEFINE_GLOBALS
+#define PELCR_EXTERN
+#else
+#define PELCR_EXTERN extern
+#endif
+
 #define TYPE 1
 #define KONST 2
 #define FUNC 3
@@ -65,10 +71,12 @@ typedef struct functionstack {
 } functionstack;
 
 /* ANTO */
-USERTYPE k[MAXNUMCOST][3];
+PELCR_EXTERN USERTYPE k[MAXNUMCOST][3];
 /* ANTO */
 
-functionstack f[MAXFUNCTIONS];
-functionstack f_db[MAXFUNCTIONS];
-int t[5][2];
+PELCR_EXTERN functionstack f[MAXFUNCTIONS];
+PELCR_EXTERN functionstack f_db[MAXFUNCTIONS];
+PELCR_EXTERN int t[5][2];
+
+#undef PELCR_EXTERN
 #endif
