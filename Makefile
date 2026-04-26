@@ -101,5 +101,10 @@ docker:
 	rm Makefile.head
 	ln -s Makefile.docker Makefile.head
 	make all
+
+iulia:
+	rm Makefile.head
+	ln -s Makefile.iulia Makefile.head
+	make all
 	
 home: gcombustion

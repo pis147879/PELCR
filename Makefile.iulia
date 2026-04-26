@@ -1,0 +1,29 @@
+# Generated automatically from Makefile.in by configure.
+ALL: default
+##### User configurable options #####
+
+ARCH        = LINUX
+BASETYPE    = 'long long'
+MPIR_HOME   = /usr/local
+CC          = $(MPIR_HOME)/bin/mpicc
+CCP         = $(MPIR_HOME)/bin/mpiCC
+CLINKER     = $(CC)
+CCC         = $(MPIR_HOME)/bin/mpiCC
+COMPILINGRDIR = ./
+CCLINKER    = $(CCC)
+PROFILING   = $(PMPILIB)
+#OPTFLAGS    = -DDEBUG -DWDEBUG -DMEMDEBUG -Wall -g -pg
+OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG  -DUSERTYPE=$(BASETYPE) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
+#-mpilog -mpitrace -mpianim -02 -DWDEBUG
+#OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
+
+LIB_PATH    =
+LIB_LIST    = -ldl -lm -ll -lc -lpthread
+
+########per il parser
+LEX= lex
+YACC = bison
+
+### End User configurable options ###
+OSFLAGS   = -DLINUX
+EXECS     = combustion.linux
