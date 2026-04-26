@@ -2,6 +2,7 @@
 ALL: default
 ##### User configurable options #####
 
+PEXDIR      = pelcrexamples
 ARCH        = LINUX
 BASETYPE    = 'long long'
 MPIR_HOME   = /usr/local
