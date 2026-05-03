@@ -867,7 +867,7 @@ SinkList(struct messaggio *m, struct messaggio *l, int length) {
 	l[length].tpy = EOT_TAG;
 	length++;
 #ifdef WDEBUG
-	printf("(%d) number of cut-nodes: %3d", rank, length);
+	printf("(%d) number of cut-nodes: %3d\n", rank, length);
 #endif
 	return length;
 }

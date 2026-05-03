@@ -318,6 +318,8 @@ ShowMessage(struct messaggio *m) {
 void
 StoreMessage(struct messaggio *m, edge *target, edge *source, char *weight, int storeclass, int pol) {
 	m->tpy = ADD_TAG;
+	if (target->sto == OUT)
+		storeclass = OUT;
 	/* m->sender_load = fra_hot; */
 	m->sender_load = incoming_actions_snapshot;
 	/*m->sender_load= nhot; graph_nodes;*/
@@ -793,8 +795,25 @@ ComputeResult() {
 	printf("(%d) starting finalize \n", rank);
 }
 
+static int
+CountNodeList(node *head) {
+	int count = 0;
+	node *cursor;
+
+	for (cursor = head; cursor != NULL; cursor = cursor->nextpuit)
+		count++;
+	return count;
+}
+
 void
 PrintResult() {
+	int hot_node_count;
+	int cold_node_count;
+
+	AttachSingleEotHotNodesToCold();
+
+	hot_node_count = CountNodeList(G.hot);
+	cold_node_count = CountNodeList(G.cold);
 
 #ifdef SOLARIS
 	int lh;
@@ -851,6 +870,8 @@ PrintResult() {
 
 		printf("(%d) elapsed time        :  %d\n", rank, ((int)finaltime - (int)inittime));
 		printf("(%d) final nodes         :  %d\n", rank, graph_nodes);
+		printf("(%d) hot nodes           :  %d\n", rank, hot_node_count);
+		printf("(%d) cold nodes          :  %d\n", rank, cold_node_count);
 		printf("(%d) edge compositions   :  %ld\n", rank, edge_compositions);
 		printf("(%d) fires               :  %ld\n", rank, fires);
 		printf("(%d) trivial             :  %ld optimized\n", rank, one_optimizations);
@@ -905,6 +926,8 @@ PrintResult() {
 
 			fprintf(logfile, "(%d) elapsed time         :  %d\n", rank, ((int)finaltime - (int)inittime));
 			fprintf(logfile, "(%d) final nodes         :  %d\n", rank, graph_nodes);
+			fprintf(logfile, "(%d) hot nodes           :  %d\n", rank, hot_node_count);
+			fprintf(logfile, "(%d) cold nodes          :  %d\n", rank, cold_node_count);
 			fprintf(logfile, "(%d) edge compositions   :  %ld\n", rank, edge_compositions);
 			fprintf(logfile, "(%d) fires                :  %ld\n", rank, fires);
 			fprintf(logfile, "(%d) loops                :  %ld\n", rank, lastloop);

@@ -1528,7 +1528,7 @@ IsThere(char *s) {
 	for (tmp = symbolTable; tmp != NULL; tmp = tmp->next)
 		if (strcmp(tmp->symName, s) == 0) {
 			new = Duplicate(tmp->symTerm);
-			OUTPUTFILE printf("\n   found %s in the symbol-table", s);
+			OUTPUTFILE printf("   found %s in the symbol-table\n", s);
 			return new;
 		}
 	return 0;
@@ -1764,6 +1764,22 @@ InitializeIncoming(termGraph *t) {
 			 if(vtarget->sto==IN) cut_node_count = SinkList(&m,&cut_node_messages[cut_node_count],cut_node_count);
 			 printf("after sink\n");
 			 */
+		}
+	}
+
+	for (nodo = t->root; nodo != NULL; nodo = nodo->nextpuit) {
+		if ((nodo->left.eot + nodo->right.eot) == 1) {
+			edge endpoint;
+
+			endpoint.creator = size;
+			endpoint.rankpuit = rank;
+			endpoint.source = nodo;
+			endpoint.sto = OUT;
+			endpoint.side = nodo->left.eot ? LEFT : RIGHT;
+
+			StoreMessage(&m, &endpoint, &endpoint, (char *)"*", OUT, endpoint.side);
+			m.tpy = EOT_TAG;
+			PushMessage(&m);
 		}
 	}
 

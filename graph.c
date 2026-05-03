@@ -67,6 +67,215 @@ NewReference() {
 	return nS;
 }
 
+static void PropagateColdToSourceEndpoints(edge *P);
+static void AttachSingleEotHotNodesToColdLocal(void);
+static void QueueRemoteColdSource(int dest, int creator, long source);
+static void ExchangeRemoteColdSources(void);
+
+typedef struct cold_source_ref {
+	int dest;
+	int creator;
+	long source;
+} cold_source_ref;
+
+static cold_source_ref *remote_cold_sources = NULL;
+static int remote_cold_source_count = 0;
+static int remote_cold_source_capacity = 0;
+static int collect_remote_cold_sources = 0;
+
+static void
+UnlinkNodeFromList(node **head, node *P) {
+	if (P == NULL || head == NULL || *head == NULL)
+		return;
+
+	if (*head == P)
+		*head = P->nextpuit;
+	if (P->prevpuit != NULL)
+		P->prevpuit->nextpuit = P->nextpuit;
+	if (P->nextpuit != NULL)
+		P->nextpuit->prevpuit = P->prevpuit;
+	P->prevpuit = NULL;
+	P->nextpuit = NULL;
+}
+
+void
+AttachNodeToCold(node *P) {
+	int was_hot;
+
+	if (P == NULL)
+		return;
+
+	if (P->sto == OUT)
+		return;
+
+	was_hot = (P->sto != OUT);
+
+	UnlinkNodeFromList(&G.hot, P);
+
+	P->sto = OUT;
+	P->prevpuit = NULL;
+	P->nextpuit = G.cold;
+	if (G.cold != NULL)
+		G.cold->prevpuit = P;
+	G.cold = P;
+
+	if (was_hot) {
+		PropagateColdToSourceEndpoints(P->left.vector);
+		PropagateColdToSourceEndpoints(P->right.vector);
+	}
+}
+
+static void
+PropagateColdToSourceEndpoints(edge *P) {
+	for (; P != NULL; P = P->vector) {
+		P->sto = OUT;
+		if (P->rankpuit == rank)
+			StoreBookedAddress(P->creator, (long)P->source, OUT);
+		else if (collect_remote_cold_sources)
+			QueueRemoteColdSource(P->rankpuit, P->creator, (long)P->source);
+	}
+}
+
+void
+AttachSingleEotHotNodesToCold(void) {
+	int previous_collect_remote_cold_sources;
+	long local_remote_source_count;
+	long global_remote_source_count;
+
+	previous_collect_remote_cold_sources = collect_remote_cold_sources;
+	collect_remote_cold_sources = (size > 1);
+
+	AttachSingleEotHotNodesToColdLocal();
+
+	if (size > 1) {
+		do {
+			local_remote_source_count = remote_cold_source_count;
+			MPI_Allreduce(&local_remote_source_count, &global_remote_source_count, 1, MPI_LONG, MPI_SUM,
+			              MPI_COMM_WORLD);
+			if (global_remote_source_count == 0)
+				break;
+			ExchangeRemoteColdSources();
+		} while (1);
+	}
+
+	collect_remote_cold_sources = previous_collect_remote_cold_sources;
+}
+
+static void
+AttachSingleEotHotNodesToColdLocal(void) {
+	int changed;
+
+	do {
+		node *cursor;
+
+		changed = 0;
+		for (cursor = G.hot; cursor != NULL; cursor = cursor->nextpuit) {
+			if ((cursor->left.eot + cursor->right.eot) == 1) {
+				AttachNodeToCold(cursor);
+				changed = 1;
+				break;
+			}
+		}
+	} while (changed);
+}
+
+static void
+QueueRemoteColdSource(int dest, int creator, long source) {
+	cold_source_ref *new_refs;
+
+	if (dest < 0 || dest >= size || dest == rank)
+		return;
+
+	if (remote_cold_source_count == remote_cold_source_capacity) {
+		remote_cold_source_capacity = remote_cold_source_capacity ? 2 * remote_cold_source_capacity : 1024;
+		new_refs = (cold_source_ref *)realloc(remote_cold_sources,
+		                                      remote_cold_source_capacity * sizeof(cold_source_ref));
+		if (new_refs == NULL) {
+			fprintf(logfile, "remote cold source allocation failure - ABORT");
+			exit(-1);
+		}
+		remote_cold_sources = new_refs;
+	}
+
+	remote_cold_sources[remote_cold_source_count].dest = dest;
+	remote_cold_sources[remote_cold_source_count].creator = creator;
+	remote_cold_sources[remote_cold_source_count].source = source;
+	remote_cold_source_count++;
+}
+
+static void
+ExchangeRemoteColdSources(void) {
+	int *send_counts;
+	int *recv_counts;
+	int *send_displacements;
+	int *recv_displacements;
+	int *fill_offsets;
+	long *send_buffer;
+	long *recv_buffer;
+	int total_send;
+	int total_recv;
+	int i;
+
+	send_counts = (int *)calloc(size, sizeof(int));
+	recv_counts = (int *)calloc(size, sizeof(int));
+	send_displacements = (int *)calloc(size, sizeof(int));
+	recv_displacements = (int *)calloc(size, sizeof(int));
+	fill_offsets = (int *)calloc(size, sizeof(int));
+	if (send_counts == NULL || recv_counts == NULL || send_displacements == NULL || recv_displacements == NULL
+	    || fill_offsets == NULL) {
+		fprintf(logfile, "remote cold exchange allocation failure - ABORT");
+		exit(-1);
+	}
+
+	for (i = 0; i < remote_cold_source_count; i++)
+		send_counts[remote_cold_sources[i].dest] += 2;
+
+	MPI_Alltoall(send_counts, 1, MPI_INT, recv_counts, 1, MPI_INT, MPI_COMM_WORLD);
+
+	total_send = 0;
+	total_recv = 0;
+	for (i = 0; i < size; i++) {
+		send_displacements[i] = total_send;
+		recv_displacements[i] = total_recv;
+		fill_offsets[i] = total_send;
+		total_send += send_counts[i];
+		total_recv += recv_counts[i];
+	}
+
+	send_buffer = total_send ? (long *)calloc(total_send, sizeof(long)) : NULL;
+	recv_buffer = total_recv ? (long *)calloc(total_recv, sizeof(long)) : NULL;
+	if ((total_send && send_buffer == NULL) || (total_recv && recv_buffer == NULL)) {
+		fprintf(logfile, "remote cold exchange buffer allocation failure - ABORT");
+		exit(-1);
+	}
+
+	for (i = 0; i < remote_cold_source_count; i++) {
+		int dest;
+		int offset;
+
+		dest = remote_cold_sources[i].dest;
+		offset = fill_offsets[dest];
+		send_buffer[offset] = remote_cold_sources[i].creator;
+		send_buffer[offset + 1] = remote_cold_sources[i].source;
+		fill_offsets[dest] += 2;
+	}
+
+	remote_cold_source_count = 0;
+	MPI_Alltoallv(send_buffer, send_counts, send_displacements, MPI_LONG, recv_buffer, recv_counts,
+	              recv_displacements, MPI_LONG, MPI_COMM_WORLD);
+
+	for (i = 0; i + 1 < total_recv; i += 2)
+		StoreBookedAddress((int)recv_buffer[i], recv_buffer[i + 1], OUT);
+
+	free(send_counts);
+	free(recv_counts);
+	free(send_displacements);
+	free(recv_displacements);
+	free(fill_offsets);
+	free(send_buffer);
+	free(recv_buffer);
+}
+
 void
 LiberaV(edge *P) {
 	struct messaggio m;
@@ -104,6 +313,11 @@ void
 AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int side) {
 	edge *p;
 	seminode *v;
+
+	if (sto == OUT) {
+		if (rk == rank)
+			StoreBookedAddress(c, (long)nS, OUT);
+	}
 
 	p = NewReference();
 	if (p == NULL) {
@@ -218,6 +432,7 @@ CreateNewNode(node *S) {
 	nS->right.dejavu = NULL;
 
 	nS->nextpuit = S;
+	nS->sto = IN;
 	nS->families = 0;
 	nS->prevpuit = NULL;
 	if (S != NULL)
@@ -241,6 +456,7 @@ CreateNewBoundary(node *S) {
 	node *nS;
 
 	nS = NewNode();
+	nS->sto = OUT;
 	nS->left.length = -1;
 	nS->left.vector = NULL;
 	nS->left.dejavu = NULL;

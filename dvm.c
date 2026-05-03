@@ -243,6 +243,7 @@ BookedAddress(int rk, long ord) {
 			TRACING fprintf(logfile, "it is not here\n");
 #endif
 			G.hot = CreateNewNode(G.hot);
+			G.hot->sto = IN;
 			table_iput(p, ord, G.hot);
 			G.hot->printed = !pflag;
 			address = G.hot;
@@ -267,8 +268,11 @@ StoreBookedAddress(int rk, long ord, int sto) {
 	  */
 
 	if (rk == rank) {
+		address = (node *)ord;
+		if (sto == OUT)
+			AttachNodeToCold(address);
 		/* DEBUG fprintf(logfile,"\n");*/
-		return (node *)ord;
+		return address;
 	} else {
 		p = BookTable[rk];
 		if (table_iget(p, ord, &address) == 0) {
@@ -277,16 +281,19 @@ StoreBookedAddress(int rk, long ord, int sto) {
 			  */
 			if (sto == IN) {
 				G.hot = CreateNewNode(G.hot);
+				G.hot->sto = IN;
 				table_iput(p, ord, G.hot);
 				G.hot->printed = !pflag;
 				address = G.hot;
 			} else {
 				G.cold = CreateNewNode(G.cold);
+				G.cold->sto = OUT;
 				table_iput(p, ord, G.cold);
 				G.cold->printed = !pflag;
 				address = G.cold;
 			}
 		} else if (sto == OUT) {
+			AttachNodeToCold(address);
 		};
 
 		/*    DEBUG fprintf(logfile,"\n");*/

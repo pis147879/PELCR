@@ -46,6 +46,9 @@ void
 SendAddEdge(edge *N, edge *E, char *sw, int sto) {
 	node *target;
 
+	if (N->sto == OUT)
+		sto = OUT;
+
 #ifdef _DEBUG
 	DEBUG_DISTRIBUTION {
 		fprintf(logfile, "SAD %d %d\n", saddflag, scount);
@@ -238,6 +241,7 @@ SendCreateNewNode(int dest, int sto, edge *nS) {
 	if ((dest == rank) && (sto == IN)) {
 		nS->source = CreateNewNode(G.hot);
 		G.hot = nS->source;
+		nS->source->sto = IN;
 		nS->rankpuit = rank;
 		nS->creator = rank;
 		nS->sto = IN;
@@ -247,6 +251,7 @@ SendCreateNewNode(int dest, int sto, edge *nS) {
 	} else if ((dest == rank) && (sto == OUT)) {
 		nS->source = CreateNewNode(G.cold);
 		G.cold = nS->source;
+		nS->source->sto = OUT;
 		nS->rankpuit = rank;
 		nS->creator = rank;
 		nS->sto = OUT;

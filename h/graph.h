@@ -36,6 +36,7 @@ typedef struct node {
 	int mu_remote; /* n. archi con sorgente remota */
 	struct node *nextpuit;
 	struct node *prevpuit;
+	int sto;      /* node storage: IN = hot graph, OUT = cold graph */
 	int printed;  /* used in Print function to avoid duplication of the node*/
 	int families; /* the maximal number of family reductions in compositions of edges onto the node*/
 } node;
@@ -43,7 +44,7 @@ typedef struct node {
 typedef struct edge {
 	struct edge *vector;
 	node *source;
-	int sto;
+	int sto; /* storage of the source endpoint; the edge itself lives in the target side list */
 	int sign;
 	int side;
 	int rankpuit;
@@ -65,6 +66,8 @@ void LiberaV(edge *P);
 void AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int side);
 node *CreateNewNode(node *S);
 node *CreateNewBoundary(node *S);
+void AttachNodeToCold(node *P);
+void AttachSingleEotHotNodesToCold(void);
 node *SinkRemove(node *P);
 edge *EdgeRemove(edge *e, node *P);
 void ShowEdge(edge *);
