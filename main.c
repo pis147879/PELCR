@@ -42,7 +42,7 @@ extern int yyparse(void);
 int
 main(int argc, char **argv) {
 	int j;
-	int fine = 0;
+	int parse_status = 0;
 
 	timestamp = 0;
 	outtimestamp = 1;
@@ -58,14 +58,14 @@ main(int argc, char **argv) {
 	outflag = 0;
 	verflag = 0;
 
-	bip = 0;
+	failed_compositions = 0;
 	processed_actions = 0;
 	edge_compositions = 0;
 	bip4 = 0;
 	fires = 0;
 	loops = 0;
 	prnsteps = 1;
-	ones = 0;
+	one_optimizations = 0;
 	unaddtest = 0;
 	uneottest = 0;
 	laddtest = 0;
@@ -73,7 +73,7 @@ main(int argc, char **argv) {
 	idle = 0;
 	lidle = 0;
 	lbip2 = 0;
-	francesco = 0;
+	computing_loops = 0;
 	lastloop = 0;
 
 	ending = 0;
@@ -88,7 +88,7 @@ main(int argc, char **argv) {
 	graph_edges = 0;
 	inittime = 0;
 	finaltime = 0;
-	contatore_combustioni_f = 0;
+	batch_processed_actions = 0;
 	lift = 0;
 	varname = 0;
 	symbolTable = NULL;
@@ -210,7 +210,7 @@ main(int argc, char **argv) {
 	if ((size < MAXNPROCESS) && (size >= 1)) {
 		MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-		fine = 0;
+		parse_status = 0;
 
 		if INITIALIZER {
 			printf("PELCR (Parallel Environment for Lambda Calculus Optimal Reduction)\n");
@@ -219,7 +219,7 @@ main(int argc, char **argv) {
 		};
 
 		/*** INTERPRETER MAIN LOOP ***/
-		while (fine != MAXNUMCOST + 1) {
+		while (parse_status != MAXNUMCOST + 1) {
 			printf("(%d) EVAL\n", rank);
 			OpenFileInitStruct();
 			fflush(stdout);
@@ -227,13 +227,13 @@ main(int argc, char **argv) {
 				printf("(%d) PELCR 10.0> ", rank);
 				fflush(stdout);
 				/* CALLING PARSER */
-				fine = yyparse();
+				parse_status = yyparse();
 				//	printf("(%d) loops %ld\n",rank,maxloop); fflush(stdout);
 
 				/* BROADCAST TO MPICOMMWORLD RENDEZ-VOUS POINT AFTER PARSING*/
-				MPI_Bcast(&fine, 1, MPI_INT, 0, MPI_COMM_WORLD);
+				MPI_Bcast(&parse_status, 1, MPI_INT, 0, MPI_COMM_WORLD);
 				MPI_Bcast(infile, MAXNAMELEN, MPI_CHAR, 0, MPI_COMM_WORLD);
-				if (fine != MAXNUMCOST + 1) {
+				if (parse_status != MAXNUMCOST + 1) {
 					BDump(&incoming[schedule]);
 					/*MPI_Barrier(MPI_COMM_WORLD);*/
 					number_of_processes = size;
@@ -245,16 +245,16 @@ main(int argc, char **argv) {
 				}
 			}
 			if WARMING {
-				MPI_Bcast(&fine, 1, MPI_INT, 0, MPI_COMM_WORLD);
+				MPI_Bcast(&parse_status, 1, MPI_INT, 0, MPI_COMM_WORLD);
 				MPI_Bcast(infile, MAXNAMELEN, MPI_CHAR, 0, MPI_COMM_WORLD);
-				if (fine != MAXNUMCOST + 1) {
-					kindex = fine;
+				if (parse_status != MAXNUMCOST + 1) {
+					kindex = parse_status;
 					/*MPI_Barrier(MPI_COMM_WORLD);*/
 				}
 			}
 
 			MPI_Barrier(MPI_COMM_WORLD);
-			if (fine != MAXNUMCOST + 1) {
+			if (parse_status != MAXNUMCOST + 1) {
 				TRACING fprintf(
 				    logfile, "2nd Barrier passed - injecting the stream of actions corresponding to the parsed term\n");
 				printf("(%d) 2nd barrier - injecting the stream of actions corresponding to the parsed term\n", rank);
@@ -262,7 +262,7 @@ main(int argc, char **argv) {
 
 				/* set to zero the counter for beta-reductions */
 				/* number of LAMBDA-APP reductions (families in the Levy's sense) */
-				fam_counter = 0;
+				family_reductions = 0;
 				buf_flush(); /* scheduler*/
 
 				if (size != 1)

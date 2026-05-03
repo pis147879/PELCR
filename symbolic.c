@@ -113,7 +113,7 @@ product(char *a, char *b, char *a1, char *b1) {
 #endif
 			checkone(a1);
 			checkone(b1);
-			locf_counter++;
+			local_family_reductions++;
 			return 3;
 		} else
 			return 0;

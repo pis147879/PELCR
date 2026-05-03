@@ -256,7 +256,7 @@ SinkRemove(node *P) {
 #ifdef _DEBUG
 	DEBUG_MEM fprintf(logfile, "(%d) REMOVE NODE P=[%p]\n", rank, P);
 #endif
-	fam_counter += P->families;
+	family_reductions += P->families;
 
 	if ((P->left.vector != NULL) || (P->right.vector != NULL)) {
 #ifdef _DEBUG

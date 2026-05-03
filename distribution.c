@@ -524,8 +524,8 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 void
 PushMessage(struct messaggio *m) {
 	char *lout;
-	// int h,temporaneo;
-	long temporaneo;
+	// int h,packet_action_count;
+	long packet_action_count;
 	int dest;
 	int nc;
 
@@ -581,9 +581,9 @@ PushMessage(struct messaggio *m) {
 		outcontrol[dest]++;
 
 		/*
-		  temporaneo = outcontrol[dest];
+		  packet_action_count = outcontrol[dest];
 
-		  memcpy((char*)buf[dest],(char*)&temporaneo,sizeof(int));
+		  memcpy((char*)buf[dest],(char*)&packet_action_count,sizeof(int));
 		*/
 
 		if (outcontrol[dest] >= aggregationWindow[dest]) {
@@ -592,8 +592,8 @@ PushMessage(struct messaggio *m) {
 		  int nc;
 			*/
 
-			temporaneo = outcontrol[dest];
-			memcpy((char *)buf[dest], (char *)&temporaneo, sizeof(long));
+			packet_action_count = outcontrol[dest];
+			memcpy((char *)buf[dest], (char *)&packet_action_count, sizeof(long));
 
 			nc = sizeof(long) + outcontrol[dest] * sizeof(struct messaggio);
 			/***************** Carlo ***************************************/
@@ -660,9 +660,9 @@ PushMessage(struct messaggio *m) {
 	//  fflush(stdout);
 
 
-	temporaneo = outcontrol[h];
+	packet_action_count = outcontrol[h];
 
-	memcpy((char*)buf[h],(char*)&temporaneo,sizeof(int));
+	memcpy((char*)buf[h],(char*)&packet_action_count,sizeof(int));
 	nTickSend++;
 	nrApplMsg[h]+=outcontrol[h];
 	nrFisicMsg[h]++;
@@ -875,7 +875,7 @@ AggregationControl5() { /*copiata*/
 void *
 ThreadReceiveMsgs() {
 
-	int temporaneo1, i;
+	int received_action_count, i;
 	if (size != 1) {
 		dataflag = 1;
 		MPI_Iprobe(MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &dataflag, &status);
@@ -887,8 +887,8 @@ ThreadReceiveMsgs() {
 			MPI_Recv(rbuf, maxdim, MPI_CHAR, MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &status);
 			position = rbuf + sizeof(int);
 
-			memcpy((char *)&temporaneo1, (char *)rbuf, sizeof(int));
-			aggregation_cumulate += temporaneo1;
+			memcpy((char *)&received_action_count, (char *)rbuf, sizeof(int));
+			aggregation_cumulate += received_action_count;
 			num_receives++;
 
 			if ((tempfile != NULL) && (!(num_receives % 40))) {
@@ -897,7 +897,7 @@ ThreadReceiveMsgs() {
 
 				now = (smtime.tms_utime + smtime.tms_stime) / 60.0;
 				OUTPUT {
-					fprintf(coldfile, "%f %d\n", now, temporaneo1);
+					fprintf(coldfile, "%f %d\n", now, received_action_count);
 					fprintf(anamfile, "%f %ld\n", now, aggregation_cumulate / num_receives);
 					fflush(coldfile);
 					fflush(anamfile);
@@ -911,12 +911,12 @@ ThreadReceiveMsgs() {
 			       euristica.
 			********************************/
 			/*printf("(%d) RCVS %d, TOTAGG %d, AGGMSG %d\n",
-		  rank,num_receives,aggregation_cumulate,temporaneo1);
-		  printf("arrivato messaggio (taglia %d)\n",temporaneo1);
+		  rank,num_receives,aggregation_cumulate,received_action_count);
+		  printf("arrivato messaggio (taglia %d)\n",received_action_count);
 			*/
 			/*  for(i= 0;i<AGGREGATIONWINDOW;i++)  */
 
-			for (i = 0; i < temporaneo1; i++) {
+			for (i = 0; i < received_action_count; i++) {
 #if MINPRIORITY > 1
 				int priority;
 				int ub;
@@ -946,7 +946,7 @@ ThreadReceiveMsgs() {
 
 	/* scheduler*/
 	buf_flush();
-	contatore_combustioni_f = 0;
+	batch_processed_actions = 0;
 	schedule = 0;
 	/* fine scheduler */
 
@@ -955,26 +955,26 @@ ThreadReceiveMsgs() {
 
 void *
 ThreadInteraction() {
-	int contatore_combustioni_f = 0;
-	int nc1, temporaneo2;
+	int batch_processed_actions = 0;
+	int nc1, packet_action_count;
 	int h;
 	MPI_Request ireq;
 	MPI_Status stsq;
 
 	/*
-	  while( (!EmptyBuffer(&incoming)) && (contatore_combustioni_f < CHECKTICKS) ) {
+	  while( (!EmptyBuffer(&incoming)) && (batch_processed_actions < CHECKTICKS) ) {
 	  lidle = idle;
 	  idle += loops-1;
 	  loops = 0;
 	  nhot=BDump(&incoming[schedule]);
 	  processed_actions++;
-	  contatore_combustioni_f++;
+	  batch_processed_actions++;
 	  pthread_mutex_lock(&mutex);
 	  PopMessage(&msg,&incoming);
 	  pthread_mutex_unlock(&mutex);
 	*/
 
-	while ((pending_actions > 0) && (contatore_combustioni_f < CHECKTICKS)) {
+	while ((pending_actions > 0) && (batch_processed_actions < CHECKTICKS)) {
 		lidle = idle;
 		idle += loops - 1;
 		loops = 0;
@@ -1000,7 +1000,7 @@ ThreadInteraction() {
 #endif
 		if (schedule < MINPRIORITY) {
 			processed_actions++;
-			contatore_combustioni_f++;
+			batch_processed_actions++;
 			DEBUG fprintf(logfile, "(%d) POP(%d) \n", rank, schedule);
 
 			pthread_mutex_lock(&mutex);
@@ -1053,16 +1053,16 @@ ThreadInteraction() {
 			OUTPUT WriteStats();
 
 			/*   schedule=0;
-			     while (((schedule<MINPRIORITY)&&(!(nhot=BDumpS(&incoming[schedule]))))) schedule++;
-			     schedule++;*/
+		     while (((schedule<MINPRIORITY)&&(!(nhot=BDumpS(&incoming[schedule]))))) schedule++;
+		     schedule++;*/
 
 			for (h = 0; h < size; h++) {
 				tickcontrol[h]++;
 				if ((outcontrol[h] > 0) && (tickcontrol[h] >= maxTick[h])) {
 					nc1 = sizeof(int) + outcontrol[h] * sizeof(struct messaggio);
-					temporaneo2 = outcontrol[h];
+					packet_action_count = outcontrol[h];
 
-					memcpy((char *)buf[h], (char *)&temporaneo2, sizeof(int));
+					memcpy((char *)buf[h], (char *)&packet_action_count, sizeof(int));
 					/***************** Carlo *******************************/
 					nTickSend++;
 					nrApplMsg[h] += outcontrol[h];
@@ -1094,9 +1094,9 @@ ThreadInteraction() {
 		tickcontrol[h]++;
 		if ((outcontrol[h] > 0) && (tickcontrol[h] >= maxTick[h])) {
 			nc1 = sizeof(int) + outcontrol[h] * sizeof(struct messaggio);
-			temporaneo2 = outcontrol[h];
+			packet_action_count = outcontrol[h];
 
-			memcpy((char *)buf[h], (char *)&temporaneo2, sizeof(int));
+			memcpy((char *)buf[h], (char *)&packet_action_count, sizeof(int));
 			/***************** Carlo ***************************************/
 			nTickSend++;
 			nrApplMsg[h] += outcontrol[h];

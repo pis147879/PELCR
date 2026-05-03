@@ -50,7 +50,7 @@
 //#include "lambdastar.h"
 //#include "buildgraph.h"
 #include "var.h"
-int npozzi=0;
+int cut_node_count=0;
 int yylex();
 int yyerror(char *s);
 %}
@@ -205,4 +205,3 @@ lterm	: LAMBDA ID '.' lterm
 	fprintf(stderr, "ERROR: %s at symbol '%s' on line %d\n", s, yytext, yylineno);
 	return -1;
  }
-

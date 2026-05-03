@@ -91,7 +91,7 @@ OpenStatsFile(void) {
 	if (statsfile != NULL) {
 		/* The old fra_hot pre-pop load snapshot is now incoming_actions_snapshot. */
 		fprintf(statsfile,
-		        "# wall_epoch time rank loops processed_actions edge_compositions fires ones nofires graph_nodes nhot pending_actions "
+		        "# wall_epoch time rank loops processed_actions edge_compositions fires one_optimizations failed_compositions graph_nodes nhot pending_actions "
 		        "graph_edges local_pending incoming_pending outgoing_pending global_physical_msgs nTickSend nFullSend\n");
 		fflush(statsfile);
 	}
@@ -129,10 +129,10 @@ WriteStats() {
 		if (tempfile != NULL) {
 			fprintf(firfile, "%f %ld\n", now, fires);
 			fprintf(tempfile, "%f %d\n", now, graph_nodes);
-			/*fprintf(coldfile,"%f %d\n",now,temporaneo1); */
+			/*fprintf(coldfile,"%f %d\n",now,received_action_count); */
 			fprintf(hotfile, "%f %d\n", now, nhot);
-			fprintf(trivfile, "%f %ld\n", now, ones);
-			fprintf(nofile, "%f %ld\n", now, bip);
+			fprintf(trivfile, "%f %ld\n", now, one_optimizations);
+			fprintf(nofile, "%f %ld\n", now, failed_compositions);
 			fflush(firfile);
 			fflush(hotfile);
 			fflush(tempfile);
@@ -140,7 +140,7 @@ WriteStats() {
 
 		if (statsfile != NULL) {
 			fprintf(statsfile, "%ld %f %d %ld %ld %ld %ld %ld %ld %d %d %d %ld %d %d %ld %ld %ld %ld\n",
-			        (long)wall_epoch, now, rank, loops, processed_actions, edge_compositions, fires, ones, bip, graph_nodes, nhot, pending_actions,
+			        (long)wall_epoch, now, rank, loops, processed_actions, edge_compositions, fires, one_optimizations, failed_compositions, graph_nodes, nhot, pending_actions,
 			        graph_edges, local_pending, incoming_pending, outgoing_pending, global_physical_msgs, nTickSend, nFullSend);
 			fflush(statsfile);
 		}
@@ -193,16 +193,16 @@ NodeCombustion(node *n, int polarity) {
 		strcpy(neg, "");
 		edge_compositions++;
 
-		locf_counter = 0;
+		local_family_reductions = 0;
 		outp = product(a, b, pos, neg);
 		//    DEBUG    printf("(%d) number of family reductions %ld (node families %d)\n", rank,
-		//    locf_counter,n->families);
-		if (locf_counter > n->families)
-			n->families = locf_counter;
+		//    local_family_reductions,n->families);
+		if (local_family_reductions > n->families)
+			n->families = local_family_reductions;
 
 		if (!outp) {
 			TRACING fprintf(logfile, "NULL(%d)\n", outp);
-			bip++;
+			failed_compositions++;
 		} else if (isone(pos) && (XJ->sto == IN)) {
 			TRACING {
 				Print(G, incoming, edge_compositions);
@@ -213,7 +213,7 @@ NodeCombustion(node *n, int polarity) {
 				fprintf(logfile, "(%d)-", rank);
 			}
 
-			ones++;
+			one_optimizations++;
 			if ((outp == 40) || (outp == 42)) {
 				TRACING fprintf(logfile, "\n\t\t CAMBIO DI POLARITA' da %d ", XJ->side);
 				XJ->side = !XJ->side;
@@ -230,7 +230,7 @@ NodeCombustion(node *n, int polarity) {
 				fprintf(logfile, "OPT %s\n", pos);
 				fprintf(logfile, "(%d)+", rank);
 			}
-			ones++;
+			one_optimizations++;
 			if ((outp == 40) || (outp == 42)) {
 				TRACING fprintf(logfile, "\n\t\t CAMBIO DI POLARITA' da %d", XI->side);
 				XI->side = !XI->side;
@@ -406,7 +406,7 @@ BDumpS(struct mbuffer *b) {
 void
 FunReceiveMessages() {
 
-	int temporaneo1, i;
+	int received_action_count, i;
 
 	char *position;
 	int maxdim;
@@ -415,7 +415,7 @@ FunReceiveMessages() {
 	int ub;
 
 	if (size != 1) {
-		/*  int temporaneo1=0; */
+		/*  int received_action_count=0; */
 		dataflag = 1;
 		MPI_Iprobe(MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &dataflag, &status);
 		while (dataflag) {
@@ -425,8 +425,8 @@ FunReceiveMessages() {
 			MPI_Recv(rbuf, maxdim, MPI_CHAR, MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &status);
 			position = rbuf + sizeof(int);
 
-			memcpy((char *)&temporaneo1, (char *)rbuf, sizeof(int));
-			aggregation_cumulate += temporaneo1;
+			memcpy((char *)&received_action_count, (char *)rbuf, sizeof(int));
+			aggregation_cumulate += received_action_count;
 			num_receives++;
 
 			/*
@@ -438,7 +438,7 @@ FunReceiveMessages() {
 			 now = (smtime.tms_utime+smtime.tms_stime)/60.0;
 			 OUTPUT
 			 {
-			 fprintf(coldfile,"%f %d\n",now,temporaneo1);
+			 fprintf(coldfile,"%f %d\n",now,received_action_count);
 
 			 fprintf(anamfile,"%f %ld\n",now,
 			 aggregation_cumulate/num_receives);
@@ -459,18 +459,18 @@ FunReceiveMessages() {
 
 			/*
 			 printf("(%d) RCVS %d, TOTAGG %d, AGGMSG %d\n",
-			 rank,num_receives,aggregation_cumulate,temporaneo1);
+			 rank,num_receives,aggregation_cumulate,received_action_count);
 			 */
 
 #ifdef _DEBUG
 			DEBUG_AGGREGATION {
-				printf("(%d) incoming message (of size %d)\n", rank, temporaneo1);
+				printf("(%d) incoming message (of size %d)\n", rank, received_action_count);
 				fflush(stdout);
 			}
 #endif
 			/*  for(i= 0;i<AGGREGATIONWINDOW;i++)	   */
 
-			for (i = 0; i < temporaneo1; i++) {
+			for (i = 0; i < received_action_count; i++) {
 
 #if MINPRIORITY > 1
 				ub = UpperBound((struct messaggio *)position);
@@ -500,7 +500,7 @@ FunReceiveMessages() {
 
 	buf_flush();
 
-	contatore_combustioni_f = 0;
+	batch_processed_actions = 0;
 	schedule = 0;
 
 	TRACING {
@@ -511,8 +511,8 @@ FunReceiveMessages() {
 
 void
 FunInteraction() {
-	int contatore_combustioni_f = 0;
-	int nc1, temporaneo2;
+	int batch_processed_actions = 0;
+	int nc1, packet_action_count;
 	int h;
 #if MINPRIORITY > 1
 	int z;
@@ -522,7 +522,7 @@ FunInteraction() {
 		fflush(stdout);
 	};
 
-	while ((pending_actions > 0) && (contatore_combustioni_f < CHECKTICKS)) {
+	while ((pending_actions > 0) && (batch_processed_actions < CHECKTICKS)) {
 
 		lidle = idle;
 		idle += loops - 1;
@@ -571,7 +571,7 @@ FunInteraction() {
 
 		if (schedule < MINPRIORITY) {
 			processed_actions++;
-			contatore_combustioni_f++;
+			batch_processed_actions++;
 			TRACING fprintf(logfile, "(%d) POP(%d) \n", rank, schedule);
 			PopMessage(&msg, &incoming[schedule]);
 
@@ -649,9 +649,9 @@ FunInteraction() {
 
 				if ((outcontrol[h] > 0) && (tickcontrol[h] >= maxTick[h])) {
 					nc1 = sizeof(int) + outcontrol[h] * sizeof(struct messaggio);
-					temporaneo2 = outcontrol[h];
+					packet_action_count = outcontrol[h];
 
-					memcpy((char *)buf[h], (char *)&temporaneo2, sizeof(int));
+					memcpy((char *)buf[h], (char *)&packet_action_count, sizeof(int));
 					/***************** Carlo *******************************/
 					nTickSend++;
 					nrApplMsg[h] += outcontrol[h];
@@ -735,9 +735,9 @@ FunInteraction() {
 
 		if (outcontrol[h] > 0) {
 			nc1 = sizeof(int) + outcontrol[h] * sizeof(struct messaggio);
-			temporaneo2 = outcontrol[h];
+			packet_action_count = outcontrol[h];
 
-			memcpy((char *)buf[h], (char *)&temporaneo2, sizeof(int));
+			memcpy((char *)buf[h], (char *)&packet_action_count, sizeof(int));
 			/***************** Carlo ***************************************/
 			nTickSend++;
 			nrApplMsg[h] += outcontrol[h];
@@ -853,10 +853,10 @@ PrintResult() {
 		printf("(%d) final nodes         :  %d\n", rank, graph_nodes);
 		printf("(%d) edge compositions   :  %ld\n", rank, edge_compositions);
 		printf("(%d) fires               :  %ld\n", rank, fires);
-		printf("(%d) trivial             :  %ld optimized\n", rank, ones);
-		printf("(%d) family reductions   :  %ld\n", rank, fam_counter);
+		printf("(%d) trivial             :  %ld optimized\n", rank, one_optimizations);
+		printf("(%d) family reductions   :  %ld\n", rank, family_reductions);
 		printf("(%d) loops               :  %ld\n", rank, lastloop);
-		printf("(%d) computing loops     :  %ld\n", rank, francesco);
+		printf("(%d) computing loops     :  %ld\n", rank, computing_loops);
 		printf("(%d) idle loops          :  %ld (%ld)\n", rank, lidle, idle);
 		printf("(%d) listen loops        :  %ld\n", rank, lbip2);
 		printf("(%d) received messages   :  %ld\n", rank, num_receives);
@@ -908,7 +908,7 @@ PrintResult() {
 			fprintf(logfile, "(%d) edge compositions   :  %ld\n", rank, edge_compositions);
 			fprintf(logfile, "(%d) fires                :  %ld\n", rank, fires);
 			fprintf(logfile, "(%d) loops                :  %ld\n", rank, lastloop);
-			fprintf(logfile, "(%d) computing Loops      :  %ld\n", rank, francesco);
+			fprintf(logfile, "(%d) computing Loops      :  %ld\n", rank, computing_loops);
 			fprintf(logfile, "(%d) idle Loops           :  %ld (%ld)\n", rank, lidle, idle);
 			fprintf(logfile, "(%d) listen Loops         :  %ld\n", rank, lbip2);
 			fprintf(logfile, "(%d) received messages    :  %d\n", rank, h);

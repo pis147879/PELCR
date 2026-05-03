@@ -41,7 +41,7 @@
 unsigned int GML_line;
 unsigned int GML_column;
 
-extern int npozzi;
+extern int cut_node_count;
 
 void
 OpenFileInitStruct() {
@@ -55,7 +55,7 @@ OpenFileInitStruct() {
 	num_receives = 0;
 	global_physical_msgs = 0;
 
-	bip = 0;
+	failed_compositions = 0;
 	processed_actions = 0;
 	edge_compositions = 0;
 	bip4 = 0;
@@ -64,7 +64,7 @@ OpenFileInitStruct() {
 	incoming_actions_snapshot = 0;
 	graph_nodes = 0;
 	graph_edges = 0;
-	ones = 0;
+	one_optimizations = 0;
 
 	idle = 0;
 	lidle = 0;
@@ -253,8 +253,8 @@ GML_parser(FILE *source, struct GML_stat *stat, int open) {
 	struct GML_pair *tmp = NULL;
 	struct GML_list_elem *tmp_elem;
 
-	struct messaggio pozzi[MAXCUTNODES];
-	// int npozzi = 0;
+	struct messaggio cut_node_messages[MAXCUTNODES];
+	// int cut_node_count = 0;
 
 	assert(stat);
 
@@ -414,7 +414,7 @@ GML_parser(FILE *source, struct GML_stat *stat, int open) {
 
 		tmp = pair;
 		if (!strcmp(pair->key, "edge")) {
-			npozzi = GML_edge_det(pair->value.list, pozzi, npozzi);
+			cut_node_count = GML_edge_det(pair->value.list, cut_node_messages, cut_node_count);
 		};
 		pair = (struct GML_pair *)malloc(sizeof(struct GML_pair));
 		tmp->next = pair;
@@ -424,14 +424,14 @@ GML_parser(FILE *source, struct GML_stat *stat, int open) {
 	free(pair);
 	{
 		int i;
-		if (npozzi > 0) {
+		if (cut_node_count > 0) {
 			printf("\n\n\n");
-			for (i = 0; i < npozzi; i++) {
+			for (i = 0; i < cut_node_count; i++) {
 				//			printf("pozzo n.%d nodo
-				//%d[%p]\n",i,(int)pozzi[i].vtarget.source,(void*((pozzi[i].vtarget).source)));
-				PushMessage(&pozzi[i]);
-				pozzi[i].side = !(pozzi[i].side);
-				PushMessage(&pozzi[i]);
+				//%d[%p]\n",i,(int)cut_node_messages[i].vtarget.source,(void*((cut_node_messages[i].vtarget).source)));
+				PushMessage(&cut_node_messages[i]);
+				cut_node_messages[i].side = !(cut_node_messages[i].side);
+				PushMessage(&cut_node_messages[i]);
 			};
 			printf("\n\n\n");
 		};
@@ -521,7 +521,7 @@ GML_print_list(struct GML_pair *list, int level) {
 }
 
 int
-GML_edge_det(struct GML_pair *list, struct messaggio *pozzi, int nnpozzi) {
+GML_edge_det(struct GML_pair *list, struct messaggio *cut_node_messages, int cut_node_count) {
 	edge *vsource, *vtarget;
 	int storeclass, polarity;
 
@@ -584,10 +584,10 @@ GML_edge_det(struct GML_pair *list, struct messaggio *pozzi, int nnpozzi) {
 			StoreMessage(&m, vtarget, vsource, weight, storeclass, polarity);
 			PushMessage(&m);
 			if (vtarget->sto == IN)
-				nnpozzi = SinkList(&m, pozzi, nnpozzi);
+				cut_node_count = SinkList(&m, cut_node_messages, cut_node_count);
 		};
 	};
-	return nnpozzi;
+	return cut_node_count;
 }
 
 /*

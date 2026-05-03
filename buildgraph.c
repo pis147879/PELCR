@@ -1718,7 +1718,7 @@ InitializeIncoming(termGraph *t) {
 			//  DEBUG printf("after push message. sto target=%d\n",vtarget->sto);
 
 			if (vtarget->sto == IN)
-				npozzi = SinkList(&m, pozzi, npozzi);
+				cut_node_count = SinkList(&m, cut_node_messages, cut_node_count);
 			//  DEBUG printf("after sink\n");
 		}
 
@@ -1761,14 +1761,14 @@ InitializeIncoming(termGraph *t) {
 			                 //  DEBUG printf("after push message\n");
 
 			/*
-			 if(vtarget->sto==IN) npozzi = SinkList(&m,&pozzi[npozzi],npozzi);
+			 if(vtarget->sto==IN) cut_node_count = SinkList(&m,&cut_node_messages[cut_node_count],cut_node_count);
 			 printf("after sink\n");
 			 */
 		}
 	}
 
 	/* invia effettivamente gli EOT */
-	if (npozzi > 0) {
+	if (cut_node_count > 0) {
 		printf("(%d) sending initial graph termination signals (eot)\n", rank);
 		TRACING fprintf(logfile, "(%d) sending initial graph termination signals (eot)\n", rank);
 	};
@@ -1776,11 +1776,11 @@ InitializeIncoming(termGraph *t) {
 	{
 		int i;
 
-		for (i = 0; i < npozzi; i++) {
-			//  DEBUG printf("pozzo n.%d nodo %d[%p]\n",i,(int)pozzi[i].vtarget.source,pozzi[i].vtarget.source);
-			PushMessage(&pozzi[i]); /* In initIncoming */
-			pozzi[i].side = !(pozzi[i].side);
-			PushMessage(&pozzi[i]);
+		for (i = 0; i < cut_node_count; i++) {
+			//  DEBUG printf("cut node n.%d node %d[%p]\n",i,(int)cut_node_messages[i].vtarget.source,cut_node_messages[i].vtarget.source);
+			PushMessage(&cut_node_messages[i]); /* In initIncoming */
+			cut_node_messages[i].side = !(cut_node_messages[i].side);
+			PushMessage(&cut_node_messages[i]);
 
 			TRACING BDump(&incoming[schedule]);
 		}
@@ -1792,7 +1792,7 @@ InitializeIncoming(termGraph *t) {
 	TRACING printf("(%d) exit from initialization procedure\n", rank);
 	TRACING printf("(%d) message stack size (of schedule %d) is |%d-%d|=%d\n", rank, schedule, incoming[schedule].last,
 	               incoming[schedule].first, incoming[schedule].last - incoming[schedule].first);
-	TRACING printf("(%d) number of target nodes %d\n", rank, npozzi);
+	TRACING printf("(%d) number of target nodes %d\n", rank, cut_node_count);
 	TRACING printf("(%d) message stack size (of schedule %d) is |%d-%d|=%d\n", rank, size, incoming[size].last,
 	               incoming[size].first, incoming[size].last - incoming[size].first);
 }

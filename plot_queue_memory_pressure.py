@@ -43,8 +43,8 @@ STATS_COLUMNS = [
     "processed_actions",
     "edge_compositions",
     "fires",
-    "ones",
-    "nofires",
+    "one_optimizations",
+    "failed_compositions",
     "graph_nodes",
     "nhot",
     "pending_actions",
@@ -142,6 +142,14 @@ def read_stats(path):
                 row["edge_compositions"] = row["bip3"]
             if "bip3" not in row and "edge_compositions" in row:
                 row["bip3"] = row["edge_compositions"]
+            if "one_optimizations" not in row and "ones" in row:
+                row["one_optimizations"] = row["ones"]
+            if "ones" not in row and "one_optimizations" in row:
+                row["ones"] = row["one_optimizations"]
+            if "failed_compositions" not in row and "nofires" in row:
+                row["failed_compositions"] = row["nofires"]
+            if "nofires" not in row and "failed_compositions" in row:
+                row["nofires"] = row["failed_compositions"]
             if "graph_nodes" not in row and "temp" in row:
                 row["graph_nodes"] = row["temp"]
             if "temp" not in row and "graph_nodes" in row:

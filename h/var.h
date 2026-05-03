@@ -63,16 +63,16 @@ PELCR_EXTERN int schedule;
 PELCR_EXTERN int pflag;
 
 PELCR_EXTERN int traceflag, inflag, outflag, verflag;
-PELCR_EXTERN long bip, processed_actions, edge_compositions, bip4, fam_counter;
-PELCR_EXTERN int locf_counter;
-PELCR_EXTERN long fires, loops, prnsteps, ones;
+PELCR_EXTERN long failed_compositions, processed_actions, edge_compositions, bip4, family_reductions;
+PELCR_EXTERN int local_family_reductions;
+PELCR_EXTERN long fires, loops, prnsteps, one_optimizations;
 PELCR_EXTERN int unaddtest, uneottest;
 PELCR_EXTERN int laddtest, leottest;
 PELCR_EXTERN long idle, lidle, lbip2;
 PELCR_EXTERN int graph_nodes, nhot, ncold, scount;
-PELCR_EXTERN long francesco, lastloop;
+PELCR_EXTERN long computing_loops, lastloop;
 
-PELCR_EXTERN int npozzi;
+PELCR_EXTERN int cut_node_count;
 
 /* PELCR_EXTERN int fra_hot; */
 PELCR_EXTERN int incoming_actions_snapshot;
@@ -162,11 +162,11 @@ PELCR_EXTERN long applicative_msgs[MAXNPROCESS];
 /***********************************************************************/
 
 /* per lo scheduler */
-PELCR_EXTERN int contatore_combustioni_f;
+PELCR_EXTERN int batch_processed_actions;
 
 PELCR_EXTERN HashTable *BookTable[MAXNPROCESS];
 
-PELCR_EXTERN struct messaggio pozzi[MAXCUTNODES]; /*maximal number of cut-nodes in the parsed input*/
+PELCR_EXTERN struct messaggio cut_node_messages[MAXCUTNODES]; /*maximal number of cut-nodes in the parsed input*/
 
 PELCR_EXTERN int lift;
 PELCR_EXTERN int varname;

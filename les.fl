@@ -174,8 +174,8 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 	  /*parsing gml*/
 	  
 	  FILE *gmlfile;
-      extern int npozzi ;
-//	  struct messaggio pozzi[MAXCUTNODES];
+      extern int cut_node_count ;
+//	  struct messaggio cut_node_messages[MAXCUTNODES];
 	  
 	  struct GML_pair*list;
 	  struct GML_stat*stat= (struct GML_stat*)malloc(sizeof(struct GML_stat));
@@ -235,7 +235,7 @@ path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
 	  BDump(&incoming[schedule]);
 	  printf("(%d) exit from initialization procedure, schedule = %d\n",rank,schedule);
 	  printf("(%d) message stack size (of schedule %d) is |%d-%d|=%d\n",rank,schedule,incoming[schedule].last,incoming[schedule].first,incoming[schedule].last-incoming[schedule].first);
-	  printf("(%d) number of target nodes %d\n",rank,npozzi);
+	  printf("(%d) number of target nodes %d\n",rank,cut_node_count);
 	  BEGIN(INITIAL);
 	  return GMLGRAPH ;
 }

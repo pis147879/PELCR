@@ -71,10 +71,9 @@ void GML_free_list (struct GML_pair*, struct GML_list_elem*);
 
 void GML_print_list (struct GML_pair*, int);
 
-int GML_edge_det(struct GML_pair*list, struct messaggio*pozzi, int npozzi);
+int GML_edge_det(struct GML_pair*list, struct messaggio*cut_node_messages, int cut_node_count);
 
 //int SinkList(struct messaggio *,struct messaggio *,int);
 
 #endif
-
 
