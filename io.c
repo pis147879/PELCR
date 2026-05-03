@@ -56,12 +56,14 @@ OpenFileInitStruct() {
 	global_physical_msgs = 0;
 
 	bip = 0;
-	bip2 = 0;
-	bip3 = 0;
+	processed_actions = 0;
+	edge_compositions = 0;
 	bip4 = 0;
 	fires = 0;
 	loops = 0;
-	temp = 0;
+	incoming_actions_snapshot = 0;
+	graph_nodes = 0;
+	graph_edges = 0;
 	ones = 0;
 
 	idle = 0;
@@ -122,6 +124,10 @@ OpenFileInitStruct() {
 		system(command);
 		sprintf(namefile, "run.%d.log", rank);
 		logfile = fopen(namefile, "w");
+		if (statsfile != NULL) {
+			fclose(statsfile);
+			statsfile = NULL;
+		}
 #ifdef _DEBUG
 		TRACING {
 			printf("(%d) opened files:\n", rank);

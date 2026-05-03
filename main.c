@@ -59,8 +59,8 @@ main(int argc, char **argv) {
 	verflag = 0;
 
 	bip = 0;
-	bip2 = 0;
-	bip3 = 0;
+	processed_actions = 0;
+	edge_compositions = 0;
 	bip4 = 0;
 	fires = 0;
 	loops = 0;
@@ -82,7 +82,10 @@ main(int argc, char **argv) {
 
 	maxubound = 1;
 	local_pending = 0;
-	edges_counter = 0;
+	pending_actions = 0;
+	incoming_actions_snapshot = 0;
+	graph_nodes = 0;
+	graph_edges = 0;
 	inittime = 0;
 	finaltime = 0;
 	contatore_combustioni_f = 0;
@@ -229,6 +232,7 @@ main(int argc, char **argv) {
 
 				/* BROADCAST TO MPICOMMWORLD RENDEZ-VOUS POINT AFTER PARSING*/
 				MPI_Bcast(&fine, 1, MPI_INT, 0, MPI_COMM_WORLD);
+				MPI_Bcast(infile, MAXNAMELEN, MPI_CHAR, 0, MPI_COMM_WORLD);
 				if (fine != MAXNUMCOST + 1) {
 					BDump(&incoming[schedule]);
 					/*MPI_Barrier(MPI_COMM_WORLD);*/
@@ -237,11 +241,12 @@ main(int argc, char **argv) {
 					OUTPUT printf("(%d) n. of activated processes %d\n", rank, number_of_processes);
 					environment = NULL;
 					TRACING fprintf(logfile, "(%d) COLDS=[%p] HOTS=[%p]\n", rank, (void *)G.cold, (void *)G.hot);
-					/*DEBUG Print(G,incoming,bip3);*/
+					/*DEBUG Print(G,incoming,edge_compositions);*/
 				}
 			}
 			if WARMING {
 				MPI_Bcast(&fine, 1, MPI_INT, 0, MPI_COMM_WORLD);
+				MPI_Bcast(infile, MAXNAMELEN, MPI_CHAR, 0, MPI_COMM_WORLD);
 				if (fine != MAXNUMCOST + 1) {
 					kindex = fine;
 					/*MPI_Barrier(MPI_COMM_WORLD);*/

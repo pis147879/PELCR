@@ -95,7 +95,7 @@ SendAddEdge(edge *N, edge *E, char *sw, int sto) {
 				int localh = h - 1;
 				while (localh != h) {
 					localh = h;
-					bip2++;
+					processed_actions++;
 					MPI_Test(&request, &flag, &status);
 					if (flag) {
 						char swgt[MAXLENWEIGHT];
@@ -211,7 +211,7 @@ SendAddEdge(edge *N, edge *E, char *sw, int sto) {
 		sbuflong[4] = (long)E->source;
 		sbuflong[5] = E->sto;
 		sbuflong[6] = E->creator;
-		sbuflong[0] = temp;
+		sbuflong[0] = graph_nodes;
 		strcpy((char *)sbuf, (char *)sbuflong);
 		strcpy((char *)(sbuf + 7 * sizeof(long)), sw);
 
@@ -283,7 +283,7 @@ LightProcess(int dest) {
 	static int min = 1;
 
 	min++;
-	if (TempProcess[min % size] >= temp) {
+	if (TempProcess[min % size] >= graph_nodes) {
 		return rank;
 	} else {
 		return min % size;
@@ -296,7 +296,7 @@ LightProcess2(int dest) {
 
 	min++;
 
-	if (TempProcess[min % size] >= temp) {
+	if (TempProcess[min % size] >= graph_nodes) {
 		return rank;
 	} else {
 		return min % size;
@@ -361,7 +361,8 @@ LightProcess7(int dest) {
 
 	/*  if(((float)TempProcess[min%size])>=((float)1.1*nhot)) */
 
-	if (TempProcess[min % size] >= (fra_hot - 20)) {
+	/* if (TempProcess[min % size] >= (fra_hot - 20)) { */
+	if (TempProcess[min % size] >= (incoming_actions_snapshot - 20)) {
 		return rank;
 	} else {
 		return min % size;
@@ -373,16 +374,16 @@ int
 LightProcess8(int dest) {
 	static int min = 1;
 	static int flag = 0;
-	int temp;
+	int selected;
 
 	if (flag < BURST) {
 		flag++;
 		return min % size;
 	} else {
 		flag = 0;
-		temp = min;
+		selected = min;
 		min++;
-		return temp % size;
+		return selected % size;
 	};
 }
 */
@@ -390,12 +391,16 @@ LightProcess8(int dest) {
 void
 buf_flush() {
 	/* qui viene replicata l'analisi sulla priorita' del messaggio*/
-	int priority, i, ub;
+	int i;
+#if MINPRIORITY > 1
+	int priority, ub;
+#endif
 	struct mbuffer *l;
 	struct messaggio *m;
 
 	for (i = 0; i < local_pending; i++) {
 		m = (struct messaggio *)(buf[rank] + (i * sizeof(struct messaggio)));
+#if MINPRIORITY > 1
 		ub = UpperBound(m);
 		priority = floor((MINPRIORITY - 1) * (1 - (float)ub / (float)maxubound));
 
@@ -403,6 +408,9 @@ buf_flush() {
 		//      DEBUG      printf("(%d):: priority %d\n", rank, priority);
 
 		l = &incoming[priority];
+#else
+		l = &incoming[0];
+#endif
 
 		/*
 	  printf("STACK DUMP(%d-%d)\n",l->first,l->last);
@@ -423,7 +431,7 @@ buf_flush() {
 		};
 #endif
 
-		edges_counter++;
+		pending_actions++;
 	}
 
 	local_pending = 0;
@@ -448,8 +456,8 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 	timestamp++;
 	InCounter[m->sender]++;
 	if (m->sender != rank) {
-		TempProcess[m->sender] = m->temp;
-		if (m->temp < TempProcess[lightprocess])
+		TempProcess[m->sender] = m->sender_load;
+		if (m->sender_load < TempProcess[lightprocess])
 			lightprocess = m->sender;
 	}
 	l->first = (l->first + 1) % MAXPENDING;
@@ -509,7 +517,7 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 		k[kindex][2]++;
 	}
 
-	edges_counter--;
+	pending_actions--;
 	return;
 }
 
@@ -538,11 +546,11 @@ PushMessage(struct messaggio *m) {
 	 */
 
 	if (dest == rank) {
-		int temp;
+		int offset;
 
-		temp = local_pending * sizeof(struct messaggio);
+		offset = local_pending * sizeof(struct messaggio);
 		lout = buf[rank];
-		lout = lout + temp;
+		lout = lout + offset;
 
 		memcpy((char *)lout, (char *)m, sizeof(struct messaggio));
 		local_pending++;
@@ -688,7 +696,7 @@ AggregationControl1() { /*copiata*/
 		if ((pr != rank) && (nrFisicMsg[pr] != 0)) {
 			aggregationRatio[pr] = (((float)nrApplMsg[pr]) / ((float)nrFisicMsg[pr])) / (float)aggregationWindow[pr];
 			/*
-		  printf("(%d) %d ticks",rank,bip3);
+		  printf("(%d) %d ticks",rank,edge_compositions);
 		  printf("\t WDIM[%d]=%d",pr,aggregationWindow[pr]);
 		  printf("\tFis=%d\tApp=%d\tRatio=%4.2f\n",nrFisicMsg[pr], nrApplMsg[pr],aggregationRatio[pr]);
 			*/
@@ -721,7 +729,7 @@ AggregationControl2() { /*copiata*/
 		if ((pr != rank) && (nrFisicMsg[pr] != 0)) {
 			aggregationRatio[pr] = (((float)nrApplMsg[pr]) / ((float)nrFisicMsg[pr])) / (float)aggregationWindow[pr];
 			/*
-		  printf("(%d) %d ticks",rank,bip3);
+		  printf("(%d) %d ticks",rank,edge_compositions);
 		  printf("\t WDIM[%d]=%d",pr,aggregationWindow[pr]);
 		  printf("\tFis=%d\tApp=%d\tRatio=%4.2f",nrFisicMsg[pr],nrApplMsg[pr],aggregationRatio[pr]);
 			*/
@@ -757,7 +765,7 @@ AggregationControl3() { /*copiata*/
 	for (pr = 0; pr < size; pr++)
 		if ((pr != rank) && (nrFisicMsg[pr] != 0)) {
 			aggregationRatio[pr] = (((float)nrApplMsg[pr]) / ((float)nrFisicMsg[pr])) / (float)aggregationWindow[pr];
-			/*  printf("(%d) %d ticks",rank,bip3);
+			/*  printf("(%d) %d ticks",rank,edge_compositions);
 			printf("\t WDIM[%d]=%d",pr,aggregationWindow[pr]);
 			printf("\tFis=%d\tApp=%d\tRatio=%4.2f",nrFisicMsg[pr],nrApplMsg[pr],aggregationRatio[pr]); */
 			if (aggregationRatio[pr] >= TRHRIGHT) {
@@ -794,7 +802,7 @@ AggregationControl4() { /*copiata*/
 		if ((pr != rank) && (nrFisicMsg[pr] != 0)) {
 			aggregationRatio[pr] = (((float)nrApplMsg[pr]) / ((float)nrFisicMsg[pr])) / (float)aggregationWindow[pr];
 			/*
-		  printf("(%d) %d ticks",rank,bip3);
+		  printf("(%d) %d ticks",rank,edge_compositions);
 		  printf("\tFis=%d\tApp=%d\tRatio=%4.2f",nrFisicMsg[pr],nrApplMsg[pr],aggregationRatio[pr]);
 		  printf("\t WDIM[%d]=%d",pr,aggregationWindow[pr]);
 			*/
@@ -851,7 +859,7 @@ AggregationControl5() { /*copiata*/
 					maxTick[pr] = MAXTICK;
 			}
 			/*
-		  printf("(%d) %d ticks",rank,bip3);
+		  printf("(%d) %d ticks",rank,edge_compositions);
 		  printf("\tFis=%d\tApp=%d\tRatio=%4.2f",nrFisicMsg[pr],nrApplMsg[pr],aggregationRatio[pr]);
 		  printf("\t WDIM[%d]=%d",pr,aggregationWindow[pr]);
 		  printf("\t maxTick[%d]=%d\n",pr,maxTick[pr]);
@@ -909,11 +917,14 @@ ThreadReceiveMsgs() {
 			/*  for(i= 0;i<AGGREGATIONWINDOW;i++)  */
 
 			for (i = 0; i < temporaneo1; i++) {
+#if MINPRIORITY > 1
 				int priority;
 				int ub;
+#endif
 
 				pthread_mutex_lock(&mutex);
 
+#if MINPRIORITY > 1
 				/*SCHEDULER*/
 				ub = UpperBound((struct messaggio *)position);
 				priority = floor((MINPRIORITY - 1) * (1 - (float)ub / (float)maxubound));
@@ -923,6 +934,9 @@ ThreadReceiveMsgs() {
 				/* FINE SCHEDULER */
 
 				PushIncomingMessage(priority, (struct messaggio *)position);
+#else
+				PushIncomingMessage(0, (struct messaggio *)position);
+#endif
 				position = position + sizeof(struct messaggio);
 				pthread_mutex_unlock(&mutex);
 			}
@@ -953,14 +967,14 @@ ThreadInteraction() {
 	  idle += loops-1;
 	  loops = 0;
 	  nhot=BDump(&incoming[schedule]);
-	  bip2++;
+	  processed_actions++;
 	  contatore_combustioni_f++;
 	  pthread_mutex_lock(&mutex);
 	  PopMessage(&msg,&incoming);
 	  pthread_mutex_unlock(&mutex);
 	*/
 
-	while ((edges_counter > 0) && (contatore_combustioni_f < CHECKTICKS)) {
+	while ((pending_actions > 0) && (contatore_combustioni_f < CHECKTICKS)) {
 		lidle = idle;
 		idle += loops - 1;
 		loops = 0;
@@ -968,17 +982,24 @@ ThreadInteraction() {
 		DEBUG_DISTRIBUTION fprintf(logfile, "(%d) ...seeking a non-empty incoming buffer\n", rank);
 #endif
 
+#if MINPRIORITY > 1
 		while (((schedule < MINPRIORITY) && (!(nhot = BDumpS(&incoming[schedule]))))) {
 #ifdef _DEBUG
 			DEBUG_DISTRIBUTION fprintf(logfile, "(%d) BUFFER %d ", rank, schedule);
 #endif
 			schedule++;
 		};
+#else
+		schedule = 0;
+		nhot = BDumpS(&incoming[0]);
+		if (!nhot)
+			schedule = MINPRIORITY;
+#endif
 #ifdef _DEBUG
 		DEBUG_DISTRIBUTION fprintf(logfile, "(%d) %d is the first non empty \n", rank, schedule);
 #endif
 		if (schedule < MINPRIORITY) {
-			bip2++;
+			processed_actions++;
 			contatore_combustioni_f++;
 			DEBUG fprintf(logfile, "(%d) POP(%d) \n", rank, schedule);
 
@@ -1024,7 +1045,7 @@ ThreadInteraction() {
 					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, msg.weight, e.creator, msg.side, e.side);
 
 					NodeCombustion(targetaddress, msg.side);
-					/*            DEBUG Print(G,&incoming,bip3); */
+					/*            DEBUG Print(G,&incoming,edge_compositions); */
 					tim = time(&finaltime);
 				} break;
 			} /* END OF SWITCH */

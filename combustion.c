@@ -51,32 +51,99 @@ InitReference(edge *aux) {
 	return aux;
 }
 
+static void
+OpenStatsFile(void) {
+	char basename[MAXNAMELEN];
+	char statsname[MAXNAMELEN];
+	const char *start;
+	const char *dot;
+	size_t len;
+	size_t i;
+
+	if (statsfile != NULL)
+		return;
+
+	start = strrchr(infile, '/');
+	start = (start == NULL) ? infile : start + 1;
+	if (*start == '\0')
+		start = "pelcr";
+
+	dot = strrchr(start, '.');
+	len = (dot == NULL) ? strlen(start) : (size_t)(dot - start);
+	if (len >= sizeof(basename))
+		len = sizeof(basename) - 1;
+	memcpy(basename, start, len);
+	basename[len] = '\0';
+
+	for (i = 0; basename[i] != '\0'; i++)
+		if (!isalnum((unsigned char)basename[i]) && basename[i] != '-' && basename[i] != '_')
+			basename[i] = '_';
+
+	if (basename[0] == '\0')
+		strcpy(basename, "pelcr");
+
+	if (size == 1)
+		snprintf(statsname, sizeof(statsname), "%s-np=%d-stats.log", basename, size);
+	else
+		snprintf(statsname, sizeof(statsname), "%s-np=%d-rank=%d-stats.log", basename, size, rank);
+
+	statsfile = fopen(statsname, "w");
+	if (statsfile != NULL) {
+		/* The old fra_hot pre-pop load snapshot is now incoming_actions_snapshot. */
+		fprintf(statsfile,
+		        "# wall_epoch time rank loops processed_actions edge_compositions fires ones nofires graph_nodes nhot pending_actions "
+		        "graph_edges local_pending incoming_pending outgoing_pending global_physical_msgs nTickSend nFullSend\n");
+		fflush(statsfile);
+	}
+}
+
 void
 WriteStats() {
-	/*
-	 printf("(%d) Loop:           %d\n(%d) Fires:          %d\n",rank,loops,rank,fires);
-	 printf("(%d) Trivial Fires   %d\n",rank,ones);
-	 printf("(%d) No Fires        %d\n",rank,bip);
-	 printf("(%d) Linearity       %d\n",rank,bip4);
-	 printf("(%d) Temperature     %d\n",rank,temp);
-	 */
+	int h;
+	int incoming_pending = 0;
+	long outgoing_pending = local_pending;
 
-	if ((tempfile != NULL) && (!(bip2 % FREQ))) {
+	if (processed_actions % FREQ)
+		return;
+
+#if MINPRIORITY > 1
+	for (h = 0; h < MINPRIORITY; h++)
+		incoming_pending += BDumpS(&incoming[h]);
+#else
+	incoming_pending = BDumpS(&incoming[0]);
+#endif
+
+	for (h = 0; h < size; h++)
+		outgoing_pending += outcontrol[h];
+
+	OpenStatsFile();
+
+	if ((tempfile != NULL) || (statsfile != NULL)) {
 		float now;
+		time_t wall_epoch;
 		times(&smtime);
 
-		/* printf("%d\n",bip2);*/
+		wall_epoch = time(NULL);
 		now = (smtime.tms_utime + smtime.tms_stime) / 60.0;
-		/*printf("%d\n",nhot);*/
-		fprintf(firfile, "%f %ld\n", now, fires);
-		fprintf(tempfile, "%f %d\n", now, temp);
-		/*fprintf(coldfile,"%f %d\n",now,temporaneo1); */
-		fprintf(hotfile, "%f %d\n", now, nhot);
-		fprintf(trivfile, "%f %ld\n", now, ones);
-		fprintf(nofile, "%f %ld\n", now, bip);
-		fflush(firfile);
-		fflush(hotfile);
-		fflush(tempfile);
+
+		if (tempfile != NULL) {
+			fprintf(firfile, "%f %ld\n", now, fires);
+			fprintf(tempfile, "%f %d\n", now, graph_nodes);
+			/*fprintf(coldfile,"%f %d\n",now,temporaneo1); */
+			fprintf(hotfile, "%f %d\n", now, nhot);
+			fprintf(trivfile, "%f %ld\n", now, ones);
+			fprintf(nofile, "%f %ld\n", now, bip);
+			fflush(firfile);
+			fflush(hotfile);
+			fflush(tempfile);
+		}
+
+		if (statsfile != NULL) {
+			fprintf(statsfile, "%ld %f %d %ld %ld %ld %ld %ld %ld %d %d %d %ld %d %d %ld %ld %ld %ld\n",
+			        (long)wall_epoch, now, rank, loops, processed_actions, edge_compositions, fires, ones, bip, graph_nodes, nhot, pending_actions,
+			        graph_edges, local_pending, incoming_pending, outgoing_pending, global_physical_msgs, nTickSend, nFullSend);
+			fflush(statsfile);
+		}
 	}
 }
 /*END WRITE STATS*/
@@ -124,7 +191,7 @@ NodeCombustion(node *n, int polarity) {
 
 		strcpy(pos, "");
 		strcpy(neg, "");
-		bip3++;
+		edge_compositions++;
 
 		locf_counter = 0;
 		outp = product(a, b, pos, neg);
@@ -138,7 +205,7 @@ NodeCombustion(node *n, int polarity) {
 			bip++;
 		} else if (isone(pos) && (XJ->sto == IN)) {
 			TRACING {
-				Print(G, incoming, bip3);
+				Print(G, incoming, edge_compositions);
 				fprintf(logfile, "(%d) verify one-optimization \n", rank);
 				fprintf(logfile, "     OPT=%s STO=%d CHKONE=%d\n", pos, XJ->sto, isone(pos));
 				fprintf(logfile, "     OPT=%s STO=%d CHKONE=%d\n", neg, XI->sto, isone(neg));
@@ -158,7 +225,7 @@ NodeCombustion(node *n, int polarity) {
 			PushMessage(&m);
 			XI->sign = MINUS;
 		} else if (isone(neg) && (XI->sto == IN)) {
-			// DEBUG Print(G,bip3);
+			// DEBUG Print(G,edge_compositions);
 			TRACING {
 				fprintf(logfile, "OPT %s\n", pos);
 				fprintf(logfile, "(%d)+", rank);
@@ -195,7 +262,7 @@ NodeCombustion(node *n, int polarity) {
 				}
 			}
 			TRACING fflush(logfile);
-			/*DEBUG Print(G,bip3);*/
+			/*DEBUG Print(G,edge_compositions);*/
 			SendCreateNewNode(proc, sto, aux);
 			TRACING fprintf(logfile, "(%d)- sto:%d pol:%d side:%d\n", rank, sto, LEFT, XJ->side);
 			StoreMessage(&m, XJ, aux, neg, sto, LEFT);
@@ -228,7 +295,7 @@ PushIncomingMessage(int priority, struct messaggio *m) {
 	memcpy((char *)(&l->stack[l->last]), (char *)m, sizeof(struct messaggio));
 	l->last = (l->last + 1) % MAXPENDING;
 
-	edges_counter++;
+	pending_actions++;
 	return;
 }
 
@@ -251,8 +318,9 @@ ShowMessage(struct messaggio *m) {
 void
 StoreMessage(struct messaggio *m, edge *target, edge *source, char *weight, int storeclass, int pol) {
 	m->tpy = ADD_TAG;
-	m->temp = fra_hot;
-	/*m->temp= nhot; temp;*/
+	/* m->sender_load = fra_hot; */
+	m->sender_load = incoming_actions_snapshot;
+	/*m->sender_load= nhot; graph_nodes;*/
 	m->side = target->side;
 
 	m->vsource.rankpuit = source->rankpuit;
@@ -404,6 +472,7 @@ FunReceiveMessages() {
 
 			for (i = 0; i < temporaneo1; i++) {
 
+#if MINPRIORITY > 1
 				ub = UpperBound((struct messaggio *)position);
 
 				priority = floor((MINPRIORITY - 1) * (1 - (float)ub / (float)maxubound));
@@ -420,6 +489,9 @@ FunReceiveMessages() {
 #endif
 
 				PushIncomingMessage(priority, (struct messaggio *)position);
+#else
+				PushIncomingMessage(0, (struct messaggio *)position);
+#endif
 				position = position + sizeof(struct messaggio);
 			}
 			MPI_Iprobe(MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &dataflag, &status);
@@ -442,13 +514,15 @@ FunInteraction() {
 	int contatore_combustioni_f = 0;
 	int nc1, temporaneo2;
 	int h;
+#if MINPRIORITY > 1
 	int z;
+#endif
 
-	TRACING { // printf("(%d) before while (edges = %d)\n",rank,edges_counter);
+	TRACING { // printf("(%d) before while (pending_actions = %d)\n",rank,pending_actions);
 		fflush(stdout);
 	};
 
-	while ((edges_counter > 0) && (contatore_combustioni_f < CHECKTICKS)) {
+	while ((pending_actions > 0) && (contatore_combustioni_f < CHECKTICKS)) {
 
 		lidle = idle;
 		idle += loops - 1;
@@ -458,10 +532,18 @@ FunInteraction() {
 		TRACING fprintf(logfile, "(%d) ...seeking a non-empty incoming buffer\n", rank);
 		//      DEBUG	printf("(%d) *",rank);
 
-		fra_hot = 0;
+		/* fra_hot = 0; */
+#if MINPRIORITY > 1
+		incoming_actions_snapshot = 0;
+		/* for (z = 0; z < MINPRIORITY; z++) */
 		for (z = 0; z < MINPRIORITY; z++)
-			fra_hot += BDumpS(&incoming[z]);
+		/* 	fra_hot += BDumpS(&incoming[z]); */
+			incoming_actions_snapshot += BDumpS(&incoming[z]);
+#else
+		incoming_actions_snapshot = BDumpS(&incoming[0]);
+#endif
 
+#if MINPRIORITY > 1
 		while (((schedule < MINPRIORITY) && (!(nhot = BDump(&incoming[schedule]))))) {
 			TRACING fprintf(logfile, "(%d) BUFFER %d ", rank, schedule);
 			schedule++;
@@ -470,6 +552,12 @@ FunInteraction() {
 				fflush(stdout);
 			};
 		};
+#else
+		schedule = 0;
+		nhot = BDump(&incoming[0]);
+		if (!nhot)
+			schedule = MINPRIORITY;
+#endif
 
 		//      DEBUG printf("\n*\n");
 		TRACING {
@@ -482,7 +570,7 @@ FunInteraction() {
 		}
 
 		if (schedule < MINPRIORITY) {
-			bip2++;
+			processed_actions++;
 			contatore_combustioni_f++;
 			TRACING fprintf(logfile, "(%d) POP(%d) \n", rank, schedule);
 			PopMessage(&msg, &incoming[schedule]);
@@ -536,12 +624,12 @@ FunInteraction() {
 					NodeCombustion(targetaddress, msg.side);
 					//		DEBUG       printf("(%d) after combustion\n",rank);
 					//		DEBUG       fflush(stdout);
-					/*		DEBUG Print(G,incoming,bip3);*/
+					/*		DEBUG Print(G,incoming,edge_compositions);*/
 					/*  tim = time(&finaltime); */
 				} break;
 			} /* END OF SWITCH */
 
-			/*     OUTPUT WriteStats();  */
+			OUTPUT WriteStats();
 
 			//  DEBUG  printf("(%d) after switch\n",rank);
 			//	  DEBUG  fflush(stdout);
@@ -677,7 +765,7 @@ FunInteraction() {
 void
 ComputeResult() {
 	printf("(%d) running...\n", rank);
-	while ((!end_computation) && (loops <= maxloop) && ((maxfires == 0) || bip3 < maxfires)) {
+	while ((!end_computation) && (loops <= maxloop) && ((maxfires == 0) || edge_compositions < maxfires)) {
 		maxubound = 1;
 		if (!THREAD) {
 			FunReceiveMessages();
@@ -762,8 +850,8 @@ PrintResult() {
 #endif
 
 		printf("(%d) elapsed time        :  %d\n", rank, ((int)finaltime - (int)inittime));
-		printf("(%d) final nodes         :  %d\n", rank, temp);
-		printf("(%d) combusted nodes     :  %ld\n", rank, bip3);
+		printf("(%d) final nodes         :  %d\n", rank, graph_nodes);
+		printf("(%d) edge compositions   :  %ld\n", rank, edge_compositions);
 		printf("(%d) fires               :  %ld\n", rank, fires);
 		printf("(%d) trivial             :  %ld optimized\n", rank, ones);
 		printf("(%d) family reductions   :  %ld\n", rank, fam_counter);
@@ -816,8 +904,8 @@ PrintResult() {
 			}
 
 			fprintf(logfile, "(%d) elapsed time         :  %d\n", rank, ((int)finaltime - (int)inittime));
-			fprintf(logfile, "(%d) final nodes         :  %d\n", rank, temp);
-			fprintf(logfile, "(%d) combusted nodes  :  %ld\n", rank, bip3);
+			fprintf(logfile, "(%d) final nodes         :  %d\n", rank, graph_nodes);
+			fprintf(logfile, "(%d) edge compositions   :  %ld\n", rank, edge_compositions);
 			fprintf(logfile, "(%d) fires                :  %ld\n", rank, fires);
 			fprintf(logfile, "(%d) loops                :  %ld\n", rank, lastloop);
 			fprintf(logfile, "(%d) computing Loops      :  %ld\n", rank, francesco);

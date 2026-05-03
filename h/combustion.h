@@ -29,7 +29,7 @@
 struct messaggio {
 	/* debugging */
 	long timestamp; /* debugging information to check non-overlapping of messages */
-	int temp;       /* piggybacking of the workload of the hosting process */
+	int sender_load; /* piggybacking of the workload of the sending process */
 
 	/* symbolic and graph information */
 	int tpy;                   /* the type EOT or ADD_TAG */
@@ -70,7 +70,7 @@ struct termination_msg {
 void ComputeResult();
 void PrintResult();
 
-int BdumpS(struct mbuffer *);
+int BDumpS(struct mbuffer *);
 int BDump(struct mbuffer *);
 
 void NodeCombustion(node *n, int polarity);

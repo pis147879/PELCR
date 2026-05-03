@@ -5,14 +5,15 @@ set -eu
 interval="${1:-5}"
 pattern="${2:-combustion.linux -- -I ciccio}"
 
-echo "# timestamp pid_count total_rss_mb max_rss_mb max_hwm_mb"
+echo "# timestamp pid_count total_rss_mb max_rss_mb max_hwm_mb epoch"
 
 while :; do
     pids="$(pgrep -f "$pattern" || true)"
     ts="$(date '+%Y-%m-%d %H:%M:%S')"
+    epoch="$(date '+%s')"
 
     if [ -z "$pids" ]; then
-        echo "$ts 0 0 0 0"
+        echo "$ts 0 0 0 0 $epoch"
         sleep "$interval"
         continue
     fi
@@ -24,12 +25,13 @@ while :; do
 
     for pid in $pids; do
         status_file="/proc/$pid/status"
-        if [ ! -r "$status_file" ]; then
-            continue
+        if [ -r "$status_file" ]; then
+            rss_kb="$(awk '/^VmRSS:/ { print $2; exit }' "$status_file")"
+            hwm_kb="$(awk '/^VmHWM:/ { print $2; exit }' "$status_file")"
+        else
+            rss_kb="$(ps -o rss= -p "$pid" 2>/dev/null | awk '{ print $1; exit }')"
+            hwm_kb=0
         fi
-
-        rss_kb="$(awk '/^VmRSS:/ { print $2; exit }' "$status_file")"
-        hwm_kb="$(awk '/^VmHWM:/ { print $2; exit }' "$status_file")"
 
         rss_kb="${rss_kb:-0}"
         hwm_kb="${hwm_kb:-0}"
@@ -48,6 +50,6 @@ while :; do
     max_rss_mb=$((max_rss_kb / 1024))
     max_hwm_mb=$((max_hwm_kb / 1024))
 
-    echo "$ts $pid_count $total_rss_mb $max_rss_mb $max_hwm_mb"
+    echo "$ts $pid_count $total_rss_mb $max_rss_mb $max_hwm_mb $epoch"
     sleep "$interval"
 done

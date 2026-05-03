@@ -91,6 +91,7 @@ LiberaV(edge *P) {
 		}
 
 		free(P);
+		graph_edges--;
 	};
 #ifdef _DEBUG
 	DEBUG_MEM fprintf(logfile, "(%d) Exit Free Memory Procedure\n", rank);
@@ -128,6 +129,7 @@ AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int si
 		v->vector = p;
 		if (v->length != -1)
 			v->length = (v->length) + 1;
+		graph_edges++;
 
 #ifdef _DEBUG
 		DEBUG_MEM {
@@ -220,7 +222,7 @@ CreateNewNode(node *S) {
 	nS->prevpuit = NULL;
 	if (S != NULL)
 		S->prevpuit = nS;
-	temp++;
+	graph_nodes++;
 #ifdef _DEBUG
 	DEBUG_MEM {
 		fprintf(logfile, "(%d) NEXT([%p])=[%p]\n", rank, nS, nS->nextpuit);
@@ -298,7 +300,7 @@ SinkRemove(node *P) {
 			P->nextpuit->prevpuit = P->prevpuit;
 	};
 	free(P);
-	temp--;
+	graph_nodes--;
 #ifdef _DEBUG
 	DEBUG_MEM {
 		fprintf(logfile, "REMOVED NODE\n");
@@ -334,6 +336,7 @@ EdgeRemove(edge *e, node *P) {
 		};
 
 		free(e);
+		graph_edges--;
 		P->left.length = P->left.length - 1;
 		return pp;
 	};

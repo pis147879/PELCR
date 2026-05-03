@@ -238,7 +238,7 @@ mmwrite(FILE *wstream, struct messaggio *mm, int priority) {
 			node *target;
 			node *source;
 
-			TRACING printf("ADD %ld\n", bip3);
+			TRACING printf("ADD %ld\n", edge_compositions);
 			target = BookedAddress((mm->vtarget).creator, (long)(mm->vtarget).source);
 			source = BookedAddress((mm->vsource).creator, (long)(mm->vsource).source);
 
@@ -329,7 +329,7 @@ Print(graph g, struct mbuffer *b, long sq) {
 
 	if ((rank == 0) && (outflag)) {
 		fprintf(writefile, "graph [ id %ld directed 1 label \"\n    Input File: %s \n    ", loops, infile);
-		fprintf(writefile, "Iteration  n.%ld\n    Successfull Compositions:%ld\n\"\n", loops, bip3);
+		fprintf(writefile, "Iteration  n.%ld\n    Successfull Compositions:%ld\n\"\n", loops, edge_compositions);
 	}
 
 	/*
@@ -488,7 +488,7 @@ DebugPrint(graph g, int sq) {
 		};
 		if (rank == 0) {
 			fprintf(writefile, "graph [ id %ld directed 1 label \"\n    Input File: %s \n    ", loops, infile);
-			fprintf(writefile, "Iteration  n.%ld\n    Successfull Compositions:%ld\n\"\n", loops, bip3);
+			fprintf(writefile, "Iteration  n.%ld\n    Successfull Compositions:%ld\n\"\n", loops, edge_compositions);
 		};
 	};
 

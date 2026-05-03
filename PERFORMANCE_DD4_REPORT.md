@@ -59,6 +59,47 @@ xychart-beta
     line "Family Reductions" [72, 72, 72, 72, 72, 72]
 ```
 
+## Speedup Chart
+
+```mermaid
+xychart-beta
+    title "Speedup vs 1 Process"
+    x-axis [1, 2, 4, 8, 16, 32]
+    y-axis "Speedup" 0 --> 200
+    line "Speedup" [1.00, 2.82, 7.14, 22.22, 100.00, 200.00]
+```
+
+## Memory Analysis: Queue, Fires, and Memory Pressure
+
+The following plot compares the sequential `dd4` run with the `4`-process
+run using the stats files and the output of `monitor_combustion_memory.sh`.
+The stats logs are aligned with the memory log through the `wall_epoch`
+column.
+
+![dd4 pending, fires, and memory pressure](GML/dd4_pending_fires_memory.png)
+
+The pressure signals have different meanings and should not be read on a
+single shared scale:
+
+- `pending` is an instantaneous backlog signal. In this run it does not grow
+  monotonically with memory. The sequential run reaches an incoming-pending
+  peak of about `12.7k`; the `4`-process run reaches about `6.2k`. Outgoing
+  pending remains much smaller: about `199` in the sequential run and `463`
+  in the `4`-process run.
+- `fires` is cumulative, so the plot uses `fires/s`. The sequential run
+  averages about `11k fires/s`, while the `4`-process run averages about
+  `76k fires/s`. The parallel run compresses the same total amount of work
+  into a much shorter wall-clock interval.
+- Memory pressure grows almost monotonically during evaluation. The fresh
+  sequential run peaked at about `644 MB` total RSS. The fresh `4`-process
+  run peaked at about `1.55 GB` total RSS, with a maximum per process of
+  about `389 MB`.
+
+This suggests that, for `dd4`, memory pressure follows the growth of the
+evaluated graph and cumulative work more closely than it follows the
+instantaneous pending queues. There is no clear evidence in this run that a
+pending backlog is the primary cause of memory growth.
+
 ## Interpretation Note
 
 The `family reductions` totals are consistent and provide the main

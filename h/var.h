@@ -63,22 +63,23 @@ PELCR_EXTERN int schedule;
 PELCR_EXTERN int pflag;
 
 PELCR_EXTERN int traceflag, inflag, outflag, verflag;
-PELCR_EXTERN long bip, bip2, bip3, bip4, fam_counter;
+PELCR_EXTERN long bip, processed_actions, edge_compositions, bip4, fam_counter;
 PELCR_EXTERN int locf_counter;
 PELCR_EXTERN long fires, loops, prnsteps, ones;
 PELCR_EXTERN int unaddtest, uneottest;
 PELCR_EXTERN int laddtest, leottest;
 PELCR_EXTERN long idle, lidle, lbip2;
-PELCR_EXTERN int temp, nhot, ncold, scount;
+PELCR_EXTERN int graph_nodes, nhot, ncold, scount;
 PELCR_EXTERN long francesco, lastloop;
 
 PELCR_EXTERN int npozzi;
 
-PELCR_EXTERN int fra_hot;
+/* PELCR_EXTERN int fra_hot; */
+PELCR_EXTERN int incoming_actions_snapshot;
 
 PELCR_EXTERN struct tms smtime;
 
-PELCR_EXTERN FILE *readfile, *writefile, *firfile, *tempfile, *coldfile, *anamfile;
+PELCR_EXTERN FILE *readfile, *writefile, *firfile, *tempfile, *coldfile, *anamfile, *statsfile;
 PELCR_EXTERN FILE *mawfile[MAXNPROCESS], *maxwinfile[MAXNPROCESS];
 PELCR_EXTERN FILE *trivfile, *hotfile, *nofile, *logfile;
 PELCR_EXTERN char infile[MAXNAMELEN], outfile[MAXNAMELEN], directoryname[MAXNAMELEN];
@@ -106,7 +107,8 @@ PELCR_EXTERN int reotbuf[10], raddbuf[MAXLENWEIGHT], rcreatebuf[10], rdiebuf[10]
 PELCR_EXTERN struct mbuffer incoming[MINPRIORITY]; /* array of buffers of incoming messages */
 PELCR_EXTERN int maxubound;
 PELCR_EXTERN int local_pending;
-PELCR_EXTERN int edges_counter;
+PELCR_EXTERN int pending_actions;
+PELCR_EXTERN long graph_edges;
 
 /*outgoing,*outbuffer= &outgoing;*/
 
