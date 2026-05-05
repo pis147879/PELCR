@@ -38,7 +38,7 @@ HashTable *table_init(HashTable *table);
 
 unsigned long hash_ikey(unsigned long key);
 void rebuild_itable(HashTable *table);
-HashEntry *delete_fromilist(HashTable *table, HashEntry *entry, unsigned long key);
+HashEntry *delete_fromilist(HashTable *table, HashEntry *entry, unsigned long key, node **address, int *deleted);
 
 void table_iput(HashTable *table, unsigned long key, node *address);
 int table_iget(HashTable *table, unsigned long key, node **address);
@@ -47,6 +47,9 @@ void table_idelete(HashTable *table, unsigned long key, node **address);
 void table_idestroy(HashTable *table);
 node *BookedAddress(int rk, long ord);
 node *StoreBookedAddress(int rk, long ord, int sto);
+#if FREE_HOT_BOOKTABLE_ENTRIES
+void ReleaseBookedAddress(node *address);
+#endif
 void *safemalloc(int length);
 
 #endif

@@ -37,6 +37,11 @@ typedef struct node {
 	struct node *nextpuit;
 	struct node *prevpuit;
 	int sto;      /* node storage: IN = hot graph, OUT = cold graph */
+#if FREE_HOT_BOOKTABLE_ENTRIES
+	int has_booktable_entry;
+	int booktable_rank;
+	unsigned long booktable_key;
+#endif
 	int printed;  /* used in Print function to avoid duplication of the node*/
 	int families; /* the maximal number of family reductions in compositions of edges onto the node*/
 } node;

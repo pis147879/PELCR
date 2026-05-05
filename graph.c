@@ -433,6 +433,11 @@ CreateNewNode(node *S) {
 
 	nS->nextpuit = S;
 	nS->sto = IN;
+#if FREE_HOT_BOOKTABLE_ENTRIES
+	nS->has_booktable_entry = 0;
+	nS->booktable_rank = -1;
+	nS->booktable_key = 0;
+#endif
 	nS->families = 0;
 	nS->prevpuit = NULL;
 	if (S != NULL)
@@ -457,6 +462,11 @@ CreateNewBoundary(node *S) {
 
 	nS = NewNode();
 	nS->sto = OUT;
+#if FREE_HOT_BOOKTABLE_ENTRIES
+	nS->has_booktable_entry = 0;
+	nS->booktable_rank = -1;
+	nS->booktable_key = 0;
+#endif
 	nS->left.length = -1;
 	nS->left.vector = NULL;
 	nS->left.dejavu = NULL;
@@ -515,6 +525,9 @@ SinkRemove(node *P) {
 		if (P->nextpuit != NULL)
 			P->nextpuit->prevpuit = P->prevpuit;
 	};
+#if FREE_HOT_BOOKTABLE_ENTRIES
+	ReleaseBookedAddress(P);
+#endif
 	free(P);
 	graph_nodes--;
 #ifdef _DEBUG
