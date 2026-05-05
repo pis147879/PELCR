@@ -57,6 +57,10 @@
 #define TRUE 1
 #define FALSE 0
 
+#ifndef FREE_HOT_BOOKTABLE_ENTRIES
+#define FREE_HOT_BOOKTABLE_ENTRIES 0
+#endif
+
 /*nodo IN: appartiene alla forma normale; nodo OUT:non appartiene alla forma normale.......o viceversa?*/
 #define IN 1
 #define OUT 0

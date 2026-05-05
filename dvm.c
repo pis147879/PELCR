@@ -37,6 +37,18 @@
 #include "h/var.h"
 #define INIT_TABLE_SIZE 239
 
+#if FREE_HOT_BOOKTABLE_ENTRIES
+static void
+RememberBookedAddress(node *address, int rk, unsigned long ord) {
+	if (address == NULL)
+		return;
+
+	address->has_booktable_entry = 1;
+	address->booktable_rank = rk;
+	address->booktable_key = ord;
+}
+#endif
+
 void *
 safemalloc(int length) {
 	char *ptr;
@@ -166,7 +178,7 @@ table_iput(HashTable *table, unsigned long key, node *address)
 	}
 }
 HashEntry *
-delete_fromilist(HashTable *table, HashEntry *entry, unsigned long key)
+delete_fromilist(HashTable *table, HashEntry *entry, unsigned long key, node **address, int *deleted)
 
 /* HashEntry* */
 /* delete_fromilist(table,entry,key) */
@@ -179,6 +191,10 @@ delete_fromilist(HashTable *table, HashEntry *entry, unsigned long key)
 	if (entry == NULL)
 		return NULL;
 	if (entry->key == key) {
+		if (address != NULL)
+			*address = entry->address;
+		if (deleted != NULL)
+			*deleted = 1;
 		if (table->last == entry)
 			table->last = entry->pptr;
 		if (entry->nptr)
@@ -189,7 +205,7 @@ delete_fromilist(HashTable *table, HashEntry *entry, unsigned long key)
 		free(entry);
 		return next;
 	}
-	entry->next = delete_fromilist(table, entry->next, key);
+	entry->next = delete_fromilist(table, entry->next, key, address, deleted);
 	return entry;
 }
 void
@@ -201,26 +217,45 @@ table_idelete(HashTable *table, unsigned long key, node **address)
 /* unsigned long key; */
 {
 	unsigned long hkey;
+	int deleted = 0;
 
 	hkey = hash_ikey(key) % table->size;
-	table->table[hkey] = delete_fromilist(table, table->table[hkey], key);
-	table->elements--;
+	table->table[hkey] = delete_fromilist(table, table->table[hkey], key, address, &deleted);
+	if (deleted)
+		table->elements--;
 }
 
 void
 table_idestroy(HashTable *table) {
-	HashEntry *entry, *next;
-	int i;
+	HashEntry *entry, *previous;
 
-	for (i = 0; i < table->size; i++) {
-		entry = table->table[i];
-		while (entry) {
-			next = entry->next;
-			entry = next;
-		}
+	entry = table->last;
+	while (entry != NULL) {
+		previous = entry->pptr;
+		free(entry);
+		entry = previous;
 	}
 	free(table->table);
+	table->elements = 0;
+	table->size = 0;
+	table->table = NULL;
+	table->last = NULL;
 }
+
+#if FREE_HOT_BOOKTABLE_ENTRIES
+void
+ReleaseBookedAddress(node *address) {
+	node *removed_address = NULL;
+
+	if (address == NULL || !address->has_booktable_entry || address->sto == OUT)
+		return;
+
+	table_idelete(BookTable[address->booktable_rank], address->booktable_key, &removed_address);
+	address->has_booktable_entry = 0;
+	address->booktable_rank = -1;
+	address->booktable_key = 0;
+}
+#endif
 
 node *
 BookedAddress(int rk, long ord) {
@@ -245,6 +280,9 @@ BookedAddress(int rk, long ord) {
 			G.hot = CreateNewNode(G.hot);
 			G.hot->sto = IN;
 			table_iput(p, ord, G.hot);
+#if FREE_HOT_BOOKTABLE_ENTRIES
+			RememberBookedAddress(G.hot, rk, (unsigned long)ord);
+#endif
 			G.hot->printed = !pflag;
 			address = G.hot;
 		};
@@ -283,12 +321,18 @@ StoreBookedAddress(int rk, long ord, int sto) {
 				G.hot = CreateNewNode(G.hot);
 				G.hot->sto = IN;
 				table_iput(p, ord, G.hot);
+#if FREE_HOT_BOOKTABLE_ENTRIES
+				RememberBookedAddress(G.hot, rk, (unsigned long)ord);
+#endif
 				G.hot->printed = !pflag;
 				address = G.hot;
 			} else {
 				G.cold = CreateNewNode(G.cold);
 				G.cold->sto = OUT;
 				table_iput(p, ord, G.cold);
+#if FREE_HOT_BOOKTABLE_ENTRIES
+				RememberBookedAddress(G.cold, rk, (unsigned long)ord);
+#endif
 				G.cold->printed = !pflag;
 				address = G.cold;
 			}
