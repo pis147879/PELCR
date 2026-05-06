@@ -86,6 +86,7 @@ OpenFileInitStruct() {
 	TRACING printf("(%d) boot\n", rank);
 #endif
 	lightprocess = (rank + 1) % size;
+	ResetLightProcessPolicy();
 
 #ifdef _DEBUG
 	TRACING printf("(%d) opening log files\n", rank);

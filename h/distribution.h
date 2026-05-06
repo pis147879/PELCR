@@ -27,6 +27,7 @@ void buf_flush(); /**/
 
 void SendAddEdge(edge *N, edge *E, char *sw, int sto); /**/
 int LightProcess7(int dest);                           /**/
+void ResetLightProcessPolicy(void);                    /**/
 
 void SendCreateNewNode(int dest, int sto, edge *nS); /**/
 int NouvelleReservation(int dest);                   /**/

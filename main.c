@@ -190,6 +190,7 @@ main(int argc, char **argv) {
 			SetOutputFile(argv[j + 1]);
 	}
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	ResetLightProcessPolicy();
 
 	/*if(size==1)outbuffer= &incoming;*/
 	{

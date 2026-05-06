@@ -36,6 +36,69 @@
 #include <string.h>
 #include <time.h>
 
+static int KnownProcessLoad[MAXNPROCESS];
+
+void
+ResetLightProcessPolicy(void) {
+	int h;
+
+	for (h = 0; h < MAXNPROCESS; h++) {
+		KnownProcessLoad[h] = 0;
+		TempProcess[h] = 0;
+	}
+}
+
+static int
+CurrentProcessLoad() {
+	return incoming_actions_snapshot;
+}
+
+static void
+RememberProcessLoad(int process, int load) {
+	if ((process < 0) || (process >= size))
+		return;
+
+	TempProcess[process] = load;
+	KnownProcessLoad[process] = 1;
+}
+
+static int
+DrainModeIsGeneralized(int local_load) {
+	int h;
+	int known = 0;
+	int low = 0;
+
+	for (h = 0; h < size; h++) {
+		int load;
+		int known_process = KnownProcessLoad[h];
+
+		if (h == rank) {
+			known_process = 1;
+			load = local_load;
+		} else {
+			load = TempProcess[h];
+		}
+
+		if (!known_process)
+			continue;
+
+		known++;
+		if (load < DRAIN_LOAD_THRESHOLD)
+			low++;
+	}
+
+	return (known * 2 >= size) && (low * 2 >= size)
+	    && (low * DRAIN_LOW_FRACTION_DEN >= known * DRAIN_LOW_FRACTION_NUM);
+}
+
+static int
+RankZeroCanDrain(int local_load) {
+	if (rank == 0)
+		return local_load < DRAIN_LOAD_THRESHOLD;
+
+	return KnownProcessLoad[0] && (TempProcess[0] < DRAIN_LOAD_THRESHOLD);
+}
+
 int
 NouvelleReservation(int dest) {
 	TableProcess[dest] = TableProcess[dest] + 1;
@@ -361,16 +424,32 @@ LightProcess6(int dest) {
 int
 LightProcess7(int dest) {
 	static int min = 1;
+	int candidate;
+	int local_load;
+	int drain_mode;
 
 	min++;
+	candidate = min % size;
+	local_load = CurrentProcessLoad();
+	RememberProcessLoad(rank, local_load);
+	drain_mode = DrainModeIsGeneralized(local_load);
+
+	if (drain_mode && RankZeroCanDrain(local_load)) {
+		if (rank == 0) {
+			if (local_load < DRAIN_LOAD_THRESHOLD)
+				return rank;
+		} else if (local_load < DRAIN_LOAD_THRESHOLD) {
+			return 0;
+		}
+	}
 
 	/*  if(((float)TempProcess[min%size])>=((float)1.1*nhot)) */
 
 	/* if (TempProcess[min % size] >= (fra_hot - 20)) { */
-	if (TempProcess[min % size] >= (incoming_actions_snapshot - 20)) {
+	if (TempProcess[candidate] >= (local_load - DRAIN_LOAD_MARGIN)) {
 		return rank;
 	} else {
-		return min % size;
+		return candidate;
 	};
 }
 
@@ -461,7 +540,7 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 	timestamp++;
 	InCounter[m->sender]++;
 	if (m->sender != rank) {
-		TempProcess[m->sender] = m->sender_load;
+		RememberProcessLoad(m->sender, m->sender_load);
 		if (m->sender_load < TempProcess[lightprocess])
 			lightprocess = m->sender;
 	}
