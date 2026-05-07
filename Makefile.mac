@@ -30,9 +30,16 @@ YACC=bison
 #OSFLAGS = -DLINUX
 OSFLAGS	  =
 
-OBJECTS	  = parser.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o main.o buildgraph.o combustion.o
+BUILDDIR    = build
+OBJECTS	    = $(BUILDDIR)/parser.tab.o $(BUILDDIR)/lex.yy.o $(BUILDDIR)/read_back.o $(BUILDDIR)/dvm.o $(BUILDDIR)/io.o $(BUILDDIR)/graph.o $(BUILDDIR)/symbolic.o $(BUILDDIR)/distribution.o $(BUILDDIR)/print.o $(BUILDDIR)/main.o $(BUILDDIR)/buildgraph.o $(BUILDDIR)/combustion.o $(BUILDDIR)/globals.o
+SRCS	    = lex.yy.c parser.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c $(COMPILINGRDIR)globals.c
+PARSERSRC   = lex.yy.c parser.tab.c
+EXECS       = combustion.mac
 
-SRCS	  = lex.yy.c parser.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c
-EXECS     = combustion.mac
+GMLDIR      = GML
+LOGDIR      = LOGS
+REPORTDIR   = REPORTS
+SCRIPTDIR   = scripts
+OUTDIR      = OUTPUT
 
 

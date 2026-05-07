@@ -95,35 +95,35 @@ OpenFileInitStruct() {
 	OUTPUT {
 		/*  if(inflag==1) { */
 
-		sprintf(namefile, "DAT/%s.%d.temp.dat", infile, rank);
+		sprintf(namefile, "OUTPUT/%s.%d.temp.dat", infile, rank);
 		tempfile = fopen(namefile, "w");
-		sprintf(namefile, "DAT/%s.%d.nofires.dat", infile, rank);
+		sprintf(namefile, "OUTPUT/%s.%d.nofires.dat", infile, rank);
 		nofile = fopen(namefile, "w");
-		sprintf(namefile, "DAT/%s.%d.hot.dat", infile, rank);
+		sprintf(namefile, "OUTPUT/%s.%d.hot.dat", infile, rank);
 		hotfile = fopen(namefile, "w");
-		sprintf(namefile, "DAT/%s.%d.cold.dat", infile, rank);
+		sprintf(namefile, "OUTPUT/%s.%d.cold.dat", infile, rank);
 		coldfile = fopen(namefile, "w");
-		sprintf(namefile, "DAT/%s.%d.nmm.dat", infile, rank);
+		sprintf(namefile, "OUTPUT/%s.%d.nmm.dat", infile, rank);
 		anamfile = fopen(namefile, "w");
 		for (i = 0; i < size; i++) {
-			sprintf(namefile, "DAT/%s.%d.%d.aws.dat", infile, rank, i);
+			sprintf(namefile, "OUTPUT/%s.%d.%d.aws.dat", infile, rank, i);
 			maxwinfile[i] = fopen(namefile, "w");
-			sprintf(namefile, "DAT/%s.%d.%d.maw.dat", infile, rank, i);
+			sprintf(namefile, "OUTPUT/%s.%d.%d.maw.dat", infile, rank, i);
 			mawfile[i] = fopen(namefile, "w");
 		}
-		sprintf(namefile, "DAT/%s.%d.trivial.dat", infile, rank);
+		sprintf(namefile, "OUTPUT/%s.%d.trivial.dat", infile, rank);
 		trivfile = fopen(namefile, "w");
 
-		sprintf(namefile, "DAT/%s.%d.fires.dat", infile, rank);
+		sprintf(namefile, "OUTPUT/%s.%d.fires.dat", infile, rank);
 		firfile = fopen(namefile, "w");
 
 		//    printf("<---------------------------------\n\n");
-		sprintf(command, "cp run.%d.log runold.%d.log", rank, rank);
+		sprintf(command, "cp LOGS/run.%d.log LOGS/runold.%d.log", rank, rank);
 		system(command);
 
-		sprintf(command, "\\rm -f run.%d.log", rank);
+		sprintf(command, "\\rm -f LOGS/run.%d.log", rank);
 		system(command);
-		sprintf(namefile, "run.%d.log", rank);
+		sprintf(namefile, "LOGS/run.%d.log", rank);
 		logfile = fopen(namefile, "w");
 		if (statsfile != NULL) {
 			fclose(statsfile);

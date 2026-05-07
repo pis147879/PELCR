@@ -37,6 +37,7 @@
 /LOGS/
 /REPORTS/
 /OUTPUT/
+/build/
 
 # Ignore object files and cache
 *.o

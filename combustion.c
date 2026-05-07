@@ -83,9 +83,9 @@ OpenStatsFile(void) {
 		strcpy(basename, "pelcr");
 
 	if (size == 1)
-		snprintf(statsname, sizeof(statsname), "%s-np=%d-stats.log", basename, size);
+		snprintf(statsname, sizeof(statsname), "LOGS/%s-np=%d-stats.log", basename, size);
 	else
-		snprintf(statsname, sizeof(statsname), "%s-np=%d-rank=%d-stats.log", basename, size, rank);
+		snprintf(statsname, sizeof(statsname), "LOGS/%s-np=%d-rank=%d-stats.log", basename, size, rank);
 
 	statsfile = fopen(statsname, "w");
 	if (statsfile != NULL) {
@@ -949,14 +949,14 @@ PrintResult() {
 		printf("(%d) [OK] out from MPI\n", rank);
 #ifdef MAIL
 		if (rank == 0) {
-			system("cat run.*.log > run.log");
+			system("cat LOGS/run.*.log > LOGS/run.log");
 			{
-				char command[100];
+				char command[200];
 #ifdef LINUX
-				sprintfx(command, "mail -s %s.np%d@%s marco@localhost < run.log", infile, size, hostname);
+				sprintfx(command, "mail -s %s.np%d@%s marco@localhost < LOGS/run.log", infile, size, hostname);
 #endif
 #ifdef SOLARIS
-				sprintf(command, "mailx -s %s.np%d@%s marco@iac.rm.cnr.it < run.log", infile, size, hostname);
+				sprintf(command, "mailx -s %s.np%d@%s marco@iac.rm.cnr.it < LOGS/run.log", infile, size, hostname);
 #endif
 				system(command);
 				printf("Sent Aknowledgement: %s\n", command);

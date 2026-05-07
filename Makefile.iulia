@@ -28,3 +28,14 @@ YACC = bison
 ### End User configurable options ###
 OSFLAGS   = -DLINUX
 EXECS     = combustion.linux
+
+BUILDDIR    = build
+OBJECTS	    = $(BUILDDIR)/read_back.o $(BUILDDIR)/dvm.o $(BUILDDIR)/io.o $(BUILDDIR)/graph.o $(BUILDDIR)/symbolic.o $(BUILDDIR)/distribution.o $(BUILDDIR)/print.o $(BUILDDIR)/main.o $(BUILDDIR)/buildgraph.o $(BUILDDIR)/combustion.o $(BUILDDIR)/lex.yy.o $(BUILDDIR)/parser.tab.o $(BUILDDIR)/globals.o
+SRCS	    = read_back.c dvm.c  io.c graph.c symbolic.c distribution.c print.c parser.tab.c main.c buildgraph.c combustion.c lex.yy.c globals.c
+PARSERSRC   = lex.yy.c parser.tab.c
+
+GMLDIR      = GML
+LOGDIR      = LOGS
+REPORTDIR   = REPORTS
+SCRIPTDIR   = scripts
+OUTDIR      = OUTPUT
