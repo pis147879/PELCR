@@ -6,14 +6,20 @@ OBJECTS   = parser.tab.o lex.yy.o read_back.o dvm.o io.o graph.o symbolic.o dist
 PARSERSRC = lex.yy.c parser.tab.c
 SRCS      = lex.yy.c parser.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c $(COMPILINGRDIR)globals.c
 
+GMLDIR      = GML
+LOGDIR      = LOGS
+REPORTDIR   = REPORTS
+SCRIPTDIR   = scripts
+OUTDIR      = OUTPUT
+
 BASETYPE='long long'
 TESTFILE    = dd3.plcr
 
 RUN1= printf '\043setdir "%s" ; \043open "%s"\n' "$(PEXDIR)" "$(TESTFILE)"
-RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS) -- -I ciccio -loop 10000000 -o GML/prova -v 
+RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS) -- -I ciccio -loop 10000000 -o $(GMLDIR)/prova -v 
 RUNTEST = $(RUN1)|$(RUN)
 LIB_PATH    =
-LIB_LIST    = -ldl -lm -ll -lc
+LIB_LIST    = -ldl -lm -lc
 CFLAGS    =$(ARCHFLAGS) $(OPTFLAGS)
 CCFLAGS   = $(CFLAGS)
 FFLAGS    = $(OPTFLAGS)
@@ -44,22 +50,22 @@ go2:
 
 test: NP=1
 test:
-	mkdir -p GML
+	mkdir -p $(GMLDIR) $(LOGDIR) $(REPORTDIR) $(SCRIPTDIR)
 	$(RUNTEST)
 
 test2: NP=2
 test2:
-	mkdir -p GML
+	mkdir -p $(GMLDIR) $(LOGDIR) $(REPORTDIR) $(SCRIPTDIR)
 	$(RUNTEST)
 
 check-parallel:
-	mkdir -p GML
-	seq_log=$$(mktemp /tmp/pelcr-seq.XXXXXX.log); \
-	par_log=$$(mktemp /tmp/pelcr-par.XXXXXX.log); \
+	mkdir -p $(GMLDIR) $(LOGDIR) $(REPORTDIR) $(SCRIPTDIR)
+	seq_log=$$(mktemp $(LOGDIR)/pelcr-seq.XXXXXX.log); \
+	par_log=$$(mktemp $(LOGDIR)/pelcr-par.XXXXXX.log); \
 	echo "Running sequential test with $(TESTFILE)"; \
-	$(RUN1)|$(MPIR_HOME)/bin/mpirun -np 1 $(EXECS) -- -I ciccio -loop 10000000 -o GML/prova -v > $$seq_log 2>&1; \
+	$(RUN1)|$(MPIR_HOME)/bin/mpirun -np 1 $(EXECS) -- -I ciccio -loop 10000000 -o $(GMLDIR)/prova -v > $$seq_log 2>&1; \
 	echo "Running parallel test with $(TESTFILE) on 2 ranks"; \
-	$(RUN1)|$(MPIR_HOME)/bin/mpirun -np 2 $(EXECS) -- -I ciccio -loop 10000000 -o GML/prova -v > $$par_log 2>&1; \
+	$(RUN1)|$(MPIR_HOME)/bin/mpirun -np $(NP) $(EXECS) -- -I ciccio -loop 10000000 -o $(GMLDIR)/prova -v > $$par_log 2>&1; \
 	seq_family=$$(awk '/family reductions/ { value = $$NF } END { print value }' $$seq_log); \
 	par_family=$$(awk '/family reductions/ { sum += $$NF } END { print sum + 0 }' $$par_log); \
 	if [ -z "$$seq_family" ]; then \
@@ -82,10 +88,11 @@ check-parallel:
 
 test4: NP=4
 test4:
-	$(RUNTEST)	
+	mkdir -p $(GMLDIR) $(LOGDIR) $(REPORTDIR) $(SCRIPTDIR)
 
 clean:
 	/bin/rm -f y.output y.tab.h y.tab.c lex.yy.c *.o run.*.log core combustion combustion.home combustion.ultra combustion.linux combustion.capital combustion.mac *.log combustion*.tex *.idx *.aux *.scn combustion*.dvi *.toc *~ DAT/*.* GML/* h/*~ ./Crypto/*.o ./Crypto/*.so *.so
+	/bin/rm -rf $(LOGDIR) $(REPORTDIR) $(OUTDIR)
 
 linux:
 	rm Makefile.head

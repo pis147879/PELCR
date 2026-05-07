@@ -31,3 +31,16 @@
 /pelcrexamples/ciccio.graphml
 /pelcrexamples/.DS_Store
 *.dat
+
+# Ignore generated uppercase directories
+/GML/
+/LOGS/
+/REPORTS/
+/OUTPUT/
+
+# Ignore object files and cache
+*.o
+__pycache__/
+
+# Keep scripts under version control
+!scripts/

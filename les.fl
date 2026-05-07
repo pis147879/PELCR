@@ -30,6 +30,8 @@ int include_stack_ptr = 0;
 int is_interactive = 1;
 %}
 
+%option noyywrap
+
 %x incl
 %x inclgml
 %x COMMENTS
