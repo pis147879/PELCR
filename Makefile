@@ -32,8 +32,8 @@ all: default
 lex.yy.c: $(COMPILINGRDIR)les.fl
 	$(LEX) $(COMPILINGRDIR)les.fl
 
-y.tab.c: $(COMPILINGRDIR)parser.y
-	$(YACC) -d -v $(COMPILINGRDIR)parser.y -b y
+parser.tab.c: $(COMPILINGRDIR)parser.y
+	$(YACC) -d -v $(COMPILINGRDIR)parser.y -b parser
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
@@ -41,7 +41,7 @@ $(BUILDDIR):
 objects: $(BUILDDIR) $(SRCS)
 	$(CC) $(CFLAGS) $(OSFLAGS) -c $(SRCS) && mv *.o $(BUILDDIR)/ && mv lex.yy.c parser.tab.* $(BUILDDIR)/ 2>/dev/null || true
 
-gcombustion: y.tab.c objects
+gcombustion: parser.tab.c objects
 	$(CLINKER) $(ARCHFLAGS) $(OPTFLAGS) $(OSFLAG) -o $(BUILDDIR)/$(EXECS) $(OBJECTS) $(LIB_PATH) $(LIB_LIST)
 
 go:	NP=1
