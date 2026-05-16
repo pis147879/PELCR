@@ -119,12 +119,12 @@ WriteStats() {
 	OpenStatsFile();
 
 	if ((tempfile != NULL) || (statsfile != NULL)) {
-		float now;
+		double now;
 		time_t wall_epoch;
-		times(&smtime);
 
 		wall_epoch = time(NULL);
-		now = (smtime.tms_utime + smtime.tms_stime) / 60.0;
+		/* Match the elapsed time printed in PrintResult: wall-clock seconds since evaluation start. */
+		now = (inittime == 0) ? 0.0 : difftime(wall_epoch, inittime);
 
 		if (tempfile != NULL) {
 			fprintf(firfile, "%f %ld\n", now, fires);
