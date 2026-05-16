@@ -50,7 +50,6 @@
 //#include "lambdastar.h"
 //#include "buildgraph.h"
 #include "var.h"
-int cut_node_count=0;
 int yylex();
 int yyerror(char *s);
 %}
