@@ -24,7 +24,9 @@
 
 /*#define MAXPENDING 920000*/
 
+#ifndef MAXPENDING
 #define MAXPENDING 520000
+#endif
 
 struct messaggio {
 	/* debugging */
