@@ -36,6 +36,241 @@
 #include <string.h>
 #include <time.h>
 
+#define DIE_NOTICE_ACTIVE 0
+#define DIE_NOTICE_IDLE 1
+#define DIE_NOTICE_FINAL 2
+
+static int die_idle_notice_sent = 0;
+static int die_idle_rank[MAXNPROCESS];
+static int die_max_pending_load = 0;
+static int die_sendbuf[2 + 2 * MAXNPROCESS];
+static int die_recvbuf[2 + 2 * MAXNPROCESS];
+static int die_last_out_counter[MAXNPROCESS];
+static int die_last_in_counter[MAXNPROCESS];
+
+static void
+ResetDieProtocol() {
+	int h;
+
+	die_idle_notice_sent = 0;
+	die_max_pending_load = 0;
+	for (h = 0; h < MAXNPROCESS; h++)
+		die_idle_rank[h] = 0;
+	for (h = 0; h < MAXNPROCESS; h++) {
+		die_last_out_counter[h] = -1;
+		die_last_in_counter[h] = -1;
+	}
+}
+
+static int
+OutgoingPendingCount() {
+	int h;
+	int count = local_pending;
+
+	for (h = 0; h < size; h++)
+		count += outcontrol[h];
+
+	return count;
+}
+
+static int
+IncomingPendingCount() {
+	int h;
+	int count = 0;
+
+#if MINPRIORITY > 1
+	for (h = 0; h < MINPRIORITY; h++)
+		count += BDumpS(&incoming[h]);
+#else
+	(void)h;
+	count = BDumpS(&incoming[0]);
+#endif
+
+	return count;
+}
+
+static int
+CurrentPendingLoad() {
+	return pending_actions + IncomingPendingCount() + OutgoingPendingCount();
+}
+
+static void
+UpdateDiePendingLoad() {
+	int load = CurrentPendingLoad();
+
+	if (load > die_max_pending_load)
+		die_max_pending_load = load;
+}
+
+static int
+DieProtocolIsArmed() {
+	return die_max_pending_load >= DRAIN_LOAD_THRESHOLD;
+}
+
+static int
+LocalWorkIsDrained() {
+	return CurrentPendingLoad() == 0;
+}
+
+static void
+PackDieMessage(int *dbuf, int state) {
+	int h;
+
+	dbuf[0] = rank;
+	dbuf[1] = state;
+	for (h = 0; h < size; h++) {
+		dbuf[2 + h] = OutCounter[h];
+		dbuf[2 + size + h] = InCounter[h];
+	}
+}
+
+static void
+RememberDieCounters(int source, int *dbuf) {
+	int h;
+
+	for (h = 0; h < size; h++) {
+		OutTerminationStatus[source][h] = dbuf[2 + h];
+		InTerminationStatus[source][h] = dbuf[2 + size + h];
+	}
+}
+
+static void
+RememberLastSentDieCounters() {
+	int h;
+
+	for (h = 0; h < size; h++) {
+		die_last_out_counter[h] = OutCounter[h];
+		die_last_in_counter[h] = InCounter[h];
+	}
+}
+
+static int
+DieCountersChangedSinceNotice() {
+	int h;
+
+	for (h = 0; h < size; h++)
+		if ((die_last_out_counter[h] != OutCounter[h]) || (die_last_in_counter[h] != InCounter[h]))
+			return TRUE;
+
+	return FALSE;
+}
+
+static void
+SendDieMessage(int dest, int state) {
+	PackDieMessage(die_sendbuf, state);
+	MPI_Send(die_sendbuf, 2 + 2 * size, MPI_INT, dest, DIE_TAG, MPI_COMM_WORLD);
+	if (dest == 0)
+		RememberLastSentDieCounters();
+}
+
+static void
+PollDieMessages() {
+	MPI_Status die_status;
+
+	if (size == 1)
+		return;
+
+	MPI_Iprobe(MPI_ANY_SOURCE, DIE_TAG, MPI_COMM_WORLD, &dieflag, &die_status);
+	while (dieflag) {
+		MPI_Recv(die_recvbuf, 2 + 2 * size, MPI_INT, die_status.MPI_SOURCE, DIE_TAG, MPI_COMM_WORLD, &die_status);
+
+		if (rank == 0) {
+			if ((die_status.MPI_SOURCE > 0) && (die_status.MPI_SOURCE < size)) {
+				RememberDieCounters(die_status.MPI_SOURCE, die_recvbuf);
+				die_idle_rank[die_status.MPI_SOURCE] = (die_recvbuf[1] == DIE_NOTICE_IDLE);
+			}
+		} else if ((die_status.MPI_SOURCE == 0) && (die_recvbuf[1] == DIE_NOTICE_FINAL)) {
+			end_computation = 1;
+		}
+
+		MPI_Iprobe(MPI_ANY_SOURCE, DIE_TAG, MPI_COMM_WORLD, &dieflag, &die_status);
+	}
+}
+
+static int
+AllRanksIdleAtRankZero() {
+	int h;
+
+	for (h = 1; h < size; h++)
+		if (!die_idle_rank[h])
+			return FALSE;
+
+	return TRUE;
+}
+
+static int
+DieOutCounter(int source, int dest) {
+	if (source == rank)
+		return OutCounter[dest];
+
+	return OutTerminationStatus[source][dest];
+}
+
+static int
+DieInCounter(int dest, int source) {
+	if (dest == rank)
+		return InCounter[source];
+
+	return InTerminationStatus[dest][source];
+}
+
+static int
+AllChannelsDrainedAtRankZero() {
+	int source, dest;
+
+	for (source = 0; source < size; source++)
+		for (dest = 0; dest < size; dest++)
+			if (DieOutCounter(source, dest) != DieInCounter(dest, source))
+				return FALSE;
+
+	return TRUE;
+}
+
+static void
+BroadcastFinalDie() {
+	int h;
+
+	for (h = 1; h < size; h++)
+		SendDieMessage(h, DIE_NOTICE_FINAL);
+}
+
+static void
+UpdateDieProtocol() {
+	int local_idle;
+
+	PollDieMessages();
+	UpdateDiePendingLoad();
+
+	local_idle = LocalWorkIsDrained();
+	if (size == 1) {
+		if (local_idle)
+			end_computation = 1;
+		return;
+	}
+
+	if (rank == 0) {
+		die_idle_rank[0] = local_idle;
+		if (local_idle && AllRanksIdleAtRankZero() && AllChannelsDrainedAtRankZero()) {
+			BroadcastFinalDie();
+			end_computation = 1;
+		}
+		return;
+	}
+
+	if (!DieProtocolIsArmed())
+		return;
+
+	if (local_idle) {
+		if (!die_idle_notice_sent || DieCountersChangedSinceNotice()) {
+			SendDieMessage(0, DIE_NOTICE_IDLE);
+			die_idle_notice_sent = 1;
+		}
+	} else if (die_idle_notice_sent) {
+		SendDieMessage(0, DIE_NOTICE_ACTIVE);
+		die_idle_notice_sent = 0;
+	}
+}
+
 edge *
 InitReference(edge *aux) {
 	if (aux == NULL)
@@ -767,11 +1002,15 @@ FunInteraction() {
 void
 ComputeResult() {
 	printf("(%d) running...\n", rank);
-	while ((!end_computation) && (loops <= maxloop) && ((maxfires == 0) || edge_compositions < maxfires)) {
+	ResetDieProtocol();
+	while ((!end_computation) && ((maxfires == 0) || edge_compositions < maxfires)) {
 		maxubound = 1;
 		if (!THREAD) {
+			UpdateDiePendingLoad();
 			FunReceiveMessages();
+			UpdateDiePendingLoad();
 			FunInteraction();
+			UpdateDieProtocol();
 		}
 		if (THREAD) {
 			exit(-1);

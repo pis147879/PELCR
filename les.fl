@@ -47,7 +47,7 @@ digit	[0-9]
 id	{letter}({letter}|{digit})*
 number	{digit}+
 /* ANTO */
-path (\")("."|"/"|{letter})({letter}|{digit}|"/"|".")*(\")
+path (\")("."|"/"|{letter}|{digit})({letter}|{digit}|"/"|".")*(\")
 /* ANTO */
 
 %%

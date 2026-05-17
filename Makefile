@@ -15,9 +15,10 @@ OUTDIR      = OUTPUT
 
 BASETYPE='long long'
 TESTFILE    = dd3.plcr
+LOOP        = 10000000
 
 RUN1= printf '\043setdir "%s" ; \043open "%s"\n' "$(PEXDIR)" "$(TESTFILE)"
-RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(BUILDDIR)/$(EXECS) -- -I ciccio -loop 10000000 -o $(GMLDIR)/prova -v 
+RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(BUILDDIR)/$(EXECS) -- -loop $(LOOP)
 RUNTEST = $(RUN1)|$(RUN)
 LIB_PATH    =
 LIB_LIST    = -ldl -lm -lc
@@ -64,12 +65,12 @@ test2:
 
 check-parallel:
 	mkdir -p $(GMLDIR) $(LOGDIR) $(REPORTDIR) $(SCRIPTDIR)
-	seq_log=$$(mktemp $(LOGDIR)/pelcr-seq.XXXXXX.log); \
-	par_log=$$(mktemp $(LOGDIR)/pelcr-par.XXXXXX.log); \
+	seq_log=$$(mktemp $(LOGDIR)/pelcr-seq-log.XXXXXX); \
+	par_log=$$(mktemp $(LOGDIR)/pelcr-par-log.XXXXXX); \
 	echo "Running sequential test with $(TESTFILE)"; \
-	$(RUN1)|$(MPIR_HOME)/bin/mpirun -np 1 $(BUILDDIR)/$(EXECS) -- -I ciccio -loop 10000000 -o $(GMLDIR)/prova -v > $$seq_log 2>&1; \
-	echo "Running parallel test with $(TESTFILE) on 2 ranks"; \
-	$(RUN1)|$(MPIR_HOME)/bin/mpirun -np $(NP) $(BUILDDIR)/$(EXECS) -- -I ciccio -loop 10000000 -o $(GMLDIR)/prova -v > $$par_log 2>&1; \
+	$(RUN1)|$(MPIR_HOME)/bin/mpirun -np 1 $(BUILDDIR)/$(EXECS) -- -loop $(LOOP) > $$seq_log 2>&1; \
+	echo "Running parallel test with $(TESTFILE) on $(NP) ranks"; \
+	$(RUN1)|$(MPIR_HOME)/bin/mpirun -np $(NP) $(BUILDDIR)/$(EXECS) -- -loop $(LOOP) > $$par_log 2>&1; \
 	seq_family=$$(awk '/family reductions/ { value = $$NF } END { print value }' $$seq_log); \
 	par_family=$$(awk '/family reductions/ { sum += $$NF } END { print sum + 0 }' $$par_log); \
 	if [ -z "$$seq_family" ]; then \

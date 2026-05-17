@@ -1,2 +1,2 @@
-(\f.\x.(f)(f)x)\x.x
-#quit
+(\f.\x.(f)(f)x)\x.x ;
+#quit ;
