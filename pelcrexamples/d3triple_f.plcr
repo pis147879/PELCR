@@ -1,4 +1,4 @@
-#uselib "./shared.so"
+#uselib "./shared.so" ;
 #def fun = \x.xfunction(addone)(x) ;
 #def delta = \x.(x)x ;
 #def three = \f.\x.(f)(f)(f)x ;
@@ -13,5 +13,5 @@
 #def F = \z.(((triple)(fun)(z)pi1)(fun)(z)pi2)(fun)(z)pi3 ;
 (((delta)three)F)A ;
 
-#quit 
+#quit ; 
 

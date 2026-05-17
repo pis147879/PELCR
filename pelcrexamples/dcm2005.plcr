@@ -8,6 +8,6 @@
 
 #def five = \f.\x.(f)(f)(f)(f)(f)x
 #def seven = \f.\x.(f)(f)(f)(f)(f)(f)(f)x
-#def nine = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)x
-((nine)FF)AA
-quit
+#def nine = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)x ;
+((nine)FF)AA ;
+#quit ;

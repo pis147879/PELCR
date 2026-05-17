@@ -5,5 +5,5 @@
 #def delta = \x.(x)x ;
 #def two = \f.\x.(f)(f)x ;
 (delta)(delta)two ;
-#quit
+#quit ;
 

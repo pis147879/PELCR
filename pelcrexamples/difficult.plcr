@@ -1,12 +1,13 @@
-#def two = \f.\x.(f)(f)x
-#def three = \f.\x.(f)(f)(f)x
-#def four = \f.\x.(f)(f)(f)(f)x
-#def I = \x.x
+#def two = \f.\x.(f)(f)x ;
+#def three = \f.\x.(f)(f)(f)x ;
+#def four = \f.\x.(f)(f)(f)(f)x ;
+#def I = \x.x ;
 
+(((((two)two)three)three)I)I ;
+(((four)four)I)I ;
+(((((two)two)three)two)I)I ;
 
-(((((three)two)two)two)I)I 
-
-#quit
+#quit ;
 
 
 (((two)two)I)I
