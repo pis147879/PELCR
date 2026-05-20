@@ -24,7 +24,7 @@
 *.log
 /Makefile.head
 /.vscode/
-/.DS_Store
+.DS_Store
 /parser.tab.o
 /out.err
 *.gml
@@ -41,6 +41,7 @@
 
 # Ignore object files and cache
 *.o
+*.so
 __pycache__/
 
 # Keep scripts under version control

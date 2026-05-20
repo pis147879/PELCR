@@ -1,0 +1,26 @@
+#uselib "./pelcrexamples/Crypto/crypto.so" ;
+#xcall (loadzip)("./pelcrexamples/Crypto/linux.zip") ;
+
+#def join = \l1 .\l2. \k. \x. ((l1)k)((l2)k)x ;
+#def map = \f. \list.\k.\x.((list)\y.(k)(f)y)x ;
+
+#def oneexpand = \y. xfunction(shiftplus)(y) ;
+#def zeroexpand = \y. xfunction(lshift)(y) ;
+
+#def generate_trials = \s. ((join) ((map)oneexpand)s ) ((map)zeroexpand)s ;
+
+#def testfunction = \y. xfunction(try)(y) ;
+
+#def bruteforce = \n.\w. ((map) testfunction) ((n)generate_trials) \k.\x.((k) w)x ;
+
+#def six = \f.\x.(f)(f)(f)(f)(f)(f)x ;
+#def eight = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)x ;
+#def ten = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x ;
+#def sixty = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x ;
+#def twenty = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x ;
+#def threebyte = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x ;
+#def fourty = \f.\x.(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)(f)x ;
+
+((bruteforce)fourty) 1 ;
+
+#quit ;
