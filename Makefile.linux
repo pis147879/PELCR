@@ -13,7 +13,7 @@ COMPILINGRDIR = ./
 CCLINKER    = $(CCC)
 PROFILING   = $(PMPILIB)
 #OPTFLAGS    = -DDEBUG -DWDEBUG -DMEMDEBUG -Wall -g -pg
-OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG  -DUSERTYPE=$(BASETYPE) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
+OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG $(USER_TYPE_FLAGS) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG 
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 
@@ -30,4 +30,3 @@ OBJECTS	  = read_back.o dvm.o io.o graph.o symbolic.o distribution.o print.o mai
 SRCS	  = read_back.c dvm.c  io.c graph.c symbolic.c distribution.c print.c parser.tab.c main.c buildgraph.c combustion.c lex.yy.c
 PARSERSRC = lex.yy.c parser.tab.c
 EXECS     = combustion.linux
-

@@ -21,9 +21,10 @@
  along with PELCR.  If not, see <http://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
+#include "pelcr_value.h"
 extern int rank;
 
-USERTYPE CRCTable[] =
+unsigned long CRCTable[] =
 {
    0x00000000L, 0x77073096L, 0xee0e612cL, 0x990951baL, 0x076dc419L,
    0x706af48fL, 0xe963a535L, 0x9e6495a3L, 0x0edb8832L, 0x79dcb8a4L,
@@ -307,58 +308,89 @@ USERTYPE CRCTable[] =
 
 USERTYPE square(USERTYPE arg)
 {
-	return (arg*arg);
+	return pelcr_value_mul(&arg, &arg);
 }
 
 USERTYPE succ2(USERTYPE arg)
 {
-  printf("(%d) Succ(%lld)\n",rank,arg++);
-	return (arg);
+  printf("(%d) Succ(",rank);
+  pelcr_value_print(stdout, &arg);
+  printf(")\n");
+	return pelcr_value_add_ui(&arg, 1);
+}
+
+USERTYPE addone(USERTYPE arg)
+{
+  printf("(%d) AddOne(",rank);
+  pelcr_value_print(stdout, &arg);
+  printf(")\n");
+	return pelcr_value_add_ui(&arg, 1);
 }
 
 USERTYPE product2(USERTYPE arg1, USERTYPE arg2)
 {
-  printf("(%d) %lld * %lld = %lld\n",rank,arg1,arg2,arg1*arg2);
-	return (arg1*arg2);
+  USERTYPE result = pelcr_value_mul(&arg1, &arg2);
+  printf("(%d) ",rank);
+  pelcr_value_print(stdout, &arg1);
+  printf(" * ");
+  pelcr_value_print(stdout, &arg2);
+  printf(" = ");
+  pelcr_value_print(stdout, &result);
+  printf("\n");
+	return result;
 }
 
 
 USERTYPE add2(USERTYPE arg1, USERTYPE arg2)
 {
-  printf("(%d) %lld + %lld = %lld\n",rank,arg1,arg2,arg1+arg2);
+  USERTYPE result = pelcr_value_add(&arg1, &arg2);
+  printf("(%d) ",rank);
+  pelcr_value_print(stdout, &arg1);
+  printf(" + ");
+  pelcr_value_print(stdout, &arg2);
+  printf(" = ");
+  pelcr_value_print(stdout, &result);
+  printf("\n");
 
-	return (arg1+arg2);
+	return result;
 }
 
 USERTYPE show(USERTYPE arg)
 {
-  printf("(%d) Show (%lld)\n",rank,arg);
+  printf("(%d) Show (",rank);
+  pelcr_value_print(stdout, &arg);
+  printf(")\n");
   
-  return (arg);
+  return pelcr_value_copy(&arg);
 }
 
 USERTYPE show2(USERTYPE arg1, USERTYPE arg2)
 {
-  printf("(%d) ShowPair (%lld,%lld)\n",rank,arg1,arg2);
+  printf("(%d) ShowPair (",rank);
+  pelcr_value_print(stdout, &arg1);
+  printf(",");
+  pelcr_value_print(stdout, &arg2);
+  printf(")\n");
   
-  return (arg1);
+  return pelcr_value_copy(&arg1);
 }
 
 
 USERTYPE checksum(USERTYPE key)
 {
-	USERTYPE check = key;
+	unsigned long check = (unsigned long)pelcr_value_get_ll(&key);
         int i;
-	unsigned long size = sizeof(CRCTable)/4; 
+	unsigned long size = sizeof(CRCTable)/sizeof(CRCTable[0]);
         
-        printf("\n (%d) Key %lld ",rank,key);
+        printf("\n (%d) Key ",rank);
+        pelcr_value_print(stdout, &key);
         for (i=0; i<size; i++)
         {
-          //printf("\n (%d) Table %d %lld ",rank,i,CRCTable[i]);
+          //printf("\n (%d) Table %d %lu ",rank,i,CRCTable[i]);
           check = CRCTable[i]^check;
-          //printf("\n (%d) Check %lld ",rank,check);
+          //printf("\n (%d) Check %lu ",rank,check);
         }
-	
-        printf("\n (%d) Check %lld ",rank,check);
-     	return (check);
+
+        printf("\n (%d) Check %lu ",rank,check);
+	return pelcr_value_from_si((long long)check);
 }

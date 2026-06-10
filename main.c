@@ -98,9 +98,16 @@ main(int argc, char **argv) {
 	fcounter = -1;
 
 	for (j = 0; j < MAXNUMCOST; j++) {
-		k[j][0] = 0;
-		k[j][1] = 0;
-		k[j][2] = 0;
+		k_type[j] = 0;
+		pelcr_value_init(&k_value[j]);
+		k_refs[j] = 0;
+	}
+	for (j = 0; j < MAXFUNCTIONS; j++) {
+		int i;
+		for (i = 0; i < MAXNUMARG; i++) {
+			pelcr_value_init(&f[j].s[i]);
+			pelcr_value_init(&f_db[j].s[i]);
+		}
 	}
 
 	timestamp = 0;
@@ -140,7 +147,11 @@ main(int argc, char **argv) {
 	memset(Path, 0, MAXNAMELEN);
 	handle = NULL;
 
-	printf("USER TYPE Size: %ld bit", 8 * sizeof(k[0][1]));
+#ifdef PELCR_GMP_USERTYPE
+	printf("USER TYPE: GMP mpz arbitrary precision");
+#else
+	printf("USER TYPE Size: %ld bit", 8 * sizeof(k_value[0]));
+#endif
 	/* ANTO */
 
 	MPI_Init(&argc, &argv);
@@ -287,8 +298,11 @@ main(int argc, char **argv) {
 				PrintResult();
 
 				if INITIALIZER
-					if (newval)
-						printf("Result:  %lld\n", k[kindex][1]);
+					if (newval) {
+						printf("Result:  ");
+						pelcr_value_print(stdout, &k_value[kindex]);
+						printf("\n");
+					}
 				MostraTabelle();
 				fflush(stdout);
 #ifdef WDEBUG

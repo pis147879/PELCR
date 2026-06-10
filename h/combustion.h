@@ -43,7 +43,7 @@ struct messaggio {
 
 	/* side effects */
 	int funWhich;     /* this message carries a functional symbol: this is symbol table entry */
-	USERTYPE funWait; /* the function is in the stack with a certain number of arguments */
+	int funWait;      /* the function is in the stack with a certain number of arguments */
 	                  /* ANTO
 	                    Attenzione !!! Modificato temporaneamente per abilitare il
 	                    passaggio di costanti long long.
@@ -53,7 +53,8 @@ struct messaggio {
 	int funNarg;      /* this is the arity of the functional symbol */
 	int funType;      /* this is a pointer to the function (output) type */
 	/* ANTO */
-	USERTYPE funArgs[MAXNUMARG]; /* ??? Carlo che hai fatto, a che serve questo ? */
+	PELCR_WIRE_VALUE funValue;
+	PELCR_WIRE_VALUE funArgs[MAXNUMARG]; /* ??? Carlo che hai fatto, a che serve questo ? */
 	                             /* ANTO */
 };
 

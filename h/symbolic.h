@@ -22,7 +22,7 @@
 
 typedef char term;
 
-/* extern int k[MAXNUMCOST][2]; */
+/* Constant values, types and reference counts are declared in lambdastar.h. */
 /* extern functionstack f[MAXFUNCTIONS]; */
 /* extern int  t[5][2]; */
 

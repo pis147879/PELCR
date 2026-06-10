@@ -296,7 +296,7 @@ LiberaV(edge *P) {
 
 		if (Xstr != NULL) {
 			konst_index = atoi(&Xstr[4]);
-			k[konst_index][2]--;
+			k_refs[konst_index]--;
 		}
 
 		free(P);

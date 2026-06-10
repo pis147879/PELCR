@@ -487,7 +487,7 @@ CallXF1ArgUser(char *namef, char *arg) {
 	USERTYPE n;
 	USERTYPE (*fun)(USERTYPE);
 
-	n = atoll(arg);
+	n = pelcr_value_from_str(arg);
 	fun = dlsym(handle, namef);
 
 	if ((error = dlerror()) != NULL) {
@@ -496,6 +496,7 @@ CallXF1ArgUser(char *namef, char *arg) {
 	};
 
 	(fun)(n);
+	pelcr_value_clear(&n);
 }
 
 int
@@ -520,7 +521,7 @@ XAddEntryInf(char *funname, int narg) {
 }
 
 int
-XAddFun(int f_db_id, USERTYPE wait) {
+XAddFun(int f_db_id, int wait) {
 
 	int index;
 
@@ -752,7 +753,7 @@ BuildNumber(char *i) {
 	 n=atoi(i);
 	 */
 
-	n = atoll(i);
+	n = pelcr_value_from_str(i);
 	/* ANTO */
 
 	strcpy(newT->nameTerm, i);
@@ -776,6 +777,7 @@ BuildNumber(char *i) {
 	(root->right).vector = NULL;
 
 	kindexTmp = AddEntryInk(NAT, n);
+	pelcr_value_clear(&n);
 	sprintf(c, "X(%d,%d)X(%d,%d)", TYPE, 0, KONST, kindexTmp);
 	(root->right).vector = AddAnEdge((root->right).vector, c, tmp, LEFT);
 
@@ -811,6 +813,7 @@ BuildBool(char *b) {
 	char *c = (char *)malloc(20);
 	int n;
 	int kindexTmp = 0;
+	USERTYPE value;
 
 	strcpy(newT->nameTerm, b);
 
@@ -836,7 +839,9 @@ BuildBool(char *b) {
 		n = 1;
 	else
 		n = 0;
-	kindexTmp = AddEntryInk(BOOL, n);
+	value = pelcr_value_from_si(n);
+	kindexTmp = AddEntryInk(BOOL, value);
+	pelcr_value_clear(&value);
 
 	sprintf(c, "X(%d,%d)X(%d,%d)", TYPE, 2, KONST, kindexTmp);
 	(root->right).vector = AddAnEdge((root->right).vector, c, tmp, LEFT);
@@ -874,9 +879,9 @@ AddEntryInk(int type, USERTYPE val) {
 		printf("\nTabella delle costanti piena\n");
 		exit(0);
 	}
-	k[kindex][0] = type;
-	k[kindex][1] = val;
-	k[kindex][2]++;
+	k_type[kindex] = type;
+	pelcr_value_set(&k_value[kindex], &val);
+	k_refs[kindex]++;
 
 	return kindex;
 }
@@ -885,7 +890,9 @@ void
 SetNextKIndex(void) {
 	int index_reduced = 0;
 
-	while (k[kindex][2] != 0) {
+	if (kindex < 0)
+		kindex = 0;
+	while (k_refs[kindex] != 0) {
 		kindex++;
 		if (kindex >= MAXNUMCOST) {
 			if (index_reduced) {
@@ -909,7 +916,9 @@ MostraTabelle() {
 	if (kindex > 0) {
 		printf("\n");
 		for (indice = 0; indice <= kindex; indice++) {
-			printf("\t\t%lld\t%lld\t%lld\n", k[indice][0], k[indice][1], k[indice][2]);
+			printf("\t\t%d\t", k_type[indice]);
+			pelcr_value_print(stdout, &k_value[indice]);
+			printf("\t%d\n", k_refs[indice]);
 		}
 	} else {
 		printf(" empty\n");
@@ -919,10 +928,13 @@ MostraTabelle() {
 	if (findex > 0) {
 		printf("\n");
 		for (indice = 0; indice <= fcounter; indice++) {
-			printf("\t\t *%lld --> %s type=%d,narg=%d wait_vct= ", (USERTYPE)f[indice].fun, f[indice].name,
+			printf("\t\t *%p --> %s type=%d,narg=%d wait_vct= ", (void *)f[indice].fun, f[indice].name,
 			       f[indice].type, f[indice].narg);
-			for (j = 0; j < f[indice].narg; j++)
-				printf(" %lld ", f[indice].s[j]);
+			for (j = 0; j < f[indice].narg; j++) {
+				printf(" ");
+				pelcr_value_print(stdout, &f[indice].s[j]);
+				printf(" ");
+			}
 			printf(" \n");
 		}
 	} else {
@@ -933,10 +945,13 @@ MostraTabelle() {
 	if (findex > 0) {
 		printf("\n");
 		for (indice = 0; indice <= findex; indice++) {
-			printf("\t\t*%lld --> %s type=%d,narg=%d wait_vct= ", (USERTYPE)f_db[indice].fun, f_db[indice].name,
+			printf("\t\t*%p --> %s type=%d,narg=%d wait_vct= ", (void *)f_db[indice].fun, f_db[indice].name,
 			       f_db[indice].type, f_db[indice].narg);
-			for (j = 0; j < f_db[indice].narg; j++)
-				printf(" %lld ", f_db[indice].s[j]);
+			for (j = 0; j < f_db[indice].narg; j++) {
+				printf(" ");
+				pelcr_value_print(stdout, &f_db[indice].s[j]);
+				printf(" ");
+			}
 			printf(" \n");
 		};
 	} else {
@@ -1972,28 +1987,22 @@ CloseLib(void) {
 
 USERTYPE
 pelcr_not(USERTYPE n) {
-	if (n == 0)
-		return 1;
-	else
-		return 0;
+	return pelcr_value_from_si(pelcr_value_is_zero(&n) ? 1 : 0);
 }
 
 USERTYPE
 pelcr_succ(USERTYPE n) {
-	return n + 1;
+	return pelcr_value_add_ui(&n, 1);
 }
 
 USERTYPE
 pelcr_pred(USERTYPE n) {
-	return n - 1;
+	return pelcr_value_sub_ui(&n, 1);
 }
 
 USERTYPE
 pelcr_iszero(USERTYPE n) {
-	if (n == 0)
-		return 1;
-	else
-		return 0;
+	return pelcr_value_from_si(pelcr_value_is_zero(&n) ? 1 : 0);
 }
 
 /* this part is not well supported by the theory:
@@ -2002,28 +2011,25 @@ pelcr_iszero(USERTYPE n) {
 
 USERTYPE
 pelcr_add(USERTYPE n, USERTYPE m) {
-	return n + m;
+	return pelcr_value_add(&n, &m);
 }
 
 USERTYPE
 pelcr_mult(USERTYPE n, USERTYPE m) {
-	return n * m;
+	return pelcr_value_mul(&n, &m);
 }
 
 USERTYPE
 pelcr_and(USERTYPE n, USERTYPE m) {
-	if (n * m == 0)
-		return 0;
-	else
-		return 1;
+	USERTYPE product = pelcr_value_mul(&n, &m);
+	int is_zero = pelcr_value_is_zero(&product);
+	pelcr_value_clear(&product);
+	return pelcr_value_from_si(is_zero ? 0 : 1);
 }
 
 USERTYPE
 pelcr_great(USERTYPE n, USERTYPE m) {
-	if (n > m)
-		return 1;
-	else
-		return 0;
+	return pelcr_value_from_si(pelcr_value_cmp(&n, &m) > 0 ? 1 : 0);
 }
 
 /***********************************************/

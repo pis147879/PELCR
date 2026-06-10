@@ -27,6 +27,7 @@
 #include <mpi.h>
 
 #include "mydefs.h"
+#include "pelcr_value.h"
 #include "symbolic.h"
 #include "graph.h"
 #include "combustion.h"

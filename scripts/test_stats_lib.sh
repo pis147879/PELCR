@@ -13,13 +13,14 @@ stats_logical_cpu_count() {
 }
 
 CPU_COUNT="${CPU_COUNT:-$(stats_logical_cpu_count)}"
+STATS_TAIL_LINES="${STATS_TAIL_LINES:-4000}"
 
 stats_real_seconds() {
 	[ -f "$1" ] || {
 		printf '0\n'
 		return
 	}
-	awk '/^real / { value=$2 } END { print value+0 }' "$1"
+	tail -n "$STATS_TAIL_LINES" "$1" | awk '/^real / { value=$2 } END { print value+0 }'
 }
 
 stats_user_seconds() {
@@ -27,7 +28,7 @@ stats_user_seconds() {
 		printf '0\n'
 		return
 	}
-	awk '/^user / { value=$2 } END { print value+0 }' "$1"
+	tail -n "$STATS_TAIL_LINES" "$1" | awk '/^user / { value=$2 } END { print value+0 }'
 }
 
 stats_sys_seconds() {
@@ -35,7 +36,7 @@ stats_sys_seconds() {
 		printf '0\n'
 		return
 	}
-	awk '/^sys / { value=$2 } END { print value+0 }' "$1"
+	tail -n "$STATS_TAIL_LINES" "$1" | awk '/^sys / { value=$2 } END { print value+0 }'
 }
 
 stats_elapsed_max() {
@@ -43,7 +44,7 @@ stats_elapsed_max() {
 		printf '0\n'
 		return
 	}
-	awk '/elapsed time/ { if ($NF > max) max=$NF } END { print max+0 }' "$1"
+	tail -n "$STATS_TAIL_LINES" "$1" | awk '/elapsed time/ { if ($NF > max) max=$NF } END { print max+0 }'
 }
 
 stats_family_sum() {
@@ -51,7 +52,7 @@ stats_family_sum() {
 		printf '0\n'
 		return
 	}
-	awk '/family reductions/ { sum += $NF } END { print sum+0 }' "$1"
+	tail -n "$STATS_TAIL_LINES" "$1" | awk '/family reductions/ { sum += $NF } END { print sum+0 }'
 }
 
 stats_machine_load_percent() {

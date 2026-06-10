@@ -74,6 +74,9 @@
 #define RIGHT 0
 
 #define MAXLENWEIGHT 100
+#ifndef MAXUSERVALUELEN
+#define MAXUSERVALUELEN 256
+#endif
 #define MAXNPROCESS 1000
 #define MAXNUMARG 2
 /* ANTO */

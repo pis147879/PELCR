@@ -556,7 +556,7 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 			sprintf(&atmp[4], "%d)", XAddFun(indice, m->funWait));
 
 			for (i = 0; i < m->funWait - 1; i++)
-				f[fcounter].s[i] = m->funArgs[i];
+				pelcr_value_from_wire(&f[fcounter].s[i], m->funArgs[i]);
 		} else {
 			if (indice > findex)
 				findex = indice;
@@ -565,7 +565,7 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 			f[indice].type = m->funType;
 			f[indice].which = m->funWhich;
 			for (i = 0; i < m->funWait - 1; i++)
-				f[indice].s[i] = m->funArgs[i];
+				pelcr_value_from_wire(&f[indice].s[i], m->funArgs[i]);
 			switch (m->funWhich) {
 				case SUCC:
 					f[indice].fun = pelcr_succ;
@@ -596,9 +596,9 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 
 		SetNextKIndex();
 		sprintf(&atmp[4], "%d)", kindex);
-		k[kindex][0] = m->funType;
-		k[kindex][1] = m->funWait;
-		k[kindex][2]++;
+		k_type[kindex] = m->funType;
+		pelcr_value_from_wire(&k_value[kindex], m->funValue);
+		k_refs[kindex]++;
 	}
 
 	pending_actions--;

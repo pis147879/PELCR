@@ -36,6 +36,16 @@
 
 #include "h/var.h"
 
+static void
+StoreComputedValue(int type, USERTYPE result) {
+	SetNextKIndex();
+	k_refs[kindex]++;
+	pelcr_value_set(&k_value[kindex], &result);
+	pelcr_value_clear(&result);
+	k_type[kindex] = type;
+	newval = 1;
+}
+
 void
 checkone(char *s) {
 	char *r, sx[MAXLENWEIGHT], *ss;
@@ -266,7 +276,7 @@ product(char *a, char *b, char *a1, char *b1) {
 
 		if (Xstr != NULL) {
 			konst_index = atoi(&Xstr[4]);
-			k[konst_index][2]++;
+			k_refs[konst_index]++;
 		}
 		return 8;
 	}
@@ -307,7 +317,7 @@ product(char *a, char *b, char *a1, char *b1) {
 
 		if (Xstr != NULL) {
 			konst_index = atoi(&Xstr[4]);
-			k[konst_index][2]++;
+			k_refs[konst_index]++;
 		}
 		return 9;
 	}
@@ -610,33 +620,25 @@ product(char *a, char *b, char *a1, char *b1) {
 				if (f[l2].narg == 1) { /* valuto la funzione di 1 variabile*/
 #ifdef WDEBUG
 					printf("%d) function evaluation (1)\n", rank);
-					printf("%d, %d %lld %lld\n", l1, l2, (f[l2].fun)(5), k[l1][1]);
 #endif
-					SetNextKIndex();
-					k[kindex][2]++;
-					k[kindex][1] = ((USERTYPE(*)(USERTYPE))f[l2].fun)(k[l1][1]);
+					StoreComputedValue(f[l2].type, ((USERTYPE(*)(USERTYPE))f[l2].fun)(k_value[l1]));
 				} else if (f[l2].narg == 2) { /* valuto la funzione di 2 variabili */
 #ifdef WDEBUG
 					printf("%d) function evaluation (2)\n", rank);
-					printf("%d, %d %lld %lld\n", l1, l2, (f[l2].fun)(45, 12), k[l1][1]);
 #endif
-					SetNextKIndex();
-					k[kindex][2]++;
-					k[kindex][1] = ((USERTYPE(*)(USERTYPE, USERTYPE))f[l2].fun)((f[l2].s)[0], k[l1][1]);
+					StoreComputedValue(
+					    f[l2].type,
+					    ((USERTYPE(*)(USERTYPE, USERTYPE))f[l2].fun)((f[l2].s)[0], k_value[l1]));
 				} else if (f[l2].narg == 3) { /* valuto la funzione di 3 variabili */
 #ifdef WDEBUG
 					printf("%d) function evaluation (3)\n", rank);
-					printf("%d, %d %lld %lld\n", l1, l2, (f[l2].fun)(45, 12, 33), k[l1][1]);
 #endif
-					SetNextKIndex();
-					k[kindex][2]++;
-					k[kindex][1]
-					    = ((USERTYPE(*)(USERTYPE, USERTYPE, USERTYPE))f[l2].fun)((f[l2].s)[0], (f[l2].s)[1], k[l1][1]);
+					StoreComputedValue(
+					    f[l2].type,
+					    ((USERTYPE(*)(USERTYPE, USERTYPE, USERTYPE))f[l2].fun)(
+					        (f[l2].s)[0], (f[l2].s)[1], k_value[l1]));
 				} else
 					printf("EXCEPTION\n");
-
-				newval = 1;
-				k[kindex][0] = f[l2].type;
 
 				/** Avvertire tutti i processi della modifica */
 				/*
@@ -644,8 +646,11 @@ product(char *a, char *b, char *a1, char *b1) {
 				*/
 
 #ifdef WDEBUG
-				printf("--R-- %d %lld\n", kindex, k[kindex][1]);
-				printf("%d) VALORE CALCOLATO %lld\n", rank, k[kindex][1]);
+				printf("--R-- %d ", kindex);
+				pelcr_value_print(stdout, &k_value[kindex]);
+				printf("\n%d) VALORE CALCOLATO ", rank);
+				pelcr_value_print(stdout, &k_value[kindex]);
+				printf("\n");
 #endif
 				if (product(atmp, btmp, a1, b1)) {
 					char ax[100];
@@ -666,7 +671,7 @@ product(char *a, char *b, char *a1, char *b1) {
 #ifdef WDEBUG
 				printf("%d) PARTIAL EVAL FUNC\n", rank);
 #endif
-				(f[l2].s)[f[l2].wait - 1] = k[l1][1];
+				pelcr_value_set(&(f[l2].s)[f[l2].wait - 1], &k_value[l1]);
 				f[l2].wait++;
 
 				/** Avvertire tutti i processi della modifica */
@@ -701,34 +706,27 @@ product(char *a, char *b, char *a1, char *b1) {
 				if (f[l1].narg == 1) { /* valuto la funzione di 1 variabile*/
 #ifdef WDEBUG
 					printf("%d) function evaluation (1)\n", rank);
-					printf("%d, %d %lld %lld\n", l2, l1, (f[0].fun)(45), k[l2][1]);
 #endif
-					SetNextKIndex();
-					k[kindex][2]++;
-					k[kindex][1] = ((USERTYPE(*)(USERTYPE))f[l1].fun)(k[l2][1]);
+					StoreComputedValue(f[l1].type, ((USERTYPE(*)(USERTYPE))f[l1].fun)(k_value[l2]));
 				} else if (f[l1].narg == 2) { /* valuto la funzione di 2 variabili */
 #ifdef WDEBUG
 					printf("%d) function evaluation (2)\n", rank);
-					printf("%d, %d %lld %lld\n", l2, l1, (f[l1].fun)(45, 12), k[l2][1]);
 #endif
-					SetNextKIndex();
-					k[kindex][2]++;
-					k[kindex][1] = ((USERTYPE(*)(USERTYPE, USERTYPE))f[l1].fun)((f[l1].s)[0], k[l2][1]);
+					StoreComputedValue(
+					    f[l1].type,
+					    ((USERTYPE(*)(USERTYPE, USERTYPE))f[l1].fun)((f[l1].s)[0], k_value[l2]));
 				} else if (f[l1].narg == 3) { /* valuto la funzione di 2 variabili */
 #ifdef WDEBUG
 					printf("%d) function evaluation (3)\n", rank);
-					printf("%d, %d %lld %lld\n", l2, l1, (f[l1].fun)(45, 12, 33), k[l2][1]);
 #endif
-					SetNextKIndex();
-					k[kindex][2]++;
-					k[kindex][1]
-					    = ((USERTYPE(*)(USERTYPE, USERTYPE, USERTYPE))f[l1].fun)((f[l1].s)[0], (f[l1].s)[1], k[l2][1]);
+					StoreComputedValue(
+					    f[l1].type,
+					    ((USERTYPE(*)(USERTYPE, USERTYPE, USERTYPE))f[l1].fun)(
+					        (f[l1].s)[0], (f[l1].s)[1], k_value[l2]));
 				}
 
 				else
 					printf("EXCEPTION\n");
-				newval = 1;
-				k[kindex][0] = f[l1].type;
 
 				/** Avvertire tutti i processi della modifica */
 				/*
@@ -736,8 +734,11 @@ product(char *a, char *b, char *a1, char *b1) {
 				*/
 
 #ifdef WDEBUG
-				printf("--R-- %d %lld\n", kindex, k[kindex][1]);
-				printf("%d) VALORE CALCOLATO %lld\n", rank, k[kindex][1]);
+				printf("--R-- %d ", kindex);
+				pelcr_value_print(stdout, &k_value[kindex]);
+				printf("\n%d) VALORE CALCOLATO ", rank);
+				pelcr_value_print(stdout, &k_value[kindex]);
+				printf("\n");
 #endif
 				if (product(atmp, btmp, a1, b1)) {
 					char ax[100];
@@ -757,7 +758,7 @@ product(char *a, char *b, char *a1, char *b1) {
 #ifdef WDEBUG
 				printf("%d) PARTIAL EVAL FUNC\n", rank);
 #endif
-				(f[l1].s)[f[l1].wait - 1] = k[l2][1];
+				pelcr_value_set(&(f[l1].s)[f[l1].wait - 1], &k_value[l2]);
 				f[l1].wait++;
 
 				/** Avvertire tutti i processi della modifica */
@@ -832,7 +833,7 @@ product(char *a, char *b, char *a1, char *b1) {
 #endif
 			if (product(atmp, btmp, a1, b1)) {
 				char ax[100];
-				if (k[l2][1] == 0)
+				if (pelcr_value_is_zero(&k_value[l2]))
 					sprintf(ax, "X(%d,%d)%s", ITE, 2, a1);
 				else
 					sprintf(ax, "X(%d,%d)%s", ITE, 1, a1);
@@ -853,7 +854,7 @@ product(char *a, char *b, char *a1, char *b1) {
 #endif
 			if (product(atmp, btmp, a1, b1)) {
 				char bx[100];
-				if (k[l1][1] == 0)
+				if (pelcr_value_is_zero(&k_value[l1]))
 					sprintf(bx, "X(%d,%d)%s", ITE, 2, b1);
 				else
 					sprintf(bx, "X(%d,%d)%s", ITE, 1, b1);

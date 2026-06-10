@@ -61,7 +61,7 @@ typedef struct functionstack {
 	int which;
 	int type;
 	int narg;
-	long wait;
+	int wait;
 	USERTYPE (*fun)();
 	USERTYPE s[MAXNUMARG];
 	/* ANTO */
@@ -71,7 +71,9 @@ typedef struct functionstack {
 } functionstack;
 
 /* ANTO */
-PELCR_EXTERN USERTYPE k[MAXNUMCOST][3];
+PELCR_EXTERN int k_type[MAXNUMCOST];
+PELCR_EXTERN USERTYPE k_value[MAXNUMCOST];
+PELCR_EXTERN int k_refs[MAXNUMCOST];
 /* ANTO */
 
 PELCR_EXTERN functionstack f[MAXFUNCTIONS];

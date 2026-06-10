@@ -48,6 +48,14 @@ static int die_recvbuf[2 + 2 * MAXNPROCESS];
 static int die_last_out_counter[MAXNPROCESS];
 static int die_last_in_counter[MAXNPROCESS];
 
+static int
+StatsLogsDisabled(void) {
+	const char *value;
+
+	value = getenv("PELCR_DISABLE_STATS_LOGS");
+	return value != NULL && value[0] != '\0' && strcmp(value, "0") != 0;
+}
+
 static void
 ResetDieProtocol() {
 	int h;
@@ -296,6 +304,9 @@ OpenStatsFile(void) {
 	size_t i;
 
 	if (statsfile != NULL)
+		return;
+
+	if (StatsLogsDisabled())
 		return;
 
 	start = strrchr(infile, '/');
@@ -552,7 +563,12 @@ ShowMessage(struct messaggio *m) {
 
 void
 StoreMessage(struct messaggio *m, edge *target, edge *source, char *weight, int storeclass, int pol) {
+	int i;
+
 	m->tpy = ADD_TAG;
+	pelcr_wire_clear(m->funValue);
+	for (i = 0; i < MAXNUMARG; i++)
+		pelcr_wire_clear(m->funArgs[i]);
 	if (target->sto == OUT)
 		storeclass = OUT;
 	/* m->sender_load = fra_hot; */
@@ -579,7 +595,7 @@ StoreMessage(struct messaggio *m, edge *target, edge *source, char *weight, int 
 
 	if (strstr(weight, "X(3")) {
 		char *atmp;
-		int indice, i;
+		int indice;
 		atmp = strstr(weight, "X(3");
 		indice = atoi(&atmp[4]);
 
@@ -589,7 +605,7 @@ StoreMessage(struct messaggio *m, edge *target, edge *source, char *weight, int 
 			sprintf(&atmp[4], "%d)", f[indice].fun_id);
 			m->funWait = f[indice].wait;
 			for (i = 0; i < f[indice].wait - 1; i++)
-				m->funArgs[i] = f[indice].s[i];
+				pelcr_value_to_wire(&f[indice].s[i], m->funArgs[i]);
 		} else {
 			m->funWhich = f_db[indice].which;
 			m->funWait = f_db[indice].wait;
@@ -601,8 +617,8 @@ StoreMessage(struct messaggio *m, edge *target, edge *source, char *weight, int 
 		atmp = strstr(weight, "X(2");
 		indice = atoi(&atmp[4]);
 
-		m->funWait = k[indice][1];
-		m->funType = (int)k[indice][0];
+		pelcr_value_to_wire(&k_value[indice], m->funValue);
+		m->funType = k_type[indice];
 	}
 	strcpy(m->weight, weight);
 }

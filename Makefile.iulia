@@ -14,7 +14,7 @@ COMPILINGRDIR = ./
 CCLINKER    = $(CCC)
 PROFILING   = $(PMPILIB)
 #OPTFLAGS    = -DDEBUG -DWDEBUG -DMEMDEBUG -Wall -g -pg
-OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG  -DUSERTYPE=$(BASETYPE) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
+OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG $(USER_TYPE_FLAGS) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 

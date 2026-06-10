@@ -41,8 +41,8 @@ struct messaggio m;
 
 void
 writelabel(FILE *wstream, edge *e) {
-	char symboliclabel[MAXLENWEIGHT];
-	char PrintWeight[2 * MAXLENWEIGHT];
+	char symboliclabel[MAXUSERVALUELEN + 8];
+	char PrintWeight[2 * MAXLENWEIGHT + MAXUSERVALUELEN];
 	char *CurrentWeight = NULL;
 	char *NewWeight = NULL;
 	char *CopyWeight = NULL;
@@ -55,8 +55,8 @@ writelabel(FILE *wstream, edge *e) {
 	}
 #endif
 
-	memset(symboliclabel, 0, MAXLENWEIGHT);
-	memset(PrintWeight, 0, 2 * MAXLENWEIGHT);
+	memset(symboliclabel, 0, sizeof(symboliclabel));
+	memset(PrintWeight, 0, sizeof(PrintWeight));
 
 	CopyWeight = strdup(e->weight); /*allocates sufficient memory for a copy of the
 	                                 weight, does the copy, and returns a pointer to it*/
@@ -89,7 +89,10 @@ writelabel(FILE *wstream, edge *e) {
 
 				/*  KONST */
 			case 2:
-				sprintf(symboliclabel, " (%lld)", k[Index][1]);
+				snprintf(symboliclabel, sizeof(symboliclabel), " (");
+				pelcr_value_to_str(&k_value[Index], symboliclabel + strlen(symboliclabel),
+				    sizeof(symboliclabel) - strlen(symboliclabel) - 1);
+				strncat(symboliclabel, ")", sizeof(symboliclabel) - strlen(symboliclabel) - 1);
 				break;
 
 				/*  FUNC */

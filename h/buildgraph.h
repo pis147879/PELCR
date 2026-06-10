@@ -62,7 +62,7 @@ void SetNextKIndex(void);
 /* ANTO */
 int AddEntryInf(char *);
 int XAddEntryInf(char *, int);
-int XAddFun(int, USERTYPE);
+int XAddFun(int, int);
 
 edge *AddAnEdge(edge *, char *, node *, int);
 void Lift(termGraph *t);

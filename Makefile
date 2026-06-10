@@ -18,6 +18,19 @@ TESTFILE    = dd3.plcr
 LOOP        = 10000000
 UNAME_S     := $(shell uname -s)
 
+# Build with arbitrary-precision user values using: make GMP=1 [GMP_VALUE_DIGITS=...]
+ifeq ($(GMP),1)
+GMP_CFLAGS  := $(shell pkg-config --cflags gmp 2>/dev/null)
+GMP_LIBS    := $(shell pkg-config --libs gmp 2>/dev/null || echo -lgmp)
+GMP_VALUE_DIGITS ?= 256
+USER_TYPE_FLAGS = -DPELCR_GMP_USERTYPE -DMAXUSERVALUELEN=$(GMP_VALUE_DIGITS) $(GMP_CFLAGS)
+FFI_TARGETS = shared
+else
+GMP_LIBS    =
+USER_TYPE_FLAGS = -DUSERTYPE=$(BASETYPE)
+FFI_TARGETS = shared crypt
+endif
+
 SHARED_LIB  = shared.so
 CRYPTO_DIR  = $(PEXDIR)/Crypto
 CRYPTO_LIB  = $(CRYPTO_DIR)/crypto.so
@@ -35,12 +48,12 @@ RUN1= printf '\043setdir "%s" ; \043open "%s"\n' "$(PEXDIR)" "$(TESTFILE)"
 RUN = $(MPIR_HOME)/bin/mpirun -np $(NP) $(BUILDDIR)/$(EXECS) -- -loop $(LOOP)
 RUNTEST = $(RUN1)|$(RUN)
 LIB_PATH    =
-LIB_LIST    = -ldl -lm -lc
+LIB_LIST    = -ldl -lm -lc $(GMP_LIBS)
 CFLAGS    =$(ARCHFLAGS) $(OPTFLAGS)
 CCFLAGS   = $(CFLAGS)
 FFLAGS    = $(OPTFLAGS)
 
-.PHONY: default all objects gcombustion ffi shared crypt crypto go go2 test test2 check-parallel test4 test-crypto clean linux mac docker iulia home
+.PHONY: default all objects gcombustion ffi shared crypt crypto go go2 test test2 check-parallel test4 test-crypto clean linux mac docker iulia home FORCE
 
 default: gcombustion ffi
 
@@ -61,14 +74,16 @@ objects: $(BUILDDIR) $(SRCS)
 gcombustion: parser.tab.c objects
 	$(CLINKER) $(ARCHFLAGS) $(OPTFLAGS) $(OSFLAG) -o $(BUILDDIR)/$(EXECS) $(OBJECTS) $(LIB_PATH) $(LIB_LIST)
 
-ffi: shared crypt
+ffi: $(FFI_TARGETS)
 
 shared: $(SHARED_LIB)
 
 crypt crypto: $(CRYPTO_LIB)
 
-$(SHARED_LIB): shared.c
-	$(CC) $(OPTFLAGS) $(PICFLAGS) $(SHLIB_FLAGS) -o $@ $<
+$(SHARED_LIB): shared.c FORCE
+	$(CC) $(OPTFLAGS) $(PICFLAGS) $(SHLIB_FLAGS) -o $@ $< $(GMP_LIBS)
+
+FORCE:
 
 $(CRYPTO_LIB): $(CRYPTO_DIR)/crypto.c $(CRYPTO_DIR)/Swap/SwapEndian.c $(CRYPTO_DIR)/Swap/SwapEndian.h
 	$(CC) $(OPTFLAGS) $(PICFLAGS) -I$(CRYPTO_DIR) $(SHLIB_FLAGS) -o $@ $(CRYPTO_DIR)/crypto.c $(CRYPTO_DIR)/Swap/SwapEndian.c
