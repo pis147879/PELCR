@@ -21,7 +21,7 @@ MAX_LOG_BYTES="${MAX_LOG_BYTES:-10485760}"
 TIMEOUT_KILL_AFTER="${TIMEOUT_KILL_AFTER:-10}"
 DISABLE_INTERNAL_STATS_LOGS="${DISABLE_INTERNAL_STATS_LOGS:-1}"
 PYTHON="${PYTHON:-python3}"
-STATE_FILE="${STATE_FILE:-$LOG_DIR/passed-np${NP}-loop${LOOP}.state}"
+STATE_FILE="${STATE_FILE:-$LOG_DIR/passed-${MACHINE}-np${NP}-loop${LOOP}.state}"
 PASSED_STATS_FILE="${PASSED_STATS_FILE:-$LOG_DIR/passed-stats-np${NP}-loop${LOOP}.csv}"
 PASSED_STATS_BY_NP_FILE="${PASSED_STATS_BY_NP_FILE:-$LOG_DIR/passed-stats-by-np-np${NP}-loop${LOOP}.csv}"
 
@@ -46,6 +46,7 @@ Environment variables:
   MAX_LOG_BYTES=$MAX_LOG_BYTES
   TIMEOUT_KILL_AFTER=$TIMEOUT_KILL_AFTER
   DISABLE_INTERNAL_STATS_LOGS=$DISABLE_INTERNAL_STATS_LOGS
+  MACHINE=$MACHINE
   STATE_FILE=$STATE_FILE
   PASSED_STATS_FILE=$PASSED_STATS_FILE
   PASSED_STATS_BY_NP_FILE=$PASSED_STATS_BY_NP_FILE
@@ -82,7 +83,7 @@ fi
 
 summary="$LOG_DIR/summary-np${NP}-loop${LOOP}.csv"
 sorted_summary="$LOG_DIR/summary-np${NP}-loop${LOOP}-by-elapsed.csv"
-printf 'file,np_requested,np_effective,loop,ffi,status,real_seconds,elapsed_max,family_sum,log\n' > "$summary"
+printf 'file,machine,np_requested,np_effective,loop,ffi,status,real_seconds,elapsed_max,family_sum,log\n' > "$summary"
 stats_write_passed_header "$PASSED_STATS_FILE"
 
 fingerprint_file() {
@@ -99,8 +100,8 @@ passed_key() {
 	local example_fingerprint
 
 	example_fingerprint="$(fingerprint_file "$example")"
-	printf '%s\t%s\tnp=%s\tnp_effective=%s\tloop=%s\ttimeout=%s\tffi=%s\texec=%s:%s\tmpirun=%s\n' \
-		"$base" "$example_fingerprint" "$NP" "$np_effective" "$LOOP" "$TIMEOUT" "$ffi" "$EXEC" "$EXEC_FINGERPRINT" "$MPIRUN"
+	printf '%s\t%s\tmachine=%s\tnp=%s\tnp_effective=%s\tloop=%s\ttimeout=%s\tffi=%s\texec=%s:%s\tmpirun=%s\n' \
+		"$base" "$example_fingerprint" "$MACHINE" "$NP" "$np_effective" "$LOOP" "$TIMEOUT" "$ffi" "$EXEC" "$EXEC_FINGERPRINT" "$MPIRUN"
 }
 
 already_passed() {
@@ -217,7 +218,7 @@ run_one() {
 		ffi=1
 		if [ "$SKIP_FFI" -ne 0 ]; then
 			printf 'skip FFI: %s\n' "$base"
-			printf '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' "$base" "$NP" "$np_effective" "$LOOP" "$ffi" "SKIP_FFI" 0 0 0 "" >> "$summary"
+			printf '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' "$base" "$MACHINE" "$NP" "$np_effective" "$LOOP" "$ffi" "SKIP_FFI" 0 0 0 "" >> "$summary"
 			return
 		fi
 		if [ "$FFI_SEQUENTIAL" -ne 0 ]; then
@@ -233,7 +234,7 @@ run_one() {
 		family="$(stats_family_sum "$log")"
 		stats_append_passed "$PASSED_STATS_FILE" "$base" "$NP" "$np_effective" "$LOOP" "$ffi" "PASS_CACHED" "$log"
 		printf 'skip passed: %s\n' "$base"
-		printf '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' "$base" "$NP" "$np_effective" "$LOOP" "$ffi" "PASS_CACHED" "$real" "$elapsed" "$family" "$log" >> "$summary"
+		printf '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' "$base" "$MACHINE" "$NP" "$np_effective" "$LOOP" "$ffi" "PASS_CACHED" "$real" "$elapsed" "$family" "$log" >> "$summary"
 		return
 	fi
 
@@ -256,7 +257,7 @@ run_one() {
 		stats_append_passed "$PASSED_STATS_FILE" "$base" "$NP" "$np_effective" "$LOOP" "$ffi" "$status" "$log"
 	fi
 
-	printf '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' "$base" "$NP" "$np_effective" "$LOOP" "$ffi" "$status" "$real" "$elapsed" "$family" "$log" >> "$summary"
+	printf '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' "$base" "$MACHINE" "$NP" "$np_effective" "$LOOP" "$ffi" "$status" "$real" "$elapsed" "$family" "$log" >> "$summary"
 }
 
 find "$EXAMPLES_DIR" -maxdepth 1 -type f -name "$PATTERN" | sort | while read -r example; do
@@ -269,7 +270,7 @@ done
 
 {
 	head -1 "$summary"
-	tail -n +2 "$summary" | sort -t, -k8,8n -k7,7n
+	tail -n +2 "$summary" | sort -t, -k9,9n -k8,8n
 } > "$sorted_summary"
 
 stats_write_by_np "$PASSED_STATS_FILE" "$PASSED_STATS_BY_NP_FILE"

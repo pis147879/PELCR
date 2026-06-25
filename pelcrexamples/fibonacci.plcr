@@ -1,9 +1,4 @@
-#def pippo = java(
- int p(int x)
-	{	 
-	 return (2*x)
-	 }
-) ;
+#def pippo = \x.add(x,x) ;
 
 (\x.add(x,x))(pippo)2 ;
 
@@ -13,6 +8,7 @@
 #def suc = \n.\x.\y.((n)x)(x)y ;
 #def pair = \x.\y.\z.((z)x)y ;
 #def molt = \n.\m.\x.(n)(m)x ;
+#def zero = \f.\x.x ;
 #def one = \f.\x.(f)x ;
 #def nextfibo = \p. (\a.(\b. ((pair)((molt)a)b)a)(suc)(p)snd)(p)fst ;
 

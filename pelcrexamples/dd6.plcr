@@ -1,0 +1,4 @@
+#def delta = \x.(x)x ;
+#def six = \f.\x.(f)(f)(f)(f)(f)(f)x ;
+(delta)(delta)six ;
+#quit ;

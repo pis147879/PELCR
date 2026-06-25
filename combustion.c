@@ -265,7 +265,7 @@ UpdateDieProtocol() {
 		return;
 	}
 
-	if (!DieProtocolIsArmed())
+	if (!DieProtocolIsArmed() && !local_idle && !die_idle_notice_sent)
 		return;
 
 	if (local_idle) {

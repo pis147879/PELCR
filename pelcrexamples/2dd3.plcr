@@ -1,0 +1,6 @@
+#def delta = \x.(x)x ;
+#def three = \f.\x.(f)(f)(f)x ;
+#def two = \f.\x.(f)(f)x ;
+#def I   = \x.x ;
+((two)(delta)(delta)three)I ;
+#quit ;

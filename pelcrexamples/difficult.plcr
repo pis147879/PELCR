@@ -10,6 +10,7 @@
 #quit ;
 
 
+/*
 (((two)two)I)I
 ((((two)two)two)I)I // 0 sec.
 ((three)I)I
@@ -21,3 +22,4 @@
 (((((two)two)three)three)I)I
 (((four)four)I)I
 (((((two)two)three)two)I)I
+*/

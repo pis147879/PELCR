@@ -123,6 +123,10 @@ path (\")("."|"/"|{letter}|{digit})({letter}|{digit}|"/"|".")*(\")
 		  return (PATH);
 		}
 
+\/\/[^\n]*              { /* ignore // comments */ }
+
+<incl>\/\/[^\n]*        { /* ignore // comments while including files */ }
+
 <incl>\/\*              { // start of a comment: go to a 'COMMENTS' state.
     BEGIN(INCLCOMMENTS);
 }
