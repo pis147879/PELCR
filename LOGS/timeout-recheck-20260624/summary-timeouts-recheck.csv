@@ -1,0 +1,17 @@
+file,machine,np_requested,np_effective,loop,ffi,status,real_seconds,elapsed_max,family_sum,log
+2I.plcr,macstudio,32,32,1,0,OK,2.05,0,3,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/2I-np32-loop1.out
+2dd3.plcr,macstudio,32,32,1,0,TIMEOUT,120.56,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/2dd3-np32-loop1.out
+2dd4.plcr,macstudio,32,32,1,0,TIMEOUT,120.56,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/2dd4-np32-loop1.out
+d2.plcr,macstudio,32,32,1,0,OK,1.99,0,6,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/d2-np32-loop1.out
+d4.plcr,macstudio,32,32,1,0,OK,2.07,0,18,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/d4-np32-loop1.out
+d4double_f.plcr,macstudio,32,1,1,1,TIMEOUT,120.55,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/d4double_f-np1-ffi-loop1.out
+d4triple_f.plcr,macstudio,32,1,1,1,FAIL:1,103.9,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/d4triple_f-np1-ffi-loop1.out
+dd2.plcr,macstudio,32,32,1,0,OK,2.07,0,14,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/dd2-np32-loop1.out
+dd5.plcr,macstudio,32,32,1,0,FAIL:1,5.3,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/dd5-np32-loop1.out
+difficult.plcr,macstudio,32,32,1,0,TIMEOUT,120.54,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/difficult-np32-loop1.out
+fibonacci.plcr,macstudio,32,32,1,0,OK,2.84,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/fibonacci-np32-loop1.out
+k2i.plcr,macstudio,32,32,1,0,OK,2.04,0,4,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/k2i-np32-loop1.out
+kdd.plcr,macstudio,32,32,1,0,TIMEOUT,120.55,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/kdd-np32-loop1.out
+ki.plcr,macstudio,32,32,1,0,OK,2.1,0,4,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/ki-np32-loop1.out
+scan.plcr,macstudio,32,32,1,0,OK,2.07,0,23,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/scan-np32-loop1.out
+Crypto/brute.plcr,macstudio,32,1,1,1,TIMEOUT,120.53,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/timeout-recheck-20260624/Crypto-brute-np1-ffi-loop1.out

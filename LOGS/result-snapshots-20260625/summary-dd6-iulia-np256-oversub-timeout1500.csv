@@ -1,0 +1,2 @@
+file,machine,np_requested,np_effective,loop,ffi,status,real_seconds,elapsed_max,family_sum,log
+dd6.plcr,iulia,256,256,1,0,TIMEOUT,1503.11,0,0,/raid/homespace/marpedicini/PELCR-anthropic/PELCR/LOGS/dd6-iulia-np256-oversub-timeout1500-20260625/dd6-np256-loop1.out

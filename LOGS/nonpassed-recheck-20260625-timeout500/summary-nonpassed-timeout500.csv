@@ -1,0 +1,2 @@
+file,np_requested,np_effective,loop,ffi,previous_status,status,real_seconds,elapsed_max,family_sum,log
+2dd3.plcr,32,32,1,0,TIMEOUT,FAIL:1,113.06,0,0,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/nonpassed-recheck-20260625-timeout500/2dd3-np32-loop1.out

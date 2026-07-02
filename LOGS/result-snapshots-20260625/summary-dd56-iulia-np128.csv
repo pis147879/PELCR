@@ -1,0 +1,3 @@
+file,machine,np_requested,np_effective,loop,ffi,status,real_seconds,elapsed_max,family_sum,log
+dd5.plcr,iulia,128,128,1,0,OK,226.37,207,134,/raid/homespace/marpedicini/PELCR-anthropic/PELCR/LOGS/dd56-iulia-np128-synced-20260625/dd5-np128-loop1.out
+dd6.plcr,iulia,128,128,1,0,TIMEOUT,502.13,0,0,/raid/homespace/marpedicini/PELCR-anthropic/PELCR/LOGS/dd56-iulia-np128-synced-20260625/dd6-np128-loop1.out

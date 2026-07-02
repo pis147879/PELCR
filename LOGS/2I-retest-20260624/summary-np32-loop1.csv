@@ -1,0 +1,2 @@
+file,np_requested,np_effective,loop,ffi,status,real_seconds,elapsed_max,family_sum,log
+2I.plcr,32,32,1,0,OK,2.06,0,3,/Users/marco/marco.live/PROGRAMS/ALL-PELCR/PELCR-anthropic/PELCR/LOGS/2I-retest-20260624/2I-np32-loop1.out
