@@ -316,6 +316,9 @@ Print(graph g, struct mbuffer *b, long sq) {
 	int i;
 	char name[MAXNAMELEN];
 
+	if (!dumpflag)
+		return;
+
 	pflag = !pflag;
 	if (sq == 1000000)
 		pflag = -1;
@@ -480,6 +483,10 @@ DebugPrint(graph g, int sq) {
 	node *P;
 	edge *e;
 	int i;
+
+	if (!dumpflag)
+		return;
+
 	OUTPUTFILE {
 		char name[MAXNAMELEN];
 

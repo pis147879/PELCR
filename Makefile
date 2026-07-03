@@ -18,6 +18,11 @@ TESTFILE    = dd3.plcr
 LOOP        = 10000000
 UNAME_S     := $(shell uname -s)
 
+MAXPENDING ?=
+ifneq ($(strip $(MAXPENDING)),)
+PENDING_FLAGS = -DMAXPENDING=$(MAXPENDING)
+endif
+
 # Build with arbitrary-precision user values using: make GMP=1 [GMP_VALUE_DIGITS=...]
 ifeq ($(GMP),1)
 GMP_CFLAGS  := $(shell pkg-config --cflags gmp 2>/dev/null)

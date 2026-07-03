@@ -10,10 +10,14 @@ CCP         = $(MPIR_HOME)/bin/mpiCC
 CLINKER     = $(CC)
 CCC         = $(MPIR_HOME)/bin/mpiCC
 COMPILINGRDIR = ./
+MAXPENDING ?=
+ifneq ($(strip $(MAXPENDING)),)
+PENDING_FLAGS = -DMAXPENDING=$(MAXPENDING)
+endif
 CCLINKER    = $(CCC)
 PROFILING   = $(PMPILIB)
 #OPTFLAGS    = -DDEBUG -DWDEBUG -DMEMDEBUG -Wall -g -pg
-OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG $(USER_TYPE_FLAGS) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
+OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG $(USER_TYPE_FLAGS) $(PENDING_FLAGS) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG 
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 

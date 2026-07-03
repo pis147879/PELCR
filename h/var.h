@@ -63,7 +63,7 @@ PELCR_EXTERN int lightprocess;
 PELCR_EXTERN int schedule;
 PELCR_EXTERN int pflag;
 
-PELCR_EXTERN int traceflag, inflag, outflag, verflag;
+PELCR_EXTERN int traceflag, inflag, outflag, verflag, dumpflag;
 PELCR_EXTERN long failed_compositions, processed_actions, edge_compositions, bip4, family_reductions;
 PELCR_EXTERN int local_family_reductions;
 PELCR_EXTERN long fires, loops, prnsteps, one_optimizations;

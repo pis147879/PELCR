@@ -39,6 +39,14 @@
 
 extern int yyparse(void);
 
+static int
+EnvFlagEnabled(const char *name) {
+	const char *value;
+
+	value = getenv(name);
+	return value != NULL && value[0] != '\0' && strcmp(value, "0") != 0;
+}
+
 int
 main(int argc, char **argv) {
 	int j;
@@ -57,6 +65,7 @@ main(int argc, char **argv) {
 	inflag = 0;
 	outflag = 0;
 	verflag = 0;
+	dumpflag = !EnvFlagEnabled("PELCR_DISABLE_DUMP_OUTPUT");
 
 	failed_compositions = 0;
 	processed_actions = 0;
@@ -166,6 +175,11 @@ main(int argc, char **argv) {
 		if (strcmp(argv[j], "-v") == 0) {
 			printf("Verbose Mode On\n");
 			verflag = 1;
+		}
+
+		if ((strcmp(argv[j], "--no-dump-output") == 0) || (strcmp(argv[j], "-qdump") == 0)) {
+			dumpflag = 0;
+			outflag = 0;
 		}
 
 		if (strcmp(argv[j], "-t") == 0) {

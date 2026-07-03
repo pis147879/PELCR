@@ -142,6 +142,17 @@ append_time_log() {
 	fi
 }
 
+needs_sequential_run() {
+	local example="$1"
+
+	grep -Eq '(^|[^[:alnum:]_])#(uselib|use|include|xcall)([^[:alnum:]_]|$)' "$example" && return 0
+	grep -Eq '(^|[^[:alnum:]_])xfunction[[:space:]]*\(' "$example" && return 0
+	grep -Eq '(^|[^[:alnum:]_])(not|Not|succ|Succ|pred|Pred|iszero|add|Add|mult|Mult|and|And|or|Or)[[:space:]]*\(' "$example" && return 0
+	grep -Eq '(^|[^[:alnum:]_])>[[:space:]]*\(' "$example" && return 0
+
+	return 1
+}
+
 run_pelcr() {
 	local base="$1"
 	local np_effective="$2"
@@ -214,7 +225,7 @@ run_one() {
 	np_effective="$NP"
 	ffi=0
 
-	if grep -Eq '(^|[^[:alnum:]_])#(uselib|use|include)([^[:alnum:]_]|$)' "$example"; then
+	if needs_sequential_run "$example"; then
 		ffi=1
 		if [ "$SKIP_FFI" -ne 0 ]; then
 			printf 'skip FFI: %s\n' "$base"

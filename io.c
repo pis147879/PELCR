@@ -155,6 +155,26 @@ OpenFileInitStruct() {
 		}
 #endif
 	}
+	if (!dumpflag) {
+		tempfile = NULL;
+		nofile = NULL;
+		hotfile = NULL;
+		coldfile = NULL;
+		anamfile = NULL;
+		trivfile = NULL;
+		firfile = NULL;
+		for (i = 0; i < size; i++) {
+			maxwinfile[i] = NULL;
+			mawfile[i] = NULL;
+		}
+		if (statsfile != NULL) {
+			fclose(statsfile);
+			statsfile = NULL;
+		}
+		logfile = fopen("/dev/null", "w");
+		if (logfile == NULL)
+			logfile = stderr;
+	}
 #ifdef _DEBUG
 	DEBUG_IO {
 		fprintf(logfile, "(%d) ok!\n", rank);

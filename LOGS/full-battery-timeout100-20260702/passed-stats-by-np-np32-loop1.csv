@@ -1,0 +1,3 @@
+machine,np_effective,passed_count,total_real_seconds,avg_real_seconds,total_elapsed_max,avg_elapsed_max,total_family_reductions,total_cpu_seconds,avg_machine_load_percent,max_machine_load_percent,logical_cpus
+macstudio,1,28,60.350000,2.155357,50.000000,1.785714,574,57.920000,2.51,3.11,32
+macstudio,32,8,19.070000,2.383750,2.000000,0.250000,155,462.750000,75.10,82.82,32

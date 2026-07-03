@@ -13,9 +13,21 @@ stats_logical_cpu_count() {
 }
 
 stats_detect_machine() {
+	local detected
+
 	if command -v hostname >/dev/null 2>&1; then
-		hostname -s 2>/dev/null && return
-		hostname 2>/dev/null && return
+		detected="$(hostname -s 2>/dev/null || hostname 2>/dev/null || true)"
+		if [ -n "$detected" ]; then
+			case "$detected" in
+				sidechannel|sidechannel.local)
+					printf 'macstudio\n'
+					;;
+				*)
+					printf '%s\n' "$detected"
+					;;
+			esac
+			return
+		fi
 	fi
 
 	uname -n 2>/dev/null && return
