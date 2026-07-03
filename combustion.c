@@ -43,6 +43,8 @@
 static int die_idle_notice_sent = 0;
 static int die_idle_rank[MAXNPROCESS];
 static int die_max_pending_load = 0;
+static long pending_buffer_slots_hwm = 0;
+static long pending_buffer_max_slots_hwm = 0;
 static int die_sendbuf[2 + 2 * MAXNPROCESS];
 static int die_recvbuf[2 + 2 * MAXNPROCESS];
 static int die_last_out_counter[MAXNPROCESS];
@@ -95,6 +97,39 @@ IncomingPendingCount() {
 #endif
 
 	return count;
+}
+
+static void
+IncomingPendingStats(long *total_slots, long *max_slots) {
+	int h;
+
+	*total_slots = 0;
+	*max_slots = 0;
+	for (h = 0; h < MINPRIORITY; h++) {
+		long slots = BDumpS(&incoming[h]);
+
+		*total_slots += slots;
+		if (slots > *max_slots)
+			*max_slots = slots;
+	}
+}
+
+void
+ResetPendingBufferStats(void) {
+	pending_buffer_slots_hwm = 0;
+	pending_buffer_max_slots_hwm = 0;
+}
+
+void
+RecordPendingBufferLoad(void) {
+	long total_slots;
+	long max_slots;
+
+	IncomingPendingStats(&total_slots, &max_slots);
+	if (total_slots > pending_buffer_slots_hwm)
+		pending_buffer_slots_hwm = total_slots;
+	if (max_slots > pending_buffer_max_slots_hwm)
+		pending_buffer_max_slots_hwm = max_slots;
 }
 
 static int
@@ -338,7 +373,8 @@ OpenStatsFile(void) {
 		/* The old fra_hot pre-pop load snapshot is now incoming_actions_snapshot. */
 		fprintf(statsfile,
 		        "# wall_epoch time rank loops processed_actions edge_compositions fires one_optimizations failed_compositions graph_nodes nhot pending_actions "
-		        "graph_edges local_pending incoming_pending outgoing_pending global_physical_msgs nTickSend nFullSend\n");
+		        "graph_edges local_pending incoming_pending incoming_buffer_capacity incoming_buffer_pct incoming_buffer_hwm incoming_buffer_hwm_pct "
+		        "incoming_buffer_max_slots incoming_buffer_max_hwm outgoing_pending global_physical_msgs nTickSend nFullSend\n");
 		fflush(statsfile);
 	}
 }
@@ -346,18 +382,26 @@ OpenStatsFile(void) {
 void
 WriteStats() {
 	int h;
-	int incoming_pending = 0;
+	long incoming_pending;
+	long incoming_buffer_capacity;
+	long incoming_buffer_max_slots;
+	double incoming_buffer_pct;
+	double incoming_buffer_hwm_pct;
 	long outgoing_pending = local_pending;
 
 	if (processed_actions % FREQ)
 		return;
 
-#if MINPRIORITY > 1
-	for (h = 0; h < MINPRIORITY; h++)
-		incoming_pending += BDumpS(&incoming[h]);
-#else
-	incoming_pending = BDumpS(&incoming[0]);
-#endif
+	IncomingPendingStats(&incoming_pending, &incoming_buffer_max_slots);
+	RecordPendingBufferLoad();
+	incoming_buffer_capacity = (long)MINPRIORITY * (long)MAXPENDING;
+	if (incoming_buffer_capacity > 0) {
+		incoming_buffer_pct = (double)incoming_pending / (double)incoming_buffer_capacity;
+		incoming_buffer_hwm_pct = (double)pending_buffer_slots_hwm / (double)incoming_buffer_capacity;
+	} else {
+		incoming_buffer_pct = 0.0;
+		incoming_buffer_hwm_pct = 0.0;
+	}
 
 	for (h = 0; h < size; h++)
 		outgoing_pending += outcontrol[h];
@@ -385,9 +429,10 @@ WriteStats() {
 		}
 
 		if (statsfile != NULL) {
-			fprintf(statsfile, "%ld %f %d %ld %ld %ld %ld %ld %ld %d %d %d %ld %d %d %ld %ld %ld %ld\n",
+			fprintf(statsfile, "%ld %f %d %ld %ld %ld %ld %ld %ld %d %d %d %ld %d %ld %ld %.6f %ld %.6f %ld %ld %ld %ld %ld %ld\n",
 			        (long)wall_epoch, now, rank, loops, processed_actions, edge_compositions, fires, one_optimizations, failed_compositions, graph_nodes, nhot, pending_actions,
-			        graph_edges, local_pending, incoming_pending, outgoing_pending, global_physical_msgs, nTickSend, nFullSend);
+			        graph_edges, local_pending, incoming_pending, incoming_buffer_capacity, incoming_buffer_pct, pending_buffer_slots_hwm, incoming_buffer_hwm_pct,
+			        incoming_buffer_max_slots, pending_buffer_max_slots_hwm, outgoing_pending, global_physical_msgs, nTickSend, nFullSend);
 			fflush(statsfile);
 		}
 	}
@@ -542,6 +587,7 @@ PushIncomingMessage(int priority, struct messaggio *m) {
 	l->last = (l->last + 1) % MAXPENDING;
 
 	pending_actions++;
+	RecordPendingBufferLoad();
 	return;
 }
 
@@ -882,7 +928,7 @@ FunInteraction() {
 				} break;
 			} /* END OF SWITCH */
 
-			OUTPUT WriteStats();
+			WriteStats();
 
 			//  DEBUG  printf("(%d) after switch\n",rank);
 			//	  DEBUG  fflush(stdout);

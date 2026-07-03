@@ -516,6 +516,7 @@ buf_flush() {
 #endif
 
 		pending_actions++;
+		RecordPendingBufferLoad();
 	}
 
 	local_pending = 0;

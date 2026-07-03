@@ -88,6 +88,8 @@ void FunInteraction();
 
 void WriteStats();
 void PushIncomingMessage(int priority, struct messaggio *m);
+void ResetPendingBufferStats(void);
+void RecordPendingBufferLoad(void);
 int EmptyBuffer(struct mbuffer *l);
 
 void Finally();
