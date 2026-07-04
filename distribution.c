@@ -304,6 +304,7 @@ SendCreateNewNode(int dest, int sto, edge *nS) {
 	if ((dest == rank) && (sto == IN)) {
 		nS->source = CreateNewNode(G.hot);
 		G.hot = nS->source;
+		hot_nodes++;
 		nS->source->sto = IN;
 		nS->rankpuit = rank;
 		nS->creator = rank;
@@ -314,6 +315,7 @@ SendCreateNewNode(int dest, int sto, edge *nS) {
 	} else if ((dest == rank) && (sto == OUT)) {
 		nS->source = CreateNewNode(G.cold);
 		G.cold = nS->source;
+		cold_nodes++;
 		nS->source->sto = OUT;
 		nS->rankpuit = rank;
 		nS->creator = rank;

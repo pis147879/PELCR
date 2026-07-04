@@ -71,6 +71,7 @@ PELCR_EXTERN int unaddtest, uneottest;
 PELCR_EXTERN int laddtest, leottest;
 PELCR_EXTERN long idle, lidle, lbip2;
 PELCR_EXTERN int graph_nodes, nhot, ncold, scount;
+PELCR_EXTERN long hot_nodes, cold_nodes;
 PELCR_EXTERN long computing_loops, lastloop;
 
 PELCR_EXTERN int cut_node_count;

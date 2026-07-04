@@ -372,7 +372,7 @@ OpenStatsFile(void) {
 	if (statsfile != NULL) {
 		/* The old fra_hot pre-pop load snapshot is now incoming_actions_snapshot. */
 		fprintf(statsfile,
-		        "# wall_epoch time rank loops processed_actions edge_compositions fires one_optimizations failed_compositions graph_nodes nhot pending_actions "
+		        "# wall_epoch time rank loops processed_actions edge_compositions fires one_optimizations failed_compositions graph_nodes hot_nodes cold_nodes nhot pending_actions "
 		        "graph_edges local_pending incoming_pending incoming_buffer_capacity incoming_buffer_pct incoming_buffer_hwm incoming_buffer_hwm_pct "
 		        "incoming_buffer_max_slots incoming_buffer_max_hwm outgoing_pending global_physical_msgs nTickSend nFullSend\n");
 		fflush(statsfile);
@@ -429,8 +429,8 @@ WriteStats() {
 		}
 
 		if (statsfile != NULL) {
-			fprintf(statsfile, "%ld %f %d %ld %ld %ld %ld %ld %ld %d %d %d %ld %d %ld %ld %.6f %ld %.6f %ld %ld %ld %ld %ld %ld\n",
-			        (long)wall_epoch, now, rank, loops, processed_actions, edge_compositions, fires, one_optimizations, failed_compositions, graph_nodes, nhot, pending_actions,
+			fprintf(statsfile, "%ld %f %d %ld %ld %ld %ld %ld %ld %d %ld %ld %d %d %ld %d %ld %ld %.6f %ld %.6f %ld %ld %ld %ld %ld %ld\n",
+			        (long)wall_epoch, now, rank, loops, processed_actions, edge_compositions, fires, one_optimizations, failed_compositions, graph_nodes, hot_nodes, cold_nodes, nhot, pending_actions,
 			        graph_edges, local_pending, incoming_pending, incoming_buffer_capacity, incoming_buffer_pct, pending_buffer_slots_hwm, incoming_buffer_hwm_pct,
 			        incoming_buffer_max_slots, pending_buffer_max_slots_hwm, outgoing_pending, global_physical_msgs, nTickSend, nFullSend);
 			fflush(statsfile);
@@ -1108,13 +1108,13 @@ CountNodeList(node *head) {
 
 void
 PrintResult() {
-	int hot_node_count;
-	int cold_node_count;
+	long hot_node_count;
+	long cold_node_count;
 
 	AttachSingleEotHotNodesToCold();
 
-	hot_node_count = CountNodeList(G.hot);
-	cold_node_count = CountNodeList(G.cold);
+	hot_node_count = hot_nodes;
+	cold_node_count = cold_nodes;
 
 #ifdef SOLARIS
 	int lh;
@@ -1171,8 +1171,8 @@ PrintResult() {
 
 		printf("(%d) elapsed time        :  %d\n", rank, ((int)finaltime - (int)inittime));
 		printf("(%d) final nodes         :  %d\n", rank, graph_nodes);
-		printf("(%d) hot nodes           :  %d\n", rank, hot_node_count);
-		printf("(%d) cold nodes          :  %d\n", rank, cold_node_count);
+		printf("(%d) hot nodes           :  %ld\n", rank, hot_node_count);
+		printf("(%d) cold nodes          :  %ld\n", rank, cold_node_count);
 		printf("(%d) edge compositions   :  %ld\n", rank, edge_compositions);
 		printf("(%d) fires               :  %ld\n", rank, fires);
 		printf("(%d) trivial             :  %ld optimized\n", rank, one_optimizations);
@@ -1227,8 +1227,8 @@ PrintResult() {
 
 			fprintf(logfile, "(%d) elapsed time         :  %d\n", rank, ((int)finaltime - (int)inittime));
 			fprintf(logfile, "(%d) final nodes         :  %d\n", rank, graph_nodes);
-			fprintf(logfile, "(%d) hot nodes           :  %d\n", rank, hot_node_count);
-			fprintf(logfile, "(%d) cold nodes          :  %d\n", rank, cold_node_count);
+			fprintf(logfile, "(%d) hot nodes           :  %ld\n", rank, hot_node_count);
+			fprintf(logfile, "(%d) cold nodes          :  %ld\n", rank, cold_node_count);
 			fprintf(logfile, "(%d) edge compositions   :  %ld\n", rank, edge_compositions);
 			fprintf(logfile, "(%d) fires                :  %ld\n", rank, fires);
 			fprintf(logfile, "(%d) loops                :  %ld\n", rank, lastloop);

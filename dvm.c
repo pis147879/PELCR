@@ -278,6 +278,7 @@ BookedAddress(int rk, long ord) {
 			TRACING fprintf(logfile, "it is not here\n");
 #endif
 			G.hot = CreateNewNode(G.hot);
+			hot_nodes++;
 			G.hot->sto = IN;
 			table_iput(p, ord, G.hot);
 #if FREE_HOT_BOOKTABLE_ENTRIES
@@ -319,6 +320,7 @@ StoreBookedAddress(int rk, long ord, int sto) {
 			  */
 			if (sto == IN) {
 				G.hot = CreateNewNode(G.hot);
+				hot_nodes++;
 				G.hot->sto = IN;
 				table_iput(p, ord, G.hot);
 #if FREE_HOT_BOOKTABLE_ENTRIES
@@ -328,6 +330,7 @@ StoreBookedAddress(int rk, long ord, int sto) {
 				address = G.hot;
 			} else {
 				G.cold = CreateNewNode(G.cold);
+				cold_nodes++;
 				G.cold->sto = OUT;
 				table_iput(p, ord, G.cold);
 #if FREE_HOT_BOOKTABLE_ENTRIES

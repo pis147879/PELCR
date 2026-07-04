@@ -46,6 +46,8 @@ STATS_COLUMNS = [
     "one_optimizations",
     "failed_compositions",
     "graph_nodes",
+    "hot_nodes",
+    "cold_nodes",
     "nhot",
     "pending_actions",
     "graph_edges",

@@ -120,6 +120,9 @@ AttachNodeToCold(node *P) {
 	G.cold = P;
 
 	if (was_hot) {
+		if (hot_nodes > 0)
+			hot_nodes--;
+		cold_nodes++;
 		PropagateColdToSourceEndpoints(P->left.vector);
 		PropagateColdToSourceEndpoints(P->right.vector);
 	}
@@ -530,6 +533,8 @@ SinkRemove(node *P) {
 #endif
 	free(P);
 	graph_nodes--;
+	if (hot_nodes > 0)
+		hot_nodes--;
 #ifdef _DEBUG
 	DEBUG_MEM {
 		fprintf(logfile, "REMOVED NODE\n");
