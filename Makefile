@@ -26,7 +26,7 @@ lex.yy.c: $(COMPILINGRDIR)les.fl
 	$(LEX) $(COMPILINGRDIR)les.fl
 
 parser.tab.c: $(COMPILINGRDIR)parser.y
-	$(YACC) -d -v $(COMPILINGRDIR)parser.y -b $@ 
+	$(YACC) -d -v $(COMPILINGRDIR)parser.y -b parser
 
 objects: $(SRCS)
 	$(CC) $(CFLAGS) $(OSFLAGS) $(INCLUDEDIR) -c $(SRCS)
@@ -82,4 +82,3 @@ tesla:
 	make all
 	
 home: gcombustion
-

@@ -29,6 +29,7 @@
 #endif
 #include <sys/types.h>
 #include <sys/times.h>
+#include <sys/stat.h>
 
 #ifdef MPE_GRAPH
 	#include<mpe.h>
@@ -38,16 +39,21 @@
 #include <ctype.h>
 #include "var.h"
 
+int yywrap(void) {
+	return 1;
+}
+
 unsigned int GML_line;
 unsigned int GML_column;
 
 int lightprocess ;
 HashTable*BookTable[MAXNPROCESS];
 int temp;
+long hot_nodes,cold_nodes;
 
 FILE *firfile,*tempfile,*coldfile,*anamfile;
 FILE*mawfile[MAXNPROCESS],*maxwinfile[MAXNPROCESS];
-FILE*trivfile,*hotfile,*nofile,*logfile;
+FILE*trivfile,*hotfile,*nofile,*logfile,*statsfile;
 char outfile[MAXNAMELEN];
 int TableProcess[MAXNPROCESS];
 int OutCounter[MAXNPROCESS],InCounter[MAXNPROCESS];
@@ -96,6 +102,8 @@ void OpenFileInitStruct() {
 	fires= 0;
 	loops= 0;
 	temp=0;
+	hot_nodes=0;
+	cold_nodes=0;
 	ones= 0;
 	
 	idle= 0;
@@ -122,6 +130,13 @@ void OpenFileInitStruct() {
 #ifdef _DEBUG
 	TRACING printf("(%d) opening log files\n",rank);
 #endif
+
+	if(!dumpflag && logfile==NULL) {
+		if( -1 == snprintf(namefile,MAXNAMELEN,"run.%d.log",rank)){
+			fprintf(stderr,"[WARN]: [%s][%d] Truncated output\n",__FILE__, __LINE__);
+		}
+		logfile= Fopen(namefile,"w");
+	}
 	
 	OUTPUT
 	{
@@ -994,4 +1009,3 @@ int length;
 #endif
 	return length;
 }
-

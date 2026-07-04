@@ -71,7 +71,7 @@ symTbl *symbolTable;
 int pflag;
 int contatore_combustioni_f;
 int fcounter;
-int traceflag, inflag, outflag,verflag;
+int traceflag, inflag, outflag,verflag,dumpflag;
 long maxloo,maxfir,bip,bip2,bip3,bip4,fam_counter;
 long fires,loops,prnsteps,ones;
 int unaddtest,uneottest;
@@ -96,7 +96,7 @@ char sendbuffer[150*(sizeof(int) + (1+MAXAWIN)*sizeof(struct messaggio))];
 int main(int argc, char **argv) {
 	int j;
 	int fine=0;
-	char c=0;
+	int c=0;
 
 	timestamp = 0;
 	outtimestamp=1;
@@ -111,6 +111,11 @@ int main(int argc, char **argv) {
 	inflag=0;
 	outflag=0;
 	verflag=0;
+	dumpflag=1;
+	for(j=1;j<argc;j++) {
+		if((strcmp(argv[j],"--no-dump-output")==0) || (strcmp(argv[j],"-qdump")==0) || (strcmp(argv[j],"--qdump")==0))
+			dumpflag=0;
+	}
 
 	bip= 0;
 	bip2= 0;
@@ -118,6 +123,9 @@ int main(int argc, char **argv) {
 	bip4= 0;
 	fires= 0;
 	loops= 0;
+	temp=0;
+	hot_nodes=0;
+	cold_nodes=0;
 	prnsteps= 1;
 	ones= 0;
 	unaddtest= 0;
@@ -220,6 +228,8 @@ int main(int argc, char **argv) {
 		{"prnstep", required_argument, NULL, 'p'},
 		{"trace-on", no_argument, NULL, 't'},
 		{"verbose", no_argument, NULL, 'v'},
+		{"no-dump-output", no_argument, NULL, 1000},
+		{"qdump", no_argument, NULL, 1000},
 		{NULL, 0, NULL, 0}
 	};
 
@@ -256,6 +266,9 @@ int main(int argc, char **argv) {
 			case 'v':
 				printf("Verbose Mode On\n");
 				verflag= 1;
+				break;
+			case 1000:
+				dumpflag=0;
 				break;
 			default:
 				fprintf(stderr,"[ERROR]: Invalid option\n");
@@ -406,4 +419,3 @@ int main(int argc, char **argv) {
 		fflush(stdout);
 		return 0;
 	}
-

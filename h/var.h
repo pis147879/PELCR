@@ -56,7 +56,7 @@ extern int lightprocess ;
 extern int schedule ;
 extern int pflag ;
 
-extern int traceflag, inflag, outflag,verflag;
+extern int traceflag, inflag, outflag,verflag,dumpflag;
 extern long maxloo,maxfir,bip,bip2,bip3,bip4,fam_counter;
 extern int locf_counter;
 extern long fires,loops,prnsteps,ones;
@@ -65,6 +65,7 @@ extern int laddtest,leottest;
 extern long idle,lidle,lbip2;
 extern int temp;
 extern int nhot,ncold;
+extern long hot_nodes,cold_nodes;
 extern int scount;
 extern long francesco,lastloop;
 
@@ -76,7 +77,7 @@ extern struct tms smtime;
 
 extern FILE *firfile,*tempfile,*coldfile,*anamfile;
 extern FILE*mawfile[MAXNPROCESS],*maxwinfile[MAXNPROCESS];
-extern FILE*trivfile,*hotfile,*nofile,*logfile;
+extern FILE*trivfile,*hotfile,*nofile,*logfile,*statsfile;
 extern char infile[MAXNAMELEN];
 extern char directoryname[MAXNAMELEN];
 extern char outfile[MAXNAMELEN];

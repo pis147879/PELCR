@@ -272,6 +272,7 @@ void SendCreateNewNode(dest,sto,nS)
     {
       nS->source= CreateNewNode(G.hot);
       G.hot= nS->source;
+      hot_nodes++;
       nS->rankpuit= rank;
       nS->creator= rank;
       nS->sto= IN;
@@ -284,6 +285,7 @@ void SendCreateNewNode(dest,sto,nS)
       {
           nS->source= CreateNewNode(G.cold);
           G.cold= nS->source;
+          cold_nodes++;
           nS->rankpuit= rank;
           nS->creator= rank;
           nS->sto= OUT;
@@ -1103,7 +1105,7 @@ void *ThreadInteraction() {
 	      break;
 	    } /* END OF SWITCH */
 
-	  OUTPUT WriteStats();
+	  WriteStats();
 	      
 	  /*   schedule=0;	
 	       while (((schedule<MINPRIORITY)&&(!(nhot=BDumpS(&incoming[schedule]))))) schedule++;
@@ -1186,4 +1188,3 @@ void *ThreadInteraction() {
   pthread_exit(0);
 }
 #endif 
-

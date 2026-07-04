@@ -256,6 +256,7 @@ long ord;
         TRACING fprintf(logfile,"it is not here\n");
 #endif
           G.hot = CreateNewNode(G.hot);
+          hot_nodes++;
           table_iput(p,ord,G.hot);
           G.hot->printed=!pflag;
           address = G.hot;
@@ -298,12 +299,14 @@ int sto;
 	  if(sto==IN)
 	    {
 	      G.hot= CreateNewNode(G.hot);
+	      hot_nodes++;
 	      table_iput(p,ord,G.hot);
 	      G.hot->printed=!pflag;
 	      address= G.hot;}
 	  else
 	    {
 	      G.cold= CreateNewNode(G.cold);
+	      cold_nodes++;
 	      table_iput(p,ord,G.cold);
 	      G.cold->printed=!pflag;
 	      address= G.cold;}

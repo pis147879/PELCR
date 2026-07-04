@@ -49,6 +49,7 @@ graph*NewGraph()
 }
 
 
+
 node*NewNode()
 {
   node*nS;
@@ -334,6 +335,8 @@ node*P;
     };
   free(P);
   temp--;
+  if(hot_nodes>0)
+    hot_nodes--;
 #ifdef _DEBUG
     DEBUG_MEM {
         fprintf(logfile,"REMOVED NODE\n");
@@ -377,5 +380,3 @@ node*P;
 
     };
 }
-
-

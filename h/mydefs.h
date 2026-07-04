@@ -46,7 +46,7 @@
 #define OUTPUTFILE if ((outflag==1))
 
 #define TRACE   traceflag
-#define PRINT   ON
+#define PRINT   dumpflag
 #define PRINT2  verflag
 #define TRACING if (TRACE)
 

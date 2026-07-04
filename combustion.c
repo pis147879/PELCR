@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <sys/stat.h>
 //#include <mpi.h>
 //
 //#include "mydefs.h"
@@ -58,6 +59,53 @@ struct tms smtime;
 
 struct messaggio msg;
 float current_rate;
+
+static void OpenStatsFile()
+{
+	char basename[MAXNAMELEN];
+	char statsname[MAXNAMELEN];
+	const char *start;
+	const char *dot;
+	size_t len;
+	size_t i;
+
+	if(statsfile!=NULL)
+		return;
+
+	start = strrchr(infile,'/');
+	start = (start==NULL) ? infile : start+1;
+	if(*start=='\0')
+		start = "pelcr";
+
+	dot = strrchr(start,'.');
+	len = (dot==NULL) ? strlen(start) : (size_t)(dot-start);
+	if(len>=sizeof(basename))
+		len = sizeof(basename)-1;
+	memcpy(basename,start,len);
+	basename[len]='\0';
+
+	for(i=0;basename[i]!='\0';i++)
+		if(!isalnum((unsigned char)basename[i]) && basename[i]!='-' && basename[i]!='_')
+			basename[i]='_';
+
+	if(basename[0]=='\0')
+		strcpy(basename,"pelcr");
+
+	mkdir("LOGS",0777);
+
+	if(size==1)
+		snprintf(statsname,sizeof(statsname),"LOGS/%s-np=%d-stats.log",basename,size);
+	else
+		snprintf(statsname,sizeof(statsname),"LOGS/%s-np=%d-rank=%d-stats.log",basename,size,rank);
+
+	statsfile=fopen(statsname,"w");
+	if(statsfile!=NULL) {
+		fprintf(statsfile,
+		        "# wall_epoch time rank loops processed_actions edge_compositions fires one_optimizations failed_compositions graph_nodes hot_nodes cold_nodes nhot local_pending edges_counter global_physical_msgs nTickSend nFullSend\n");
+		fflush(statsfile);
+	}
+}
+
 edge*InitReference(aux)
 	edge*aux;
 {
@@ -84,7 +132,23 @@ void WriteStats()
 	   printf("(%d) Temperature     %d\n",rank,temp);
 	   */
 
-	if((tempfile!=NULL)&&(!(bip2%FREQ)))
+	if(bip2%FREQ)
+		return;
+
+	OpenStatsFile();
+
+	if(statsfile!=NULL)
+	{
+		double now;
+		time_t wall_epoch;
+		wall_epoch = time(NULL);
+		now = (inittime==0) ? 0.0 : difftime(wall_epoch,inittime);
+		fprintf(statsfile,"%ld %f %d %ld %ld %ld %ld %ld %ld %d %ld %ld %d %d %d %ld %ld %ld\n",
+		        (long)wall_epoch,now,rank,loops,bip2,bip4,fires,ones,bip,temp,hot_nodes,cold_nodes,nhot,local_pending,edges_counter,global_physical_msgs,nTickSend,nFullSend);
+		fflush(statsfile);
+	}
+
+	if((tempfile!=NULL))
 	{
 		float now;
 		times(&smtime);
@@ -616,7 +680,7 @@ void FunInteraction() {
 					break;
 			} /* END OF SWITCH */
 
-			/*     OUTPUT WriteStats();  */
+			WriteStats();
 
 			//  DEBUG  printf("(%d) after switch\n",rank);
 			//	  DEBUG  fflush(stdout);
@@ -756,6 +820,7 @@ void FunInteraction() {
 			tickcontrol[h] = 0;
 		}
 	}
+
 
 	loops++;
 }
@@ -1007,4 +1072,3 @@ void PrintResult() {
 
 		return euristic ;
 	}
-
