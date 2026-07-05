@@ -217,16 +217,11 @@ main(int argc, char **argv) {
 			SetOutputFile(argv[j + 1]);
 	}
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	ResetLightProcessPolicy();
 
 	/*if(size==1)outbuffer= &incoming;*/
-	{
-		int i;
-
-		for (i = 0; i < MINPRIORITY; i++)
-			incoming[i].first = 0;
-		incoming[i].last = 0;
-	}
+	InitPendingBuffers();
 	/*outgoing.first= 0;outgoing.last= 0;*/
 
 	InitTable();
@@ -236,8 +231,6 @@ main(int argc, char **argv) {
 
 	/*******************************************/
 	if ((size < MAXNPROCESS) && (size >= 1)) {
-		MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
 		parse_status = 0;
 
 		if INITIALIZER {
@@ -329,6 +322,7 @@ main(int argc, char **argv) {
 	}
 	printf("\n(%d) QUIT\n", rank);
 	CloseLib();
+	FreePendingBuffers();
 	Finally();
 	fflush(stdout);
 	return 0;

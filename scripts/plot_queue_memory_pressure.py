@@ -63,6 +63,10 @@ STATS_COLUMNS = [
     "global_physical_msgs",
     "nTickSend",
     "nFullSend",
+    "incoming_buffer_capacity_hwm",
+    "incoming_buffer_grow_count",
+    "incoming_buffer_shrink_count",
+    "incoming_buffer_max_capacity",
 ]
 
 LEGACY_EDGE_COUNTER_COLUMNS_WITH_EPOCH = ["wall_epoch"] + LEGACY_EDGE_COUNTER_COLUMNS

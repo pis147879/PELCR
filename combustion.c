@@ -30,6 +30,7 @@
 #endif
 #include "var.h"
 #include <ctype.h>
+#include <limits.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,6 +46,7 @@ static int die_idle_rank[MAXNPROCESS];
 static int die_max_pending_load = 0;
 static long pending_buffer_slots_hwm = 0;
 static long pending_buffer_max_slots_hwm = 0;
+static long pending_buffer_capacity_hwm = 0;
 static int die_sendbuf[2 + 2 * MAXNPROCESS];
 static int die_recvbuf[2 + 2 * MAXNPROCESS];
 static int die_last_out_counter[MAXNPROCESS];
@@ -56,6 +58,298 @@ StatsLogsDisabled(void) {
 
 	value = getenv("PELCR_DISABLE_STATS_LOGS");
 	return value != NULL && value[0] != '\0' && strcmp(value, "0") != 0;
+}
+
+static long
+EnvLongValue(const char *name, long fallback, long min_value, long max_value) {
+	const char *value;
+	char *end;
+	long parsed;
+
+	value = getenv(name);
+	parsed = fallback;
+	if (value != NULL && value[0] != '\0') {
+		long env_value = strtol(value, &end, 10);
+		if (end != value)
+			parsed = env_value;
+	}
+	if (parsed < min_value)
+		parsed = min_value;
+	if (parsed > max_value)
+		parsed = max_value;
+	return parsed;
+}
+
+static unsigned long long
+MachineRamBytes(void) {
+#if defined(_SC_PHYS_PAGES) && defined(_SC_PAGESIZE)
+	long pages;
+	long page_size;
+
+	pages = sysconf(_SC_PHYS_PAGES);
+	page_size = sysconf(_SC_PAGESIZE);
+	if ((pages <= 0) || (page_size <= 0))
+		return 0;
+	return (unsigned long long)pages * (unsigned long long)page_size;
+#else
+	return 0;
+#endif
+}
+
+static int
+ClampPendingCapacity(long value) {
+	if (value < 2)
+		value = 2;
+	if (value > INT_MAX)
+		value = INT_MAX;
+	return (int)value;
+}
+
+static int
+PendingBufferCount(const struct mbuffer *l) {
+	int count;
+
+	if ((l == NULL) || (l->capacity <= 0))
+		return 0;
+
+	count = l->last - l->first;
+	if (count < 0)
+		count += l->capacity;
+	return count;
+}
+
+static long
+PendingBufferTotalCapacity(void) {
+	int h;
+	long total = 0;
+
+	for (h = 0; h < MINPRIORITY; h++)
+		total += incoming[h].capacity;
+	return total;
+}
+
+static long
+PendingBufferTotalMaxCapacity(void) {
+	int h;
+	long total = 0;
+
+	for (h = 0; h < MINPRIORITY; h++)
+		total += incoming[h].max_capacity;
+	return total;
+}
+
+static long
+PendingBufferTotalGrowCount(void) {
+	int h;
+	long total = 0;
+
+	for (h = 0; h < MINPRIORITY; h++)
+		total += incoming[h].grow_count;
+	return total;
+}
+
+static long
+PendingBufferTotalShrinkCount(void) {
+	int h;
+	long total = 0;
+
+	for (h = 0; h < MINPRIORITY; h++)
+		total += incoming[h].shrink_count;
+	return total;
+}
+
+static void
+RecordPendingBufferCapacity(void) {
+	long capacity = PendingBufferTotalCapacity();
+
+	if (capacity > pending_buffer_capacity_hwm)
+		pending_buffer_capacity_hwm = capacity;
+}
+
+static void
+ResizePendingBuffer(struct mbuffer *l, int new_capacity) {
+	struct messaggio *new_stack;
+	int count;
+	int i;
+
+	count = PendingBufferCount(l);
+	if (new_capacity <= count)
+		new_capacity = count + 1;
+	if (new_capacity < l->min_capacity)
+		new_capacity = l->min_capacity;
+	if (new_capacity > l->max_capacity)
+		new_capacity = l->max_capacity;
+	if (new_capacity <= count) {
+		printf("Pending buffer cannot resize: count=%d requested=%d max=%d\n", count, new_capacity, l->max_capacity);
+		exit(-1);
+	}
+
+	new_stack = (struct messaggio *)malloc((size_t)new_capacity * sizeof(struct messaggio));
+	if (new_stack == NULL) {
+		printf("Pending buffer allocation failed: capacity=%d message_size=%lu\n", new_capacity, (unsigned long)sizeof(struct messaggio));
+		exit(-1);
+	}
+
+	for (i = 0; i < count; i++)
+		memcpy(&new_stack[i], &l->stack[(l->first + i) % l->capacity], sizeof(struct messaggio));
+
+	free(l->stack);
+	l->stack = new_stack;
+	l->capacity = new_capacity;
+	l->first = 0;
+	l->last = count;
+	if (l->capacity > l->capacity_hwm)
+		l->capacity_hwm = l->capacity;
+	RecordPendingBufferCapacity();
+}
+
+static void
+GrowPendingBuffer(struct mbuffer *l) {
+	int count;
+	int new_capacity;
+
+	count = PendingBufferCount(l);
+	if (count < l->capacity - 1)
+		return;
+	if (l->capacity >= l->max_capacity) {
+		printf("Exceeded size of incoming buffer: count=%d capacity=%d max=%d\n", count, l->capacity, l->max_capacity);
+		exit(-1);
+	}
+
+	new_capacity = l->capacity * 2;
+	if (new_capacity < l->capacity)
+		new_capacity = l->max_capacity;
+	if (new_capacity > l->max_capacity)
+		new_capacity = l->max_capacity;
+
+	ResizePendingBuffer(l, new_capacity);
+	l->grow_count++;
+	l->shrink_countdown = PELCR_PENDING_SHRINK_GRACE;
+}
+
+static void
+MaybeShrinkPendingBuffer(struct mbuffer *l) {
+	int count;
+	int new_capacity;
+
+	if ((l == NULL) || (l->stack == NULL) || (l->capacity <= l->min_capacity))
+		return;
+
+	count = PendingBufferCount(l);
+	if (count >= (l->capacity / 8)) {
+		l->shrink_countdown = PELCR_PENDING_SHRINK_GRACE;
+		return;
+	}
+
+	if (l->shrink_countdown > 0) {
+		l->shrink_countdown--;
+		return;
+	}
+
+	new_capacity = l->capacity / 2;
+	if (new_capacity < l->min_capacity)
+		new_capacity = l->min_capacity;
+	if (new_capacity <= count)
+		new_capacity = count + 1;
+	if (new_capacity >= l->capacity)
+		return;
+
+	ResizePendingBuffer(l, new_capacity);
+	l->shrink_count++;
+	l->shrink_countdown = PELCR_PENDING_SHRINK_GRACE;
+}
+
+static void
+MaybeShrinkPendingBuffers(void) {
+	int h;
+
+	for (h = 0; h < MINPRIORITY; h++)
+		MaybeShrinkPendingBuffer(&incoming[h]);
+}
+
+void
+InitPendingBuffers(void) {
+	int h;
+	int hard_max;
+	int min_capacity;
+	int initial_capacity;
+	int ram_percent;
+	unsigned long long ram_bytes;
+	unsigned long long budget_bytes;
+	unsigned long long per_buffer_budget;
+	long ram_capacity;
+
+	hard_max = ClampPendingCapacity(EnvLongValue("PELCR_PENDING_MAX", MAXPENDING, 2, INT_MAX));
+	min_capacity = ClampPendingCapacity(EnvLongValue("PELCR_PENDING_MIN", PELCR_PENDING_MIN_CAPACITY, 2, hard_max));
+	ram_percent = (int)EnvLongValue("PELCR_PENDING_RAM_PERCENT", PELCR_PENDING_RAM_PERCENT, 0, 100);
+
+	ram_bytes = MachineRamBytes();
+	if ((ram_bytes > 0) && (ram_percent > 0) && (size > 0)) {
+		budget_bytes = (ram_bytes / 100ULL) * (unsigned long long)ram_percent;
+		per_buffer_budget = budget_bytes / (unsigned long long)size / (unsigned long long)MINPRIORITY;
+		ram_capacity = (long)(per_buffer_budget / (unsigned long long)sizeof(struct messaggio));
+		if (ram_capacity < min_capacity)
+			ram_capacity = min_capacity;
+		if (ram_capacity < hard_max)
+			hard_max = ClampPendingCapacity(ram_capacity);
+	}
+
+	initial_capacity = ClampPendingCapacity(EnvLongValue("PELCR_PENDING_INITIAL", PELCR_PENDING_INITIAL_CAPACITY, min_capacity, hard_max));
+	if (initial_capacity < min_capacity)
+		initial_capacity = min_capacity;
+	if (initial_capacity > hard_max)
+		initial_capacity = hard_max;
+
+	for (h = 0; h < MINPRIORITY; h++) {
+		incoming[h].first = 0;
+		incoming[h].last = 0;
+		incoming[h].capacity = initial_capacity;
+		incoming[h].min_capacity = min_capacity;
+		incoming[h].max_capacity = hard_max;
+		incoming[h].capacity_hwm = initial_capacity;
+		incoming[h].shrink_countdown = PELCR_PENDING_SHRINK_GRACE;
+		incoming[h].grow_count = 0;
+		incoming[h].shrink_count = 0;
+		incoming[h].stack = (struct messaggio *)malloc((size_t)initial_capacity * sizeof(struct messaggio));
+		if (incoming[h].stack == NULL) {
+			printf("Pending buffer allocation failed: capacity=%d message_size=%lu\n", initial_capacity, (unsigned long)sizeof(struct messaggio));
+			exit(-1);
+		}
+	}
+	RecordPendingBufferCapacity();
+
+	if (rank == 0) {
+		printf("Pending buffer: initial=%d min=%d max=%d hard_max=%d ram_percent=%d message_size=%lu\n",
+		       initial_capacity, min_capacity, hard_max, MAXPENDING, ram_percent, (unsigned long)sizeof(struct messaggio));
+	}
+}
+
+void
+ResetPendingBuffers(void) {
+	int h;
+
+	for (h = 0; h < MINPRIORITY; h++) {
+		incoming[h].first = 0;
+		incoming[h].last = 0;
+		if ((incoming[h].stack != NULL) && (incoming[h].capacity > incoming[h].min_capacity)) {
+			ResizePendingBuffer(&incoming[h], incoming[h].min_capacity);
+			incoming[h].shrink_count++;
+		}
+		incoming[h].shrink_countdown = PELCR_PENDING_SHRINK_GRACE;
+	}
+}
+
+void
+FreePendingBuffers(void) {
+	int h;
+
+	for (h = 0; h < MINPRIORITY; h++) {
+		free(incoming[h].stack);
+		incoming[h].stack = NULL;
+		incoming[h].capacity = 0;
+		incoming[h].first = 0;
+		incoming[h].last = 0;
+	}
 }
 
 static void
@@ -118,6 +412,7 @@ void
 ResetPendingBufferStats(void) {
 	pending_buffer_slots_hwm = 0;
 	pending_buffer_max_slots_hwm = 0;
+	pending_buffer_capacity_hwm = PendingBufferTotalCapacity();
 }
 
 void
@@ -130,6 +425,7 @@ RecordPendingBufferLoad(void) {
 		pending_buffer_slots_hwm = total_slots;
 	if (max_slots > pending_buffer_max_slots_hwm)
 		pending_buffer_max_slots_hwm = max_slots;
+	RecordPendingBufferCapacity();
 }
 
 static int
@@ -374,7 +670,8 @@ OpenStatsFile(void) {
 		fprintf(statsfile,
 		        "# wall_epoch time rank loops processed_actions edge_compositions fires one_optimizations failed_compositions graph_nodes hot_nodes cold_nodes nhot pending_actions "
 		        "graph_edges local_pending incoming_pending incoming_buffer_capacity incoming_buffer_pct incoming_buffer_hwm incoming_buffer_hwm_pct "
-		        "incoming_buffer_max_slots incoming_buffer_max_hwm outgoing_pending global_physical_msgs nTickSend nFullSend\n");
+		        "incoming_buffer_max_slots incoming_buffer_max_hwm outgoing_pending global_physical_msgs nTickSend nFullSend "
+		        "incoming_buffer_capacity_hwm incoming_buffer_grow_count incoming_buffer_shrink_count incoming_buffer_max_capacity\n");
 		fflush(statsfile);
 	}
 }
@@ -385,6 +682,9 @@ WriteStats() {
 	long incoming_pending;
 	long incoming_buffer_capacity;
 	long incoming_buffer_max_slots;
+	long incoming_buffer_max_capacity;
+	long incoming_buffer_grow_count;
+	long incoming_buffer_shrink_count;
 	double incoming_buffer_pct;
 	double incoming_buffer_hwm_pct;
 	long outgoing_pending = local_pending;
@@ -394,7 +694,11 @@ WriteStats() {
 
 	IncomingPendingStats(&incoming_pending, &incoming_buffer_max_slots);
 	RecordPendingBufferLoad();
-	incoming_buffer_capacity = (long)MINPRIORITY * (long)MAXPENDING;
+	MaybeShrinkPendingBuffers();
+	incoming_buffer_capacity = PendingBufferTotalCapacity();
+	incoming_buffer_max_capacity = PendingBufferTotalMaxCapacity();
+	incoming_buffer_grow_count = PendingBufferTotalGrowCount();
+	incoming_buffer_shrink_count = PendingBufferTotalShrinkCount();
 	if (incoming_buffer_capacity > 0) {
 		incoming_buffer_pct = (double)incoming_pending / (double)incoming_buffer_capacity;
 		incoming_buffer_hwm_pct = (double)pending_buffer_slots_hwm / (double)incoming_buffer_capacity;
@@ -429,10 +733,11 @@ WriteStats() {
 		}
 
 		if (statsfile != NULL) {
-			fprintf(statsfile, "%ld %f %d %ld %ld %ld %ld %ld %ld %d %ld %ld %d %d %ld %d %ld %ld %.6f %ld %.6f %ld %ld %ld %ld %ld %ld\n",
+			fprintf(statsfile, "%ld %f %d %ld %ld %ld %ld %ld %ld %d %ld %ld %d %d %ld %d %ld %ld %.6f %ld %.6f %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
 			        (long)wall_epoch, now, rank, loops, processed_actions, edge_compositions, fires, one_optimizations, failed_compositions, graph_nodes, hot_nodes, cold_nodes, nhot, pending_actions,
 			        graph_edges, local_pending, incoming_pending, incoming_buffer_capacity, incoming_buffer_pct, pending_buffer_slots_hwm, incoming_buffer_hwm_pct,
-			        incoming_buffer_max_slots, pending_buffer_max_slots_hwm, outgoing_pending, global_physical_msgs, nTickSend, nFullSend);
+			        incoming_buffer_max_slots, pending_buffer_max_slots_hwm, outgoing_pending, global_physical_msgs, nTickSend, nFullSend,
+			        pending_buffer_capacity_hwm, incoming_buffer_grow_count, incoming_buffer_shrink_count, incoming_buffer_max_capacity);
 			fflush(statsfile);
 		}
 	}
@@ -579,12 +884,9 @@ PushIncomingMessage(int priority, struct messaggio *m) {
 
 	l = &incoming[priority];
 
-	if ((l->last + 1) % MAXPENDING == l->first) {
-		printf("Exceeded size of incoming buffer\n Abort\n");
-		exit(-1);
-	}
+	GrowPendingBuffer(l);
 	memcpy((char *)(&l->stack[l->last]), (char *)m, sizeof(struct messaggio));
-	l->last = (l->last + 1) % MAXPENDING;
+	l->last = (l->last + 1) % l->capacity;
 
 	pending_actions++;
 	RecordPendingBufferLoad();
@@ -678,28 +980,17 @@ BDump(struct mbuffer *b) {
 
 	while (i != b->last) {
 		TRACING fprintf(logfile, "%s ", (b->stack[i]).weight);
-		i = (i + 1) % MAXPENDING;
+		i = (i + 1) % b->capacity;
 	}
 
 	TRACING fprintf(logfile, "\n");
 
-	i = (b->last - b->first);
-	if (i < 0)
-		i = MAXPENDING + i;
-
-	return i;
+	return PendingBufferCount(b);
 }
 
 int
 BDumpS(struct mbuffer *b) {
-	int i;
-
-	//  i=b->first;
-	i = (b->last - b->first);
-	if (i < 0)
-		i = MAXPENDING + i;
-
-	return i;
+	return PendingBufferCount(b);
 }
 
 void

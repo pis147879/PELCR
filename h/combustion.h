@@ -28,6 +28,22 @@
 #define MAXPENDING 520000
 #endif
 
+#ifndef PELCR_PENDING_MIN_CAPACITY
+#define PELCR_PENDING_MIN_CAPACITY 8192
+#endif
+
+#ifndef PELCR_PENDING_INITIAL_CAPACITY
+#define PELCR_PENDING_INITIAL_CAPACITY 8192
+#endif
+
+#ifndef PELCR_PENDING_RAM_PERCENT
+#define PELCR_PENDING_RAM_PERCENT 3
+#endif
+
+#ifndef PELCR_PENDING_SHRINK_GRACE
+#define PELCR_PENDING_SHRINK_GRACE 64
+#endif
+
 struct messaggio {
 	/* debugging */
 	long timestamp; /* debugging information to check non-overlapping of messages */
@@ -61,7 +77,14 @@ struct messaggio {
 struct mbuffer {
 	int first;
 	int last;
-	struct messaggio stack[MAXPENDING + 1];
+	int capacity;
+	int min_capacity;
+	int max_capacity;
+	int capacity_hwm;
+	int shrink_countdown;
+	long grow_count;
+	long shrink_count;
+	struct messaggio *stack;
 };
 
 struct termination_msg {
@@ -87,6 +110,9 @@ void FunReceiveMessages();
 void FunInteraction();
 
 void WriteStats();
+void InitPendingBuffers(void);
+void ResetPendingBuffers(void);
+void FreePendingBuffers(void);
 void PushIncomingMessage(int priority, struct messaggio *m);
 void ResetPendingBufferStats(void);
 void RecordPendingBufferLoad(void);

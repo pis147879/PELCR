@@ -481,7 +481,6 @@ buf_flush() {
 #if MINPRIORITY > 1
 	int priority, ub;
 #endif
-	struct mbuffer *l;
 	struct messaggio *m;
 
 	for (i = 0; i < local_pending; i++) {
@@ -493,9 +492,9 @@ buf_flush() {
 		//      DEBUG      printf("(%d) upperbound function %d ; max =%d ",rank ,ub,maxubound);
 		//      DEBUG      printf("(%d):: priority %d\n", rank, priority);
 
-		l = &incoming[priority];
+		PushIncomingMessage(priority, m);
 #else
-		l = &incoming[0];
+		PushIncomingMessage(0, m);
 #endif
 
 		/*
@@ -503,22 +502,12 @@ buf_flush() {
 	  fflush(stdout);
 		*/
 
-		if ((l->last + 1) % MAXPENDING == l->first) {
-			printf("Exceeded size of incoming buffer\nAbort\n");
-			exit(-1);
-		}
-		memcpy((char *)(&(l->stack[l->last])), (char *)m, sizeof(struct messaggio));
-		l->last = (l->last + 1) % MAXPENDING;
-
 #ifdef _DEBUG
 		DEBUG_DISTRIBUTION {
 			//    printf("\nSTACK DUMP(%d-%d)\n",l->first,l->last);
 			fflush(stdout);
 		};
 #endif
-
-		pending_actions++;
-		RecordPendingBufferLoad();
 	}
 
 	local_pending = 0;
@@ -547,7 +536,7 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 		if (m->sender_load < TempProcess[lightprocess])
 			lightprocess = m->sender;
 	}
-	l->first = (l->first + 1) % MAXPENDING;
+	l->first = (l->first + 1) % l->capacity;
 
 	if (strstr(m->weight, "X(3")) {
 		char *atmp;

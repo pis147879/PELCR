@@ -67,6 +67,7 @@ OpenFileInitStruct() {
 	cold_nodes = 0;
 	graph_edges = 0;
 	one_optimizations = 0;
+	ResetPendingBuffers();
 	ResetPendingBufferStats();
 
 	idle = 0;
