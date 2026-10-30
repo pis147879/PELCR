@@ -1,0 +1,11 @@
+/* La stessa espressione con ogni scelta risolta una sola volta prima di usarne il valore:
+   ogni choice e' in testa e applicata a una continuazione, ([\k.(k)u + \k.(k)v])K -> [(K)u + (K)v].
+   Forma normale: [[[6 + 3] + [14 + 7]] + [[5 + 4] + [9 + 8]]] (numerali di Church). */
+#def prod = \m.\n.\f.(m)(n)f ;
+#def sum = \m.\n.\f.\x.((m)f)((n)f)x ;
+#def one = \f.\x.(f)x ;
+#def two = \f.\x.(f)(f)x ;
+#def three = \f.\x.(f)(f)(f)x ;
+#def seven = \f.\x.(f)(f)(f)(f)(f)(f)(f)x ;
+([\k.(k)prod + \k.(k)sum])\o.([\k.(k)three + \k.(k)seven])\m.([\k.(k)two + \k.(k)one])\n.((o)m)n ;
+#quit ;

@@ -1116,7 +1116,8 @@ nd_join(char *w, const char *u1, const char *u0) {
 	if (strcmp(e0, n0) == 0)
 		strcpy(w, u1);
 	else
-		sprintf(w, "%s|%s", u1, n0);
+		/* a component without generators is the identity: written 1 (e.g. "!2" = !^2(1) = 1) */
+		sprintf(w, "%s|%s", isone((char *)u1) ? "1" : u1, (n0[0] == '\0') ? "1" : n0);
 }
 
 /* stable form in Lambda*_nd: a^* b = b1 a1^* (0 if a^* b = 0); same convention as product1 */

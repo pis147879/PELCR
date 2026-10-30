@@ -44,20 +44,39 @@ node_id(char *buf, size_t n, node *v) {
 	snprintf(buf, n, "%d:%lx", rank, (unsigned long)v);
 }
 
-static void
-source_id(char *buf, size_t n, edge *e) {
+/* the node denoted by the source of an edge, NULL if it cannot be resolved */
+static node *
+source_node(edge *e) {
 	node *address = NULL;
 	HashTable *table;
 
-	if (e->creator == rank) {
-		node_id(buf, n, e->source);
-		return;
-	}
+	if (e->creator == rank)
+		return e->source;
 	table = (e->creator >= 0 && e->creator <= size) ? BookTable[e->creator] : NULL;
-	if (table != NULL && table->size > 0 && table_iget(table, (unsigned long)e->source, &address) && address != NULL)
+	if (table != NULL && table->size > 0 && table_iget(table, (unsigned long)e->source, &address))
+		return address;
+	return NULL;
+}
+
+static void
+source_id(char *buf, size_t n, edge *e) {
+	node *address = source_node(e);
+
+	if (address != NULL)
 		node_id(buf, n, address);
 	else
 		snprintf(buf, n, "%d:key:%lx", e->creator, (unsigned long)e->source);
+}
+
+/* the node of the k-th free variable, NULL if it is not in the final graph */
+static node *
+free_var_node(int k) {
+	node *address = NULL;
+
+	if (BookTable[size] == NULL || BookTable[size]->size <= 0
+	    || !table_iget(BookTable[size], (unsigned long)freevar_key[k], &address))
+		return NULL;
+	return address;
 }
 
 static long
@@ -143,9 +162,8 @@ write_readback_dump(node *principal, const char *path) {
 		node *address;
 		char vid[64];
 		for (k = 0; k < nfreevars; k++) {
-			address = NULL;
-			if (BookTable[size] == NULL || BookTable[size]->size <= 0
-			    || !table_iget(BookTable[size], (unsigned long)freevar_key[k], &address) || address == NULL)
+			address = free_var_node(k);
+			if (address == NULL)
 				continue;
 			node_id(vid, sizeof(vid), address);
 			fprintf(f, "%s{\"id\": \"%s\", \"name\": \"%s\"}", first ? "" : ", ", vid, freevar_name[k]);
@@ -166,13 +184,165 @@ write_readback_dump(node *principal, const char *path) {
 	printf("(%d) read-back: final graph (%ld nodes, %ld edges) written to %s\n", rank, nnodes, nedges, name);
 }
 
+/* ---------------------------------------------------------------------------
+   The final graph in GML (-gml <file>, or PELCR_FINAL_GML).  Same conventions
+   as the snapshots of Print (print.c), so that the tools in agents/gml read it,
+   but complete and readable by any GML tool:
+     - nodes are numbered 0, 1, ...; the label is "root", the name of a free
+       variable, or the address; fill #FFFF0F without edges, #AAAA00 with edges,
+       #00AA00 for the root, #00AAAA for the free variables;
+     - an edge goes from its source to its target and is stored on the LEFT
+       (#aa0000) or RIGHT (#0000aa) side of the target; its sources are resolved
+       to nodes as in the JSON dump; sourceSide / targetSide are 1 (LEFT) or 0
+       (RIGHT); label is the weight of Lambda*_nd, weight1 and weight0 its two
+       components.
+   --------------------------------------------------------------------------- */
+
+static int
+compare_nodes(const void *a, const void *b) {
+	node *x = *(node *const *)a, *y = *(node *const *)b;
+	return (x > y) - (x < y);
+}
+
+static long
+node_index(node **sorted, long n, node *v) {
+	node **hit = (v == NULL) ? NULL : (node **)bsearch(&v, sorted, (size_t)n, sizeof(node *), compare_nodes);
+	return (hit == NULL) ? -1 : (long)(hit - sorted);
+}
+
+static void
+gml_string(FILE *f, const char *s) {
+	fputc('"', f);
+	for (; *s != '\0'; s++)
+		if (*s != '"' && *s != '&')
+			fputc(*s, f);
+	fputc('"', f);
+}
+
+static void
+write_final_gml(node *principal, const char *path) {
+	FILE *f;
+	char name[MAXNAMELEN + 16];
+	node *v, **sorted;
+	edge *e;
+	long n = 0, i, nedges = 0, nextra = 0;
+	long *order; /* node index -> position in the lists (ids follow the lists) */
+	int side, k;
+
+	if (size == 1)
+		snprintf(name, sizeof(name), "%s", path);
+	else
+		snprintf(name, sizeof(name), "%s.%d", path, rank);
+	f = fopen(name, "w");
+	if (f == NULL) {
+		printf("(%d) gml: cannot write %s\n", rank, name);
+		return;
+	}
+	for (v = G.hot; v != NULL; v = v->nextpuit)
+		n++;
+	for (v = G.cold; v != NULL; v = v->nextpuit)
+		n++;
+	sorted = (node **)malloc((size_t)(n + 1) * sizeof(node *));
+	order = (long *)malloc((size_t)(n + 1) * sizeof(long));
+	i = 0;
+	for (v = G.hot; v != NULL; v = v->nextpuit)
+		sorted[i++] = v;
+	for (v = G.cold; v != NULL; v = v->nextpuit)
+		sorted[i++] = v;
+	qsort(sorted, (size_t)n, sizeof(node *), compare_nodes);
+	/* ids in the order of the lists, hot first */
+	i = 0;
+	for (v = G.hot; v != NULL; v = v->nextpuit)
+		order[node_index(sorted, n, v)] = i++;
+	for (v = G.cold; v != NULL; v = v->nextpuit)
+		order[node_index(sorted, n, v)] = i++;
+
+	fprintf(f, "graph [\n  id 0\n  directed 1\n  label ");
+	{
+		char label[MAXNAMELEN + 128];
+		snprintf(label, sizeof(label), "PELCR final graph: %s, rank %d, %ld compositions, %ld nodes", infile, rank,
+		         edge_compositions, n);
+		gml_string(f, label);
+	}
+	fprintf(f, "\n");
+	for (side = 0; side < 2; side++) {
+		for (v = (side == 0) ? G.hot : G.cold; v != NULL; v = v->nextpuit) {
+			char label[96], address[64];
+			const char *fill, *role = "node";
+			snprintf(address, sizeof(address), "%p", (void *)v);
+			snprintf(label, sizeof(label), "%s", address);
+			fill = (v->left.vector != NULL || v->right.vector != NULL) ? "#AAAA00" : "#FFFF0F";
+			if (v == principal) {
+				snprintf(label, sizeof(label), "root");
+				fill = "#00AA00";
+				role = "root";
+			}
+			for (k = 0; k < nfreevars; k++)
+				if (free_var_node(k) == v) {
+					snprintf(label, sizeof(label), "%s", freevar_name[k]);
+					fill = "#00AAAA";
+					role = "var";
+				}
+			fprintf(f, "  node [ id %ld label ", order[node_index(sorted, n, v)]);
+			gml_string(f, label);
+			fprintf(f, " graphics [ w 6.0 h 6.0 type \"oval\" fill \"%s\" outline \"#000000\" ]", fill);
+			fprintf(f, " role \"%s\" address \"%s\" part \"%s\" ]\n", role, address, (side == 0) ? "hot" : "cold");
+		}
+	}
+	for (side = 0; side < 2; side++) {
+		for (v = (side == 0) ? G.hot : G.cold; v != NULL; v = v->nextpuit) {
+			int s2;
+			for (s2 = 0; s2 < 2; s2++) {
+				for (e = (s2 == 0) ? v->left.vector : v->right.vector; e != NULL; e = e->vector) {
+					char u1[MAXLENWEIGHT], u0[MAXLENWEIGHT];
+					long src = node_index(sorted, n, source_node(e));
+					if (src < 0) {
+						/* unresolved source: a node of its own */
+						src = n + nextra++;
+						fprintf(f,
+						        "  node [ id %ld label \"%d:key:%lx\" graphics [ w 6.0 h 6.0 type \"oval\" fill "
+						        "\"#888888\" outline \"#000000\" ] role \"unresolved\" ]\n",
+						        src, e->creator, (unsigned long)e->source);
+					} else
+						src = order[src];
+					nd_split(e->weight, u1, u0);
+					fprintf(f,
+					        "  edge [ id %ld source %ld target %ld graphics [ fill \"%s\" targetArrow \"standard\" ]"
+					        " targetSide %d sourceSide %d weight1 ",
+					        nedges, src, order[node_index(sorted, n, v)], (s2 == 0) ? "#aa0000" : "#0000aa",
+					        (s2 == 0) ? LEFT : RIGHT, e->side);
+					gml_string(f, u1);
+					fprintf(f, " weight0 ");
+					gml_string(f, u0);
+					fprintf(f, " label ");
+					gml_string(f, e->weight);
+					fprintf(f, " ]\n");
+					nedges++;
+				}
+			}
+		}
+	}
+	fprintf(f, "]\n");
+	fclose(f);
+	free(sorted);
+	free(order);
+	printf("(%d) gml: final graph (%ld nodes, %ld edges%s) written to %s\n", rank, n + nextra, nedges,
+	       nextra ? ", with unresolved sources" : "", name);
+}
+
 void
 read_back(node *principal) {
 	const char *env = getenv("PELCR_READBACK_JSON");
 
 	printf("(%d) ********** principal port address %p\n", rank, (void *)principal);
+	const char *genv = getenv("PELCR_FINAL_GML");
+
 	if (readbackfile[0] != '\0')
 		write_readback_dump(principal, readbackfile);
 	else if (env != NULL && env[0] != '\0')
 		write_readback_dump(principal, env);
+	if (finalgmlfile[0] != '\0')
+		write_final_gml(principal, finalgmlfile);
+	else if (genv != NULL && genv[0] != '\0')
+		write_final_gml(principal, genv);
 }

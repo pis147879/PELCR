@@ -86,6 +86,7 @@ PELCR_EXTERN FILE *mawfile[MAXNPROCESS], *maxwinfile[MAXNPROCESS];
 PELCR_EXTERN FILE *trivfile, *hotfile, *nofile, *logfile;
 PELCR_EXTERN char infile[MAXNAMELEN], outfile[MAXNAMELEN], directoryname[MAXNAMELEN];
 PELCR_EXTERN char readbackfile[MAXNAMELEN]; /* -readback <file>: JSON dump of the final graph */
+PELCR_EXTERN char finalgmlfile[MAXNAMELEN]; /* -gml <file>: the final graph in GML */
 /* free variables of the term (boundary var nodes of the graph builder), for the read-back */
 #define MAXFREEVARS 64
 PELCR_EXTERN int nfreevars;

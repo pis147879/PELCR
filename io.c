@@ -257,6 +257,7 @@ WriteHelp() {
 	printf("       #setloops <num>  : set the number of idle loops before ending\n");
 	printf("       #setfires <num>   : set the maximal number of combustion steps before forcing to end\n");
 	printf("       option -readback <file> : write the final graph in JSON for the read-back (agents/readback)\n");
+	printf("       option -gml <file>      : write the final graph in GML\n");
 }
 
 void

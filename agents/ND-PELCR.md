@@ -72,6 +72,12 @@ Gli elementi designati sono P = (1,p), Q = (1,q), W_j = (w_j,w_j), C_h = (w_h,1)
   ([λx.A + λy.B] = λx.[A + B] se x ∉ FV(A), y ∉ FV(B)), l'unica informazione che Obs non contiene.
 - Termini aperti: le variabili libere sono porte di bordo.
 - Run interrotte (`-fires N`): read-back parziale, approssimante con ⊥.
+- `-gml <file>` (o `PELCR_FINAL_GML`): il grafo finale in GML, con le sorgenti risolte come nel dump JSON
+  (la `Print` chiamata da `agents/gml/pelcr_snapshot.sh … end` lascia invece archi verso chiavi del
+  costruttore che non sono nodi del file, e non riporta il lato della sorgente). Colori di `Print`, radice
+  verde, variabili libere azzurre; attributi `sourceSide`, `targetSide`, `weight1`, `weight0`, `label` = peso.
+  Esempi: `GML/prodsum_finale_660_148nodi.{gml,graphml}`, `GML/prodsum-cbv_finale_1566_210nodi.{gml,graphml}`
+  (`pelcrexamples/nd/prodsum*.plcr`).
 
 ## Verifica (2026-10-30)
 

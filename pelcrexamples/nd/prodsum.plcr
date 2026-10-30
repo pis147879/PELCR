@@ -1,0 +1,12 @@
+/* (([prodotto + somma])[3 + 7])[2 + 1] con i numerali di Church.
+   La scelta [2 + 1] viene duplicata dal numerale m prima di essere risolta (propagazione ritardata):
+   somma -> [[5 + 4] + [9 + 8]];  prodotto -> per m = 3 tutte le somme di 3 scelte tra 2 e 1 (3..6),
+   per m = 7 di 7 scelte (7..14). */
+#def prod = \m.\n.\f.(m)(n)f ;
+#def sum = \m.\n.\f.\x.((m)f)((n)f)x ;
+#def one = \f.\x.(f)x ;
+#def two = \f.\x.(f)(f)x ;
+#def three = \f.\x.(f)(f)(f)x ;
+#def seven = \f.\x.(f)(f)(f)(f)(f)(f)(f)x ;
+(([prod + sum])[three + seven])[two + one] ;
+#quit ;
