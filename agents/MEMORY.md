@@ -136,3 +136,17 @@ _Ultimo aggiornamento: 2026-10-30_
   Sfondi `OUTPUT/website/dd4-10000nodi-sfondo-*`: SVG 1,5 MB (300 KB gzip), PNG ~2,6 MB, WebP ~0,7 MB.
 - Oltre 3000 nodi: neato non finisce in 5 minuti; `gml_to_background.py` e `gml_to_yed.py` usano `sfdp`.
   Punti e tratti si riducono con la densità (tratto ~0,4 e punti ~0,23 a 10000 nodi).
+- dd4 a ~20000 nodi: `pelcr_snapshot.sh pelcrexamples/dd4.plcr nodes 20000` -> 32294 composizioni, 20197 nodi, 22133 archi
+  (~18 s). `GML/dd4_32294_20197nodi.{gml,graphml}` (graphml 23 MB, conversione ~100 s sul Mac); sfondi
+  `OUTPUT/website/dd4-20000nodi-sfondo-*` (SVG 3,1 MB, WebP ~0,8-1,1 MB).
+- BUG (non corretto, sorgenti intatti): `write_buffer` in `print.c` avanza con `% MAXPENDING` (520000) mentre dal commit
+  "Use elastic pending buffers" il buffer `incoming` è circolare su `capacity` (es. 8192). Con il buffer "avvolto"
+  (first > last) `Print` legge oltre il buffer e va in segfault in `table_iget` (table = NULL): visto su dd4 a 20000 nodi
+  (first 7803, last 2920, capacity 8192). `BDump` invece usa già `% b->capacity`. Correzione probabile: `% b->capacity`
+  alla riga 302 di print.c. Aggirato in `pelcr_snapshot.sh` con la condizione `incoming[0].first <= incoming[0].last`.
+- Marco lavora i grafi in yEd e salva in `GML/` (es. `dd3-2423.pdf`, `dd4-16979.pdf`, `.graphml`/`.clean.gml` risalvati da yEd):
+  non sovrascrivere file in `GML/` già esistenti, usare nomi nuovi.
+- dd5 ((δ)(δ)5) a ~30000 nodi: `pelcr_snapshot.sh pelcrexamples/dd5.plcr nodes 30000` -> 46874 composizioni,
+  30424 nodi, 32949 archi (~29 s). `GML/dd5_46874_30424nodi.gml` e `.graphmlz` (GraphML compresso, 1 MB:
+  il .graphml da 35 MB supera il limite di trasferimento). Sfondi `OUTPUT/website/dd5-30000nodi-sfondo-*`
+  (SVG 4,6 MB, WebP 1,1-1,4 MB). `gml_to_yed.py` sopra 3000 nodi calcola il layout senza etichette (30000 nodi: 13 s).

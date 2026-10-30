@@ -32,7 +32,9 @@ def layout(nodes, edges):
     if shutil.which('dot'):
         src = ['digraph G { rankdir=TB; nodesep=0.5; ranksep=0.9; splines=false; node [shape=circle width=0.35 fixedsize=true label=""];']
         src += ['n%d;' % i for i in range(len(nodes))]
-        src += ['n%d -> n%d [label="%s"];' % (idx[s], idx[t], w.replace('"', "'")) for s, t, _, w in edges]
+        big = len(nodes) > 3000          # without edge labels the layout of large graphs is much faster
+        src += ['n%d -> n%d%s;' % (idx[s], idx[t], '' if big else ' [label="%s"]' % w.replace('"', "'"))
+                for s, t, _, w in edges]
         src.append('}')
         engine = 'dot' if len(nodes) <= 3000 else 'sfdp'      # dot is too slow on very large graphs
         out = subprocess.run([engine, '-Tplain'], input='\n'.join(src), capture_output=True, text=True, check=True).stdout
