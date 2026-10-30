@@ -1,0 +1,7 @@
+/* (delta)[two + three]: delta duplicates the choice before it is resolved;
+   normal form: [(two)[two + three] + (three)[two + three]] in normal form */
+#def delta = \x.(x)x ;
+#def two = \f.\x.(f)(f)x ;
+#def three = \f.\x.(f)(f)(f)x ;
+(delta)[two + three] ;
+#quit ;

@@ -166,6 +166,15 @@ lterm	: LAMBDA ID '.' lterm
 		      $$=BuildApplication($2,$4);
 		      /* printf("\n\t 'applicazione'"); */
 		    } 
+| '[' lterm OP1 lterm ']'
+		    {
+		      /* non-deterministic choice [t + u] (ND-PELCR) */
+		      if (strcmp($3, "+") != 0) {
+		          yyerror("a choice is written [t + u]");
+		          YYERROR;
+		      }
+		      $$=BuildChoice($2,$4);
+		    }
 | ID 		
 		    { 
 		      termGraph *t;

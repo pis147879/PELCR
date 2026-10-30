@@ -45,6 +45,7 @@ void InitializeIncoming(termGraph *t);
 termGraph *BuildVar(char *);
 termGraph *BuildLambda(char *, termGraph *);
 termGraph *BuildApplication(termGraph *, termGraph *);
+termGraph *BuildChoice(termGraph *, termGraph *);
 termGraph *BuildBool(char *);
 termGraph *BuildNumber(char *);
 termGraph *BuildF1Arg(char *namef, termGraph *arg);

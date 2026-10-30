@@ -251,11 +251,12 @@ WriteStatus() {
 void
 WriteHelp() {
 	printf("(%d) PELCR 10.0 help message:\n", rank);
-	printf("       <lambda-term>    : evaluates the lambda term\n");
+	printf("       <lambda-term>    : evaluates the lambda term: \\x.t, (t)u, [t + u] (non-deterministic choice)\n");
 	printf("       #open <filename> : import the file (pex: default directory)\n");
 	printf("       #trace           : enable tracing of execution in log files\n");
 	printf("       #setloops <num>  : set the number of idle loops before ending\n");
 	printf("       #setfires <num>   : set the maximal number of combustion steps before forcing to end\n");
+	printf("       option -readback <file> : write the final graph in JSON for the read-back (agents/readback)\n");
 }
 
 void

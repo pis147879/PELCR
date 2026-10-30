@@ -17,11 +17,25 @@ Stato: avviato il 2026-10-29.
 - [x] Immagini in `OUTPUT/website/` (SVG + PNG 2560x1440 trasparenti, `anteprima.png`) (2026-10-29)
 - [ ] Scelta della variante e inserimento nel sito (Marco)
 
+### NDPELCR: choice non deterministica secondo l'articolo ND-PELCR
+
+Stato: avviato il 2026-10-30, branch `non-deterministico`; dettagli in `agents/ND-PELCR.md`.
+
+- [x] Commit dei file non versionati (`9fed48c`) e branch `non-deterministico`
+- [x] Algebra dinamica Λ*_nd = Λ*⊗Λ* in `symbolic.c` (coppie `u1|u0`, generatori di choice `c(h,1)`)
+- [x] Parser: `[t + u]` (`parser.y`), costruttore `BuildChoice`, codici nuovi per le copie dei `#def`
+- [x] Read-back: dump JSON nativo (`-readback`), pesi di Λ*_nd e variabili libere nell'adattatore Python
+- [x] Verifiche: regressione deterministica, 48 termini fissi + 400 casuali (read-back = nf, Obs = EX),
+      run interrotte di (δ)[I⊕δ], run parallele, confronto con il prototipo Wolfram (Mathics)
+- [ ] Decoder del read-back in C (ora in Python, codice dell'articolo)
+- [ ] Read-back con più rank; simboli esterni `X(...)` con le choice
+
 ## Prossimi obiettivi
 
-- Read-back C: termini aperti (nodi variabile di bordo), simboli esterni `X(...)`, più rank, run interrotte (read-back parziale).
+- Read-back C: simboli esterni `X(...)`, più rank (termini aperti e run interrotte: fatti il 2026-10-30).
 
 ## Completato
 
+- 2026-10-30: NDPELCR (algebra Λ*_nd, parser `[t + u]`, read-back con choice) sul branch `non-deterministico`.
 - 2026-10-29: creata la cartella `agents/` con `README.md`, `MEMORY.md`, `ROADMAP.md`.
 - 2026-10-29: adattatore read-back per le run C in `agents/readback/`, verificato su 167 termini (17 fissi + 150 casuali).

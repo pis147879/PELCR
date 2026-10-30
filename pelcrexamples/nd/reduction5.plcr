@@ -1,0 +1,4 @@
+/* ND-PELCR, earlier version, Fig. reduction5:
+   \x.\y.(\z.(z)(z)y)\w.([x + y])w  ->*  \x.\y.[(x)[(x)y + (y)y] + (y)[(x)y + (y)y]] */
+\x.\y.(\z.(z)(z)y)\w.([x + y])w ;
+#quit ;

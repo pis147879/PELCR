@@ -73,7 +73,11 @@
 #define LEFT 1
 #define RIGHT 0
 
+/* weights of Lambda*_nd may carry two components ("u1|u0"), see symbolic.c;
+   CheckWeightLength stops the run if a weight does not fit (make MAXLENWEIGHT=...) */
+#ifndef MAXLENWEIGHT
 #define MAXLENWEIGHT 100
+#endif
 #ifndef MAXUSERVALUELEN
 #define MAXUSERVALUELEN 256
 #endif

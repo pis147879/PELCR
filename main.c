@@ -215,6 +215,12 @@ main(int argc, char **argv) {
 
 		if (strcmp(argv[j], "-o") == 0)
 			SetOutputFile(argv[j + 1]);
+
+		if (((strcmp(argv[j], "-readback") == 0) || (strcmp(argv[j], "-rb") == 0)) && (j + 1 < argc)) {
+			snprintf(readbackfile, sizeof(readbackfile), "%s", argv[j + 1]);
+			printf("Read-back dump: %s\n", readbackfile);
+			j = j + 1;
+		}
 	}
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);

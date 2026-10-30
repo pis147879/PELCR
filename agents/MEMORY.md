@@ -1,11 +1,13 @@
 # Memoria di progetto: PELCR
 
-_Ultimo aggiornamento: 2026-10-29_
+_Ultimo aggiornamento: 2026-10-30_
 
 ## Repository
 
 - Branch principale: `master` (`origin/HEAD -> origin/master`).
 - Branch di lavoro al 2026-10-29: `codex/no-ffi-min-memory`, allineato con origin (HEAD `3546c3a`).
+- 2026-10-30: commit `9fed48c` su `codex/no-ffi-min-memory` (agents/ e Claude outputs/, prima non versionati),
+  poi branch `non-deterministico` per NDPELCR (choice non deterministica): vedi `agents/ND-PELCR.md`.
 - Worktree segnati *prunable* in `/private/tmp`: `cianf-benchmarking`, `cleaned-up-version`, una baseline in detached HEAD.
 - I report `PERFORMANCE_DD4_REPORT.md`, `PERFORMANCE_DD4_IULIA_REPORT.md`, `PERFORMANCE_DD5_IULIA_REPORT.md`
   esistono solo sui branch `codex/free-booktable-memory`, `codex/restore-hot-cold-graph`, `comment-fra-hot-stats`.
@@ -35,6 +37,9 @@ _Ultimo aggiornamento: 2026-10-29_
 ## Vincoli e decisioni
 
 - 2026-10-29: per ora non modificare i sorgenti.
+- 2026-10-30: su richiesta di Marco, sul branch `non-deterministico` sono stati modificati algebra dinamica
+  (`symbolic.c`), parser (`parser.y`, `buildgraph.c`) e read-back (`read_back.c`, `agents/readback/`)
+  secondo l'articolo ND-PELCR; altrove la regola resta: niente modifiche ai sorgenti senza consenso.
 - 2026-10-29: creata la cartella `agents/`; prima non esistevano file per agenti.
 
 ## Build verificata (2026-10-29)
@@ -48,9 +53,19 @@ _Ultimo aggiornamento: 2026-10-29_
 - dd2 su 1 rank: ~0,4 s, 88 nodi finali (tutti cold), 482 edge compositions, 241 fires, 14 family reductions.
   Senza `#gml`/`#write`/`-o` non scrive GML.
 
+## NDPELCR (branch `non-deterministico`, 2026-10-30)
+
+- Sintassi `[t + u]`; pesi in Λ*_nd scritti `u1|u0` (o `u1` per (erase(u1), u1)); generatori di choice
+  `c(2i,1)`/`c(2i+1,1)` solo nella componente 0; dettagli e verifiche in `agents/ND-PELCR.md`.
+- `-readback <file>`: `read_back.c` scrive il grafo finale in JSON (anche variabili libere); niente più gdb.
+- `MAXLENWEIGHT` resta 100 (override `make MAXLENWEIGHT=...`); a fine run si stampa `max weight length`.
+- Test: `python3 agents/readback/test_c_readback.py --random 200 --seed 7` (serve `NDPELCR_PYTHON`);
+  confronto con il prototipo Wolfram: `agents/readback/compare_wolfram.py` (wolframscript o Mathics 3).
+
 ## Read-back
 
-- In PELCR (C) il read-back non è implementato: `read_back.c` stampa solo l'indirizzo della porta principale.
+- Fino al 2026-10-29 in PELCR (C) il read-back non era implementato: `read_back.c` stampava solo l'indirizzo
+  della porta principale (ora scrive il dump con `-readback`, vedi sopra).
 - Implementazione esistente (articolo ND-PELCR): `~/marco.live/TEX/2026/ND-PELCRVM2/ND-PELCRVM.github/code/ND-VM-PELCR/python/pelcr_readback.py`
   (VM Python con choice; decoder a token su Obs = EX; usa `agents/review-3.3` via `_paths.py`).
   Uso: `python3 -B pelcr_readback.py --timeout=150 --steps=10000000 '<termine>'`.

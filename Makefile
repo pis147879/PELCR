@@ -36,6 +36,13 @@ USER_TYPE_FLAGS = -DUSERTYPE=$(BASETYPE)
 FFI_TARGETS = shared crypt
 endif
 
+# Weights of Lambda*_nd may have two components ("u1|u0"); default length 100 (h/mydefs.h).
+# Override with: make MAXLENWEIGHT=512
+MAXLENWEIGHT ?=
+ifneq ($(strip $(MAXLENWEIGHT)),)
+USER_TYPE_FLAGS += -DMAXLENWEIGHT=$(MAXLENWEIGHT)
+endif
+
 SHARED_LIB  = shared.so
 CRYPTO_DIR  = $(PEXDIR)/Crypto
 CRYPTO_LIB  = $(CRYPTO_DIR)/crypto.so
@@ -58,7 +65,7 @@ CFLAGS    =$(ARCHFLAGS) $(OPTFLAGS)
 CCFLAGS   = $(CFLAGS)
 FFLAGS    = $(OPTFLAGS)
 
-.PHONY: default all objects gcombustion ffi shared crypt crypto go go2 test test2 check-parallel test4 test-crypto clean linux mac docker iulia home FORCE
+.PHONY: default all objects gcombustion ffi shared crypt crypto go go2 test test2 check-parallel test4 test-crypto test-nd clean linux mac docker iulia home FORCE
 
 default: gcombustion ffi
 
@@ -143,6 +150,12 @@ test4: NP=4
 test4:
 	mkdir -p $(GMLDIR) $(LOGDIR) $(REPORTDIR) $(SCRIPTDIR)
 	$(RUNTEST)
+
+# NDPELCR: read-back of terms with choices against nf(t) and EX(tau(t)) of the ND-PELCR model
+# (needs NDPELCR_PYTHON=.../ND-VM-PELCR/python, see agents/readback/README.md)
+NDRANDOM ?= 50
+test-nd: gcombustion
+	python3 agents/readback/test_c_readback.py --exe $(BUILDDIR)/$(EXECS) --random $(NDRANDOM)
 
 test-crypto: NP=1
 test-crypto: TESTFILE=$(CRYPTO_TESTFILE)

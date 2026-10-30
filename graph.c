@@ -330,6 +330,7 @@ AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int si
 		*/
 		exit(-1);
 	} else {
+		CheckWeightLength(w, "AddEdge");
 		strcpy(p->weight, w);
 		if (polarity == LEFT) {
 			v = &(S->left);

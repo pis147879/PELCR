@@ -1,0 +1,6 @@
+/* a choice between Church numerals passed to a duplicating function */
+#def two = \f.\x.(f)(f)x ;
+#def three = \f.\x.(f)(f)(f)x ;
+#def double = \n.\f.\x.((n)f)((n)f)x ;
+(double)[two + three] ;
+#quit ;

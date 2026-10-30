@@ -791,6 +791,10 @@ NodeCombustion(node *n, int polarity) {
 
 		local_family_reductions = 0;
 		outp = product(a, b, pos, neg);
+		if (outp) {
+			CheckWeightLength(pos, "NodeCombustion");
+			CheckWeightLength(neg, "NodeCombustion");
+		}
 		//    DEBUG    printf("(%d) number of family reductions %ld (node families %d)\n", rank,
 		//    local_family_reductions,n->families);
 		if (local_family_reductions > n->families)
@@ -1468,6 +1472,7 @@ PrintResult() {
 		printf("(%d) fires               :  %ld\n", rank, fires);
 		printf("(%d) trivial             :  %ld optimized\n", rank, one_optimizations);
 		printf("(%d) family reductions   :  %ld\n", rank, family_reductions);
+		printf("(%d) max weight length   :  %ld (MAXLENWEIGHT %d)\n", rank, max_weight_length, MAXLENWEIGHT);
 		printf("(%d) loops               :  %ld\n", rank, lastloop);
 		printf("(%d) computing loops     :  %ld\n", rank, computing_loops);
 		printf("(%d) idle loops          :  %ld (%ld)\n", rank, lidle, idle);

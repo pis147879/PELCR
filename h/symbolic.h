@@ -39,4 +39,16 @@ int findType(int tipo);
 int product(char *a, char *b, char *a1, char *b1);
 int isone(char *a);
 
+/* non-deterministic dynamic algebra Lambda*_nd (weights "u1|u0", see symbolic.c) */
+extern long max_weight_length;
+void CheckWeightLength(const char *w, const char *what);
+int nd_is_pair(const char *w);
+void nd_erase(const char *u1, char *u0);
+void nd_split(const char *w, char *u1, char *u0);
+void nd_join(char *w, const char *u1, const char *u0);
+void LiftWeight(char *w);
+void PrefixWeight1(char *w, const char *x);
+void PrefixChoice(char *w, long h);
+void RenameChoices(char *w, long *from, long *to, int *n, int max, long *counter);
+
 #endif

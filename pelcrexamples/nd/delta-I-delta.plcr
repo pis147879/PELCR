@@ -1,0 +1,7 @@
+/* ND-PELCR, Section 5: (delta)[I + delta] does not terminate; its right branch diverges.
+   Run with a limit (-fires N): the read-back of the interrupted run is an approximant
+   [[I + delta] + [[I + delta] + ... _|_]] */
+#def delta = \d.(d)d ;
+#def I = \i.i ;
+(delta)[I + delta] ;
+#quit ;

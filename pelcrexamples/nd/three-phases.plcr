@@ -1,0 +1,5 @@
+/* ND-PELCR, worked reduction with three phases (beta, choice, beta):
+   (\x.([(x)delta + (y)x])y)\z.z  ->*  [(y)y + ((y)\z.z)y]   (y free) */
+#def delta = \d.(d)d ;
+(\x.([(x)delta + (y)x])y)\z.z ;
+#quit ;

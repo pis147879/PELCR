@@ -1,0 +1,4 @@
+/* a #def symbol with a choice used twice: each copy gets fresh choice codes */
+#def c = [\x.x + \y.\z.z] ;
+(c)c ;
+#quit ;

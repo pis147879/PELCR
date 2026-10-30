@@ -1281,66 +1281,102 @@ Lift(termGraph *t) {
 void
 LiftEdges(edge *e) {
 	edge *tmp;
-	char new[MAXLENWEIGHT];
-	char tmpc[MAXLENWEIGHT];
-	int numero;
-	int numero2;
 
-	for (tmp = e; tmp != NULL; tmp = tmp->vector) {
-		//  DEBUG {
-		//    printf("-*-------> %p\n",tmp);
-		//    printf("-*-------> %s\n",tmp->weight);
-		//  }
-		if (strcmp(tmp->weight, "1") == 0)
-			;
-		else if (strncmp(tmp->weight, "!", 1) == 0) {
-			strcpy(tmpc, "");
-			sscanf(tmp->weight, "!%d%s", &numero, tmpc);
-			numero++;
-
-			sprintf(new, "!%d%s", numero, tmpc);
-			strcpy(tmp->weight, new);
-		} else if (strncmp(tmp->weight, "w", 1) == 0) {
-			strcpy(tmpc, "");
-			sscanf(tmp->weight, "w(%d,%d)%s", &numero2, &numero, tmpc);
-			numero++;
-
-			sprintf(tmp->weight, "w(%d,%d)%s", numero2, numero, tmpc);
-
-			//  DEBUG printf("www> %s\n",tmp->weight);
-		} else {
-			strcpy(new, "!1");
-			strcat(new, tmp->weight);
-			strcpy(tmp->weight, new);
-		}
-		//  DEBUG printf("---> %s\n",tmp->weight);
-	}
+	/* !(w) on each weight; the edge of a free variable raises the lift of its fan
+	   generator instead (see LiftWeight in symbolic.c) */
+	for (tmp = e; tmp != NULL; tmp = tmp->vector)
+		LiftWeight(tmp->weight);
 }
 
 void
 P_Q(node *n, char *ch) {
 	edge *tmp;
-	char s[MAXLENWEIGHT];
 
-	//  tmp=n->right.vector;
-	for (tmp = n->right.vector; tmp != NULL; tmp = tmp->vector) {
-		if (strcmp(tmp->weight, "1") == 0)
-			strcpy(tmp->weight, ch);
-		else {
-			strcpy(s, ch);
-			strcat(s, tmp->weight);
-			strcpy(tmp->weight, s);
-		}
+	/* left multiplication by p or q (component 1 of Lambda*_nd) */
+	for (tmp = n->right.vector; tmp != NULL; tmp = tmp->vector)
+		PrefixWeight1(tmp->weight, ch);
+	for (tmp = n->left.vector; tmp != NULL; tmp = tmp->vector)
+		PrefixWeight1(tmp->weight, ch);
+}
+
+/* left multiplication by the choice generator C_h = (c_h,1) of Lambda*_nd */
+static void
+PrefixChoiceNode(node *n, long h) {
+	edge *tmp;
+
+	for (tmp = n->right.vector; tmp != NULL; tmp = tmp->vector)
+		PrefixChoice(tmp->weight, h);
+	for (tmp = n->left.vector; tmp != NULL; tmp = tmp->vector)
+		PrefixChoice(tmp->weight, h);
+}
+
+/* codes of the choice branches: a fresh generator c_h (lift 1) for each branch of
+   each choice of the source term (Definition address-generator-map of ND-PELCR):
+   the i-th choice gets c_2i on its left branch and c_2i+1 on its right branch (the
+   read-back orders the branches by their codes).  Never reset, so that the codes
+   stay distinct from those of earlier terms; copies of #def symbols get fresh
+   families (RenameChoices in symbolic.c). */
+static long choicename = 0;
+#define MAXCHOICECOPY 4096
+
+/* [t1 + t2]: the choice constructor.  The paths from the root into the branch
+   t_i cross the choice port of branch i, of weight C_{h_i}: every edge at the
+   root of t_i is multiplied on the left by c_{h_i} (component 0), the two roots
+   are melted, and the free variables shared by the branches are contracted as
+   in an application. */
+termGraph *
+BuildChoice(termGraph *t1, termGraph *t2) {
+	termGraph *newTerm = (termGraph *)malloc(sizeof(termGraph));
+	node *tail, *head2;
+	node *root;
+	edge *tmpe;
+	long h1, h2;
+
+	snprintf(newTerm->nameTerm, sizeof(newTerm->nameTerm), "[%s + %s]", t1->nameTerm, t2->nameTerm);
+	newTerm->listOfVar = NULL;
+
+	h1 = choicename++;
+	h2 = choicename++;
+	PrefixChoiceNode(t1->root, h1);
+	PrefixChoiceNode(t2->root, h2);
+
+	/* the root of t1 becomes the root of the choice: it receives the edges of t2's root */
+	root = t1->root;
+	for (tmpe = (t2->root->right).vector; tmpe != NULL; tmpe = tmpe->vector) {
+		(root->right).length++;
+		(root->right).vector = AddAnEdge((root->right).vector, tmpe->weight, tmpe->source, tmpe->side);
+		(root->right).vector->sto = tmpe->sto;
 	}
-	for (tmp = n->left.vector; tmp != NULL; tmp = tmp->vector) {
-		if (strcmp(tmp->weight, "1") == 0)
-			strcpy(tmp->weight, ch);
-		else {
-			strcpy(s, ch);
-			strcat(s, tmp->weight);
-			strcpy(tmp->weight, s);
-		}
+	for (tmpe = (t2->root->left).vector; tmpe != NULL; tmpe = tmpe->vector) {
+		(root->left).length++;
+		(root->left).vector = AddAnEdge((root->left).vector, tmpe->weight, tmpe->source, tmpe->side);
+		(root->left).vector->sto = tmpe->sto;
 	}
+
+	/* node list: the nodes of t1, then those of t2 without its root (which need not be
+	   the head of its list, see BuildRec) */
+	head2 = t2->root;
+	while (head2->prevpuit != NULL)
+		head2 = head2->prevpuit;
+	if (head2 == t2->root)
+		head2 = (t2->root)->nextpuit;
+	if ((t2->root)->prevpuit != NULL)
+		((t2->root)->prevpuit)->nextpuit = (t2->root)->nextpuit;
+	if ((t2->root)->nextpuit != NULL)
+		((t2->root)->nextpuit)->prevpuit = (t2->root)->prevpuit;
+	for (tail = root; tail->nextpuit != NULL; tail = tail->nextpuit)
+		;
+	tail->nextpuit = head2;
+	if (head2 != NULL)
+		head2->prevpuit = tail;
+	newTerm->root = root;
+
+	/* contraction of the free variables common to t1 and t2 */
+	newTerm = MergeNodes(newTerm, t1, t2);
+	newTerm->root = root;
+	free(t2->root);
+	fprintf(logfile, "\n%s\n", newTerm->nameTerm);
+	return newTerm;
 }
 
 void
@@ -1643,6 +1679,18 @@ Duplicate(termGraph *old) {
 		newNode1 = newNode1->nextpuit;
 	}
 
+	/* fresh choice codes for the copy */
+	{
+		long from[MAXCHOICECOPY], to[MAXCHOICECOPY];
+		int nmap = 0;
+		for (oldNode = new->root; oldNode != NULL; oldNode = oldNode->nextpuit) {
+			for (edgeNew = (oldNode->left).vector; edgeNew != NULL; edgeNew = edgeNew->vector)
+				RenameChoices(edgeNew->weight, from, to, &nmap, MAXCHOICECOPY, &choicename);
+			for (edgeNew = (oldNode->right).vector; edgeNew != NULL; edgeNew = edgeNew->vector)
+				RenameChoices(edgeNew->weight, from, to, &nmap, MAXCHOICECOPY, &choicename);
+		}
+	}
+
 	/* duplicare la listOfVar */
 
 	/*
@@ -1693,6 +1741,19 @@ InitializeIncoming(termGraph *t) {
 	int storeclass, polarity;
 	struct messaggio m;
 	char weight[MAXLENWEIGHT];
+	table *fv;
+
+	/* the free variables of the term: boundary nodes for the read-back */
+	nfreevars = 0;
+	for (fv = t->listOfVar; fv != NULL; fv = fv->next) {
+		if (nfreevars >= MAXFREEVARS) {
+			printf("(%d) read-back: more than %d free variables, the others are not recorded\n", rank, MAXFREEVARS);
+			break;
+		}
+		snprintf(freevar_name[nfreevars], sizeof(freevar_name[nfreevars]), "%s", fv->name);
+		freevar_key[nfreevars] = (long)fv->ptrNode;
+		nfreevars++;
+	}
 
 	for (nodo = t->root; nodo != NULL; nodo = nodo->nextpuit) {
 		for (arco = (nodo->left).vector; arco != NULL; arco = arco->vector) {
