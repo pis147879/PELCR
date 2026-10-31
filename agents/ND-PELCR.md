@@ -108,6 +108,21 @@ il confronto completo va rifatto con Mathematica: `python3 agents/readback/compa
   `(\x.[x + x])(\y.y)\z.z`, `(\g.(g)\u.u)\x.[x + \v.v]`) e 8 senza (`I`, `K I`, `K I I`, `dup I`, `two I`,
   `one I`, `f-dup`, `two`); nessuna differenza. Gli altri termini della lista non erano ancora finiti in Mathics.
 
+### Esempi di `pelcrexamples` (2026-10-31)
+
+`agents/readback/check_examples.py --base <build di 3546c3a>` esegue ogni file di esempio (rapporto completo in
+`OUTPUT/check_examples.txt`). Il read-back come λ-termine si controlla solo quando ha senso per le dimensioni:
+la forma normale condivisa è molto più compatta del λ-termine che la srotola (delta-choice: 260 nodi finali,
+λ-termine di 20873 simboli; dd3: 7138 nodi e 328 cammini osservati per un numerale 27^27).
+
+- read-back = forma normale: 14 termini puri (2I, d2, d4, dd2, difficult term2, k2i, ki, i 7 esempi `nd/` che
+  terminano); Obs = EX(τ(t)) del modello Python per 13 (per dd3 e difficult term2 EX non è calcolabile per
+  enumerazione); dd3: osservazione del grafo finale identica a quella della build di base;
+- 9 termini puri non terminano entro 150 s (2dd3, 2dd4, dd4, dd5, dd6, difficult term1 e term3, kdd,
+  delta-I-delta): approssimanti ⊥, tranne kdd (λv.v, la forma normale) e delta-I-delta ([[I⊕δ] ⊕ …]);
+- 36 file con costanti o funzioni esterne: solo esecuzione;
+- 51 run confrontate con la build di base: stesse statistiche (finali, o dopo 10000 composizioni), nessuna differenza.
+
 ## Limiti e passi successivi
 
 - Read-back su un solo rank; simboli esterni `X(...)` non letti (la loro interazione con le choice non è

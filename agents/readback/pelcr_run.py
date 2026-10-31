@@ -26,7 +26,7 @@ def nofree_lib():
     return so
 
 
-def run_pelcr(plcr_path, exe, workdir, timeout=600, fires=0, use_gdb=False):
+def run_pelcr(plcr_path, exe, workdir, timeout=600, fires=0, use_gdb=False, need_dump=True):
     """returns (json path, log path, seconds)"""
     base = os.path.join(workdir, os.path.splitext(os.path.basename(plcr_path))[0])
     cmd = base + '.cmd'
@@ -62,7 +62,7 @@ def run_pelcr(plcr_path, exe, workdir, timeout=600, fires=0, use_gdb=False):
         raise RuntimeError('PELCR parse error, see %s' % (base + '.log'))
     if 'weight too long' in head:
         raise RuntimeError('weight longer than MAXLENWEIGHT, see %s' % (base + '.log'))
-    if not os.path.exists(base + '.json'):
+    if need_dump and not os.path.exists(base + '.json'):
         raise RuntimeError('no graph dump, see %s' % (base + '.log'))
     return base + '.json', base + '.log', time.time() - t0
 

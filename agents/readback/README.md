@@ -50,6 +50,8 @@ python3 agents/readback/pelcr_run.py --fires 3000 pelcrexamples/nd/delta-I-delta
 python3 agents/readback/pelcr_c_readback.py OUTPUT/readback/dd2.json
 python3 agents/readback/test_c_readback.py --random 200 --seed 7
 python3 agents/readback/compare_wolfram.py                      # serve wolframscript (Mathematica)
+python3 agents/readback/check_examples.py --report OUTPUT/check_examples.txt   # tutti gli esempi
+python3 agents/readback/check_examples.py --base build/combustion.master ...   # confronto con un'altra build
 ```
 
 Oppure a mano: `printf '#setdir "pelcrexamples" ; #open "dd2.plcr"\n' | build/combustion.linux -- -loop 10000000 -readback dd2.json`.
