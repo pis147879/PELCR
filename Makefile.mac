@@ -4,8 +4,19 @@ ALL: default
 PEXDIR      = pelcrexamples
 ARCH        = LINUX
 #MPIR_HOME   = /mpi-share/current-mpi
-MPIR_HOME  = /usr/local
-CC=$(MPIR_HOME)/bin/mpicc
+# Open MPI: the Homebrew of Apple Silicon (/opt/homebrew, arm64) when it has mpicc, otherwise /usr/local.
+# On an Apple Silicon Mac the Homebrew in /usr/local is the Intel one: its Open MPI is x86_64, so
+# everything is compiled for x86_64 (it runs with Rosetta).  Override with MPIR_HOME=... or MACARCH=...
+MACHINE    := $(shell uname -m)
+ifneq ($(wildcard /opt/homebrew/bin/mpicc),)
+MPIR_HOME  ?= /opt/homebrew
+else
+MPIR_HOME  ?= /usr/local
+endif
+ifeq ($(MACHINE)$(MPIR_HOME),arm64/usr/local)
+MACARCH    ?= -arch x86_64
+endif
+CC=$(MPIR_HOME)/bin/mpicc $(MACARCH)
 CCP         = $(MPIR_HOME)/bin/mpiCC
 CLINKER     = $(CC)
 CCC         = $(MPIR_HOME)/bin/mpiCC
@@ -22,7 +33,7 @@ endif
 #OPTFLAGS    = -D_DEBUG -Wall
 OPTFLAGS=-D_DEBUG $(USER_TYPE_FLAGS) $(PENDING_FLAGS) -I$(COMPILINGRDIR)h -I.
 
-ARCHFLAGS=-g -fstrict-aliasing -mtune=x86-64
+ARCHFLAGS=-g -fstrict-aliasing
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 

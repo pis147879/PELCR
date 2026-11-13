@@ -4,7 +4,13 @@ ALL: default
 
 ARCH        = LINUX
 BASETYPE    = 'long long'
-MPIR_HOME   = /usr/lib64/openmpi
+# Open MPI: /usr/lib64/openmpi (Fedora, RHEL) when it has mpicc, otherwise /usr (Debian, Ubuntu).
+# Override with MPIR_HOME=...
+ifneq ($(wildcard /usr/lib64/openmpi/bin/mpicc),)
+MPIR_HOME   ?= /usr/lib64/openmpi
+else
+MPIR_HOME   ?= /usr
+endif
 CC          = $(MPIR_HOME)/bin/mpicc
 CCP         = $(MPIR_HOME)/bin/mpiCC
 CLINKER     = $(CC)
@@ -22,7 +28,7 @@ OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG $(USER_TYPE_FLAGS) $(PENDING_FLAGS) -
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 
 ########per il parser
-LEX= lex
+LEX = $(if $(shell command -v flex 2>/dev/null),flex,lex)
 YACC = bison
 
 ### End User configurable options ###
