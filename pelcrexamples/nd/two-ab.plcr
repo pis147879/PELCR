@@ -1,0 +1,3 @@
+/* il numerale due copia la scelta [a + b]: ogni copia sceglie per conto suo (4 rami) */
+(\f.\x.(f)(f)x)[a + b] ;
+#quit ;

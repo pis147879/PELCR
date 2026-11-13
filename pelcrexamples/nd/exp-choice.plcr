@@ -1,0 +1,13 @@
+/* ([2 + 3])[1 + 2] con i numerali di Church: (m)n = n^m.
+   La scelta [1 + 2] viene duplicata dal numerale m prima di essere risolta (propagazione ritardata):
+   ramo 2 = (two)[1+2]: 6 rami, valori 1, 2, 2, 3, 3, 4;
+   ramo 3 = (three)[1+2]: 42 rami, valori da 1 a 8 (una copia di (two)[1+2], o la somma di due copie).
+   Grafo finale: 136 nodi, 100 cammini osservati.  Con [4 + 5] i rami sarebbero 48 e 48^4 + 48^5. */
+#def one = \f.\x.(f)x ;
+#def two = \f.\x.(f)(f)x ;
+#def three = \f.\x.(f)(f)(f)x ;
+#def four = \f.\x.(f)(f)(f)(f)x ;
+#def five = \f.\x.(f)(f)(f)(f)(f)x ;
+([two + three])[one + two] ;
+
+#quit ;

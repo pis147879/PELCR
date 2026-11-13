@@ -1,0 +1,3 @@
+/* la scelta [a + b] risolta una volta sola prima di passarla al numerale due (2 rami) */
+([\k.(k)a + \k.(k)b])\g.(\f.\x.(f)(f)x)g ;
+#quit ;

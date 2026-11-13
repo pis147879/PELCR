@@ -1,0 +1,51 @@
+/* [due + tre] applicato a [a + b]: tutte le parole di lunghezza 2 e 3 su {a, b} */
+#def one= \f.\x.(f)x;
+#def two= \f.\x.(f)(f)x;
+#def three = \f.\x.(f)(f)(f0)x  ;
+(two)[two+one];
+#quit;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+][ + \f.\x.(f)(f)(f)x])[a + b] ;
+#quit ;

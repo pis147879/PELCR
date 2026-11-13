@@ -1,0 +1,8 @@
+/* ([2 + 3])[4 + 5] con ogni scelta risolta una sola volta prima di usarne il valore
+   (([\k.(k)u + \k.(k)v])K -> [(K)u + (K)v]).  Forma normale: [[16 + 25] + [64 + 125]] (numerali di Church). */
+#def two = \f.\x.(f)(f)x ;
+#def three = \f.\x.(f)(f)(f)x ;
+#def four = \f.\x.(f)(f)(f)(f)x ;
+#def five = \f.\x.(f)(f)(f)(f)(f)x ;
+([\k.(k)two + \k.(k)three])\m.([\k.(k)four + \k.(k)five])\n.(m)n ;
+#quit ;
