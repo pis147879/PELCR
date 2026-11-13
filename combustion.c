@@ -979,15 +979,16 @@ int
 BDump(struct mbuffer *b) {
 	int i;
 
-	i = b->first;
-	TRACING fprintf(logfile, "\nSTACK DUMP(%d-%d) VVVV: ", b->first, b->last);
-
-	while (i != b->last) {
-		TRACING fprintf(logfile, "%s ", (b->stack[i]).weight);
-		i = (i + 1) % b->capacity;
+	TRACING {
+		/* the dump walks the whole buffer: only when tracing (it is called for every message) */
+		i = b->first;
+		fprintf(logfile, "\nSTACK DUMP(%d-%d) VVVV: ", b->first, b->last);
+		while (i != b->last) {
+			fprintf(logfile, "%s ", (b->stack[i]).weight);
+			i = (i + 1) % b->capacity;
+		}
+		fprintf(logfile, "\n");
 	}
-
-	TRACING fprintf(logfile, "\n");
 
 	return PendingBufferCount(b);
 }
