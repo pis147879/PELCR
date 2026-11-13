@@ -17,6 +17,16 @@ _Ultimo aggiornamento: 2026-10-30_
 - `Makefile` include `Makefile.head` (symlink a `Makefile.mac`); varianti: `Makefile.linux`, `Makefile.iulia`, `Makefile.docker`.
 - Compilazione con `mpicc` (MPI); parser con `flex` (`les.fl`) e `bison` (`parser.y`).
 - Eseguibile: `build/combustion.mac` (variabile `EXECS`).
+- Mac (2026-11-13): `Makefile.mac` usa l'Open MPI di `/opt/homebrew` (Apple Silicon, build arm64) se c'è
+  `/opt/homebrew/bin/mpicc`, altrimenti `/usr/local` con `-arch x86_64` (Homebrew Intel, Rosetta; su macOS Tahoe non
+  piu' supportato, PMIx rotto). `Makefile.linux` sceglie `/usr/lib64/openmpi` o `/usr` e `flex`. Un errore di
+  compilazione ora ferma la build (prima `|| true` faceva linkare oggetti vecchi): `make` basta.
+- Esecuzione senza Python: `make run FILE=nd/two-ab.plcr` o `make run EXPR='(\f.\x.(f)(f)x)[a + b]'` (`FIRES=N`, `NP=N`):
+  grafo finale in `OUTPUT/run/<nome>.{json,gml,log}`, statistiche e tempo trascorso; `make nf ...` aggiunge il read-back
+  (Python). `make check-parallel NP=16 TESTFILE=dd4.plcr`: tempi 1 rank / NP rank, speedup ed efficienza.
+- `BDump` (combustion.c) scorreva tutta la coda dei messaggi a ogni messaggio anche senza traccia: costo per messaggio
+  proporzionale alla coda, quindi speedup paralleli superlineari fittizi (dd4: 174 s su 1 rank, 73x con 32 rank).
+  Corretto il 2026-11-13: dd4 su 1 rank 5,4 s nel cloud, stesse statistiche.
 - Esecuzione tipo (dal Makefile):
   `printf '#setdir "pelcrexamples" ; #open "dd3.plcr"\n' | mpirun -np N build/combustion.mac -- -loop 10000000`
 - Opzioni in `main.c`: `-v`, `-t`, `-I <file>`, `-loop N`, `-fires N`, `-prnstep N`, `-o <outfile>`, `--no-dump-output` / `-qdump`.

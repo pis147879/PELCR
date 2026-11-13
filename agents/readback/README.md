@@ -56,6 +56,13 @@ python3 agents/readback/check_examples.py --base build/combustion.master ...   #
 
 Oppure a mano: `printf '#setdir "pelcrexamples" ; #open "dd2.plcr"\n' | build/combustion.linux -- -loop 10000000 -readback dd2.json`.
 
+Con il Makefile: `make run FILE=nd/three-phases.plcr` (o `EXPR='<termine>'`, `FIRES=N`) esegue solo la macchina C e
+scrive il grafo finale in `OUTPUT/run/`; `make nf ...` fa la stessa run e poi il read-back
+(`pelcr_c_readback.py`, con `--partial` se `FIRES` e' dato).
+
+Il codice dell'articolo cerca `agents/review-3.3`; nel branch `nuova-mario` del repository dell'articolo e' stato
+spostato in `agents/audits/archive/*/review-3.3`: `pelcr_c_readback.py` lo trova anche li'.
+
 Sintassi dei termini come in PELCR e nell'articolo: `\x.t`, `(t)u`, `[t + u]`, dove `(t)u` prende come
 argomento tutto il termine che segue (`(f)(f)x = (f)((f)x)`). Niente parentesi superflue: `((f)x)` da solo
 non è un termine per il parser di PELCR, che in quel caso entra in un ciclo di errori (il log è troncato a 5 MB).

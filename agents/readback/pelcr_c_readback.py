@@ -24,7 +24,7 @@ the free variables ("free").  Limits: no external symbols X(...), single rank.  
 (see pelcr_gdb_dump.py); the dump written by PELCR itself resolves the sources of the edges
 to node addresses and needs no such precaution.
 """
-import collections, json, os, re, sys
+import collections, glob, json, os, re, sys, types
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -42,8 +42,29 @@ def find_nd_python():
     raise SystemExit('pelcr_readback.py not found: set NDPELCR_PYTHON to code/ND-VM-PELCR/python')
 
 
+def find_review(nd):
+    """sg.py, terms.py, combo.py of the article code: agents/review-3.3, or its archived copy
+    agents/audits/archive/*/review-3.3 (the article repository moved it there)"""
+    d = nd
+    for _ in range(6):
+        cands = [os.path.join(d, 'agents', 'review-3.3')]
+        cands += sorted(glob.glob(os.path.join(d, 'agents', 'audits', 'archive', '*', 'review-3.3')))
+        for c in cands:
+            if os.path.isfile(os.path.join(c, 'terms.py')):
+                return c
+        d = os.path.dirname(d)
+    return None
+
+
 sys.dont_write_bytecode = True
-sys.path.insert(0, find_nd_python())
+_ND = find_nd_python()
+sys.path.insert(0, _ND)
+_REVIEW = find_review(_ND)
+if _REVIEW is not None and os.path.basename(os.path.dirname(_REVIEW)) != 'agents':
+    # _paths.py of the article code looks only for agents/review-3.3 and only adds these two
+    # directories to sys.path: do it here and skip it
+    sys.path.insert(1, _REVIEW)
+    sys.modules.setdefault('_paths', types.ModuleType('_paths'))
 import ndalg as A               # noqa: E402
 import pelcr_readback as R      # noqa: E402
 
@@ -194,11 +215,13 @@ def readback_file(path, partial=False):
 
 
 if __name__ == '__main__':
-    for p in sys.argv[1:]:
-        d, obs, term, an = readback_file(p)
+    # pelcr_c_readback.py [--partial] dump.json ...   (--partial: a run stopped by -fires, approximant)
+    partial = '--partial' in sys.argv[1:]
+    for p in [a for a in sys.argv[1:] if a != '--partial']:
+        d, obs, term, an = readback_file(p, partial)
         print(p)
         print('   final graph: %d nodes, %d edges; %d observed paths'
               % (len(d['nodes']), len(d['edges']), sum(obs.values())))
-        print('   normal form: %s' % R.term_string(term))
+        print('   %s: %s' % ('approximant' if partial else 'normal form', R.term_string(term)))
         if an:
             print('   anomalies: %s' % dict(an))
