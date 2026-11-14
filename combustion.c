@@ -620,7 +620,7 @@ InitReference(edge *aux) {
 	aux->side = LEFT;
 	aux->sign = PLUS;
 	aux->rankpuit = rank;
-	strcpy(aux->weight, "");
+	WeightSetOne(&aux->weight);
 
 	return aux;
 }
@@ -749,8 +749,8 @@ NodeCombustion(node *n, int polarity) {
 	seminode v, vstar;
 	edge *XI, *XJ;
 	int counter;
-	char a[MAXLENWEIGHT], b[MAXLENWEIGHT];
-	char pos[MAXLENWEIGHT], neg[MAXLENWEIGHT];
+	wbuf pos, neg;
+	char ws1[MAXLENWEIGHT], ws2[MAXLENWEIGHT];
 	int proc, sto, outp;
 	static edge *aux;
 	struct messaggio m;
@@ -775,25 +775,23 @@ NodeCombustion(node *n, int polarity) {
 		 printf(" test XI->weight = %s\n",XI->weight);
 		*/
 
-		strcpy(a, XJ->weight);
-		strcpy(b, XI->weight);
-
 		TRACING {
 			fprintf(logfile, "(%d) FIRING: %d-th pair\n", rank, counter);
 			fprintf(logfile, "(%d) COMPUTE(", rank);
-			fprintf(logfile, "%s,%s", a, b);
+			fprintf(logfile, "%s,%s", WeightToString(&XJ->weight, ws1, sizeof(ws1)),
+			        WeightToString(&XI->weight, ws2, sizeof(ws2)));
 			fprintf(logfile, ") Result:");
 		}
 
-		strcpy(pos, "");
-		strcpy(neg, "");
+		WeightSetOne(&pos.h);
+		WeightSetOne(&neg.h);
 		edge_compositions++;
 
 		local_family_reductions = 0;
-		outp = product(a, b, pos, neg);
+		outp = product(&XJ->weight, &XI->weight, &pos.h, &neg.h);
 		if (outp) {
-			CheckWeightLength(pos, "NodeCombustion");
-			CheckWeightLength(neg, "NodeCombustion");
+			WeightCheck(W_NLETTERS(&pos.h), "NodeCombustion");
+			WeightCheck(W_NLETTERS(&neg.h), "NodeCombustion");
 		}
 		//    DEBUG    printf("(%d) number of family reductions %ld (node families %d)\n", rank,
 		//    local_family_reductions,n->families);
@@ -803,13 +801,15 @@ NodeCombustion(node *n, int polarity) {
 		if (!outp) {
 			TRACING fprintf(logfile, "NULL(%d)\n", outp);
 			failed_compositions++;
-		} else if (isone(pos) && (XJ->sto == IN)) {
+		} else if (isone(&pos.h) && (XJ->sto == IN)) {
 			TRACING {
 				Print(G, incoming, edge_compositions);
 				fprintf(logfile, "(%d) verify one-optimization \n", rank);
-				fprintf(logfile, "     OPT=%s STO=%d CHKONE=%d\n", pos, XJ->sto, isone(pos));
-				fprintf(logfile, "     OPT=%s STO=%d CHKONE=%d\n", neg, XI->sto, isone(neg));
-				fprintf(logfile, "OPT %s\n", neg);
+				fprintf(logfile, "     OPT=%s STO=%d CHKONE=%d\n", WeightToString(&pos.h, ws1, sizeof(ws1)), XJ->sto,
+				        isone(&pos.h));
+				fprintf(logfile, "     OPT=%s STO=%d CHKONE=%d\n", WeightToString(&neg.h, ws2, sizeof(ws2)), XI->sto,
+				        isone(&neg.h));
+				fprintf(logfile, "OPT %s\n", ws2);
 				fprintf(logfile, "(%d)-", rank);
 			}
 
@@ -818,16 +818,16 @@ NodeCombustion(node *n, int polarity) {
 				TRACING fprintf(logfile, "\n\t\t CAMBIO DI POLARITA' da %d ", XJ->side);
 				XJ->side = !XJ->side;
 				TRACING fprintf(logfile, "a %d\n\n", XJ->side);
-				StoreMessage(&m, XJ, XI, neg, XI->sto, XI->side);
+				StoreMessage(&m, XJ, XI, &neg.h, XI->sto, XI->side);
 				XJ->side = !XJ->side;
 			} else
-				StoreMessage(&m, XJ, XI, neg, XI->sto, XI->side);
+				StoreMessage(&m, XJ, XI, &neg.h, XI->sto, XI->side);
 			PushMessage(&m);
 			XI->sign = MINUS;
-		} else if (isone(neg) && (XI->sto == IN)) {
+		} else if (isone(&neg.h) && (XI->sto == IN)) {
 			// DEBUG Print(G,edge_compositions);
 			TRACING {
-				fprintf(logfile, "OPT %s\n", pos);
+				fprintf(logfile, "OPT %s\n", WeightToString(&pos.h, ws1, sizeof(ws1)));
 				fprintf(logfile, "(%d)+", rank);
 			}
 			one_optimizations++;
@@ -835,10 +835,10 @@ NodeCombustion(node *n, int polarity) {
 				TRACING fprintf(logfile, "\n\t\t CAMBIO DI POLARITA' da %d", XI->side);
 				XI->side = !XI->side;
 				TRACING fprintf(logfile, "a %d\n\n", XI->side);
-				StoreMessage(&m, XI, XJ, pos, XJ->sto, XJ->side);
+				StoreMessage(&m, XI, XJ, &pos.h, XJ->sto, XJ->side);
 				XI->side = !XI->side;
 			} else
-				StoreMessage(&m, XI, XJ, pos, XJ->sto, XJ->side);
+				StoreMessage(&m, XI, XJ, &pos.h, XJ->sto, XJ->side);
 			PushMessage(&m);
 			XJ->sign = MINUS;
 		} else {
@@ -847,8 +847,10 @@ NodeCombustion(node *n, int polarity) {
 				proc = rank;
 				sto = OUT;
 				TRACING {
-					fprintf(logfile, "%d%d%d+%s, %d%d%d-%s\n", sto, RIGHT, XI->side, pos, sto, LEFT, XJ->side, neg);
-					fprintf(logfile, " ISONE+ %d ISONE- %d\n", isone(pos), isone(neg));
+					fprintf(logfile, "%d%d%d+%s, %d%d%d-%s\n", sto, RIGHT, XI->side,
+					        WeightToString(&pos.h, ws1, sizeof(ws1)), sto, LEFT, XJ->side,
+					        WeightToString(&neg.h, ws2, sizeof(ws2)));
+					fprintf(logfile, " ISONE+ %d ISONE- %d\n", isone(&pos.h), isone(&neg.h));
 					fprintf(logfile, "(%d) SENDCOLD", rank);
 				}
 			} else {
@@ -856,8 +858,10 @@ NodeCombustion(node *n, int polarity) {
 				proc = LightProcess7(rank);
 				sto = IN;
 				TRACING {
-					fprintf(logfile, "%d%d%d+%s, %d%d%d-%s\n", sto, RIGHT, XI->side, pos, sto, LEFT, XJ->side, neg);
-					fprintf(logfile, " ISONE+ %d ISONE- %d\n", isone(pos), isone(neg));
+					fprintf(logfile, "%d%d%d+%s, %d%d%d-%s\n", sto, RIGHT, XI->side,
+					        WeightToString(&pos.h, ws1, sizeof(ws1)), sto, LEFT, XJ->side,
+					        WeightToString(&neg.h, ws2, sizeof(ws2)));
+					fprintf(logfile, " ISONE+ %d ISONE- %d\n", isone(&pos.h), isone(&neg.h));
 					fprintf(logfile, "(%d) SENDHOT(%d,", rank, proc);
 				}
 			}
@@ -865,10 +869,10 @@ NodeCombustion(node *n, int polarity) {
 			/*DEBUG Print(G,edge_compositions);*/
 			SendCreateNewNode(proc, sto, aux);
 			TRACING fprintf(logfile, "(%d)- sto:%d pol:%d side:%d\n", rank, sto, LEFT, XJ->side);
-			StoreMessage(&m, XJ, aux, neg, sto, LEFT);
+			StoreMessage(&m, XJ, aux, &neg.h, sto, LEFT);
 			PushMessage(&m);
 			TRACING fprintf(logfile, "(%d)+ sto:%d pol:%d side:%d", rank, sto, RIGHT, XI->side);
-			StoreMessage(&m, XI, aux, pos, sto, RIGHT);
+			StoreMessage(&m, XI, aux, &pos.h, sto, RIGHT);
 			PushMessage(&m);
 		}
 		XI = XI->vector;
@@ -899,15 +903,17 @@ PushIncomingMessage(int priority, struct messaggio *m) {
 
 void
 ShowMessage(struct messaggio *m) {
-	fprintf(logfile, "(%d) %20s : %d[(%d).(%d)%p]->%d[(%d).(%d)%p]\n", rank, m->weight, m->vsource.side,
+	char ws[MAXLENWEIGHT];
+	fprintf(logfile, "(%d) %20s : %d[(%d).(%d)%p]->%d[(%d).(%d)%p]\n", rank,
+	        WeightToString(&m->weight.h, ws, sizeof(ws)), m->vsource.side,
 	        m->vsource.rankpuit, m->vsource.creator, (void *)m->vsource.source, m->side, m->vtarget.rankpuit,
 	        m->vtarget.creator, (void *)m->vtarget.source);
 	return;
 }
 
 void
-StoreMessage(struct messaggio *m, edge *target, edge *source, char *weight, int storeclass, int pol) {
-	int i;
+StoreMessage(struct messaggio *m, edge *target, edge *source, const weight *w, int storeclass, int pol) {
+	int i, k;
 
 	m->tpy = ADD_TAG;
 	pelcr_wire_clear(m->funValue);
@@ -937,16 +943,14 @@ StoreMessage(struct messaggio *m, edge *target, edge *source, char *weight, int 
 	};
 	m->vtarget.side = pol;
 
-	if (strstr(weight, "X(3")) {
-		char *atmp;
-		int indice;
-		atmp = strstr(weight, "X(3");
-		indice = atoi(&atmp[4]);
+	WeightCopy(&m->weight.h, w);
+	if ((k = WeightFindX(&m->weight.h, FUNC)) >= 0) {
+		long indice = XL_VALUE(m->weight.l[k]);
 
 		if (fcounter > -1) {
 			m->funWhich = f[indice].which; // Va eliminata successivamente
 
-			sprintf(&atmp[4], "%d)", f[indice].fun_id);
+			WeightSetXAndTruncate(&m->weight.h, k, f[indice].fun_id);
 			m->funWait = f[indice].wait;
 			for (i = 0; i < f[indice].wait - 1; i++)
 				pelcr_value_to_wire(&f[indice].s[i], m->funArgs[i]);
@@ -955,16 +959,12 @@ StoreMessage(struct messaggio *m, edge *target, edge *source, char *weight, int 
 			m->funWait = f_db[indice].wait;
 		}
 
-	} else if (strstr(weight, "X(2")) {
-		char *atmp;
-		int indice;
-		atmp = strstr(weight, "X(2");
-		indice = atoi(&atmp[4]);
+	} else if ((k = WeightFindX(&m->weight.h, KONST)) >= 0) {
+		long indice = XL_VALUE(m->weight.l[k]);
 
 		pelcr_value_to_wire(&k_value[indice], m->funValue);
 		m->funType = k_type[indice];
 	}
-	strcpy(m->weight, weight);
 }
 
 int
@@ -976,7 +976,8 @@ BDump(struct mbuffer *b) {
 		i = b->first;
 		fprintf(logfile, "\nSTACK DUMP(%d-%d) VVVV: ", b->first, b->last);
 		while (i != b->last) {
-			fprintf(logfile, "%s ", (b->stack[i]).weight);
+			char ws[MAXLENWEIGHT];
+			fprintf(logfile, "%s ", WeightToString(&(b->stack[i]).weight.h, ws, sizeof(ws)));
 			i = (i + 1) % b->capacity;
 		}
 		fprintf(logfile, "\n");
@@ -1164,7 +1165,8 @@ FunInteraction() {
 			PopMessage(&msg, &incoming[schedule]);
 
 			TRACING {
-				fprintf(logfile, "-> %s store:", msg.weight);
+				char ws[MAXLENWEIGHT];
+				fprintf(logfile, "-> %s store:", WeightToString(&msg.weight.h, ws, sizeof(ws)));
 				fprintf(logfile, "%d sign:%d side:%d\n", msg.vsource.sto, msg.vsource.side, msg.side);
 				//  printf("(%d) before switch\n",rank);
 				fflush(stdout);
@@ -1205,7 +1207,7 @@ FunInteraction() {
 
 					e = msg.vsource;
 
-					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, msg.weight, e.creator, msg.side, e.side);
+					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, &msg.weight.h, e.creator, msg.side, e.side);
 
 					//		DEBUG       printf("(%d) before combustion\n",rank);
 					//		DEBUG       fflush(stdout);
@@ -1455,7 +1457,7 @@ PrintResult() {
 		printf("(%d) fires               :  %ld\n", rank, fires);
 		printf("(%d) trivial             :  %ld optimized\n", rank, one_optimizations);
 		printf("(%d) family reductions   :  %ld\n", rank, family_reductions);
-		printf("(%d) max weight length   :  %ld (MAXLENWEIGHT %d)\n", rank, max_weight_length, MAXLENWEIGHT);
+		printf("(%d) max weight length   :  %ld letters (MAXLETTERS %d)\n", rank, max_weight_length, MAXLETTERS);
 		printf("(%d) loops               :  %ld\n", rank, lastloop);
 		printf("(%d) computing loops     :  %ld\n", rank, computing_loops);
 		printf("(%d) idle loops          :  %ld (%ld)\n", rank, lidle, idle);

@@ -36,8 +36,23 @@
 
 #include "h/var.h"
 
-/* letters of exponential generators: fans w(i,l) and choices c(h,1) */
-#define IS_GENERATOR(ch) (((ch) == 'w') || ((ch) == 'c'))
+/* ---------------------------------------------------------------------------
+   Girard's dynamic algebra on words of integer letters (h/weight.h).
+
+   The product follows the rules of the string form of the weights, where "!n"
+   raises by n the exponential of all the letters that follow it ("!2w(1,1)p"):
+   product1 reads the two words as sequences of tokens, letters and "!n", exactly
+   as the string form did, and writes the results in the same token form; the
+   tokens are only internal (a word is stored as letters {x, m}, see weight.c).
+   --------------------------------------------------------------------------- */
+
+#define MAXTOK (2 * MAXLETTERS + 8)
+
+/* a result of product1, written from the end (the rules add letters on the left) */
+typedef struct tokbuf {
+	int s; /* the result is t[s .. MAXTOK) */
+	letter t[MAXTOK];
+} tokbuf;
 
 static void
 StoreComputedValue(int type, USERTYPE result) {
@@ -49,971 +64,506 @@ StoreComputedValue(int type, USERTYPE result) {
 	newval = 1;
 }
 
-void
-checkone(char *s) {
-	char *r, sx[MAXLENWEIGHT], *ss;
-	long p = 0;
-	ss = s;
-#ifdef WDEBUG
-	//   printf("%s %d\n",s,p);
-#endif
-	while (s[0] == '!') {
-		p = p + strtol(&s[1], &r, 10);
-		s = r;
-#ifdef WDEBUG
-		//     printf("%s %d\n",s,p);
-#endif
-	};
-	strcpy(sx, s);
-	if (p != 0)
-		sprintf(s, "!%ld%s", p, sx);
-	sprintf(ss, "%s", s);
-#ifdef WDEBUG
-	//   printf("%s\n",s);
-#endif
-	return;
+static void
+tok_overflow(void) {
+	WeightCheck(MAXLETTERS + 1, "product");
 }
 
-int
-isone(term *w) {
-	if (w[0] == '\0')
-		return 1;
-	if (!strpbrk(w, "wpqXc")) {
-		return 1;
-	} else
-		return 0;
+static void
+tb_init(tokbuf *b) {
+	b->s = MAXTOK;
 }
 
+/* x b, a letter or "!n"; "!n!m" is merged into "!(n+m)" as checkone did */
+static void
+tb_prefix(tokbuf *b, letter x) {
+	if (LETTER_KIND(x) == L_BANG && b->s < MAXTOK && LETTER_KIND(b->t[b->s]) == L_BANG) {
+		b->t[b->s] = MakeBang(BANG_VALUE(b->t[b->s]) + BANG_VALUE(x));
+		return;
+	}
+	if (b->s == 0)
+		tok_overflow();
+	b->t[--b->s] = x;
+}
+
+/* b r */
+static void
+tb_append(tokbuf *b, const letter *r, int n) {
+	int len = MAXTOK - b->s;
+	if (n == 0)
+		return;
+	if (b->s < n)
+		tok_overflow();
+	memmove(b->t + b->s - n, b->t + b->s, (size_t)len * sizeof(letter));
+	memcpy(b->t + MAXTOK - n, r, (size_t)n * sizeof(letter));
+	b->s -= n;
+}
+
+/* the first X(KONST,.) of a result (-1 if none) */
+static long
+tb_konst(const tokbuf *b) {
+	return WeightKonstIndex(b->t + b->s, MAXTOK - b->s);
+}
+
+/* x r: a token in front of the rest of an operand */
 static int
-product1(char *a, char *b, char *a1, char *b1) {
-	long l1, l2, i1, i2, p1, p2;
-	char *r;
-	char *atmp = a, *btmp = b;
-	if (atmp[0] == '\0') {
-		sprintf(b1, "%s%s", b1, btmp);
+with_head(letter x, const letter *r, int n, letter *out) {
+	if (n + 1 > MAXTOK)
+		tok_overflow();
+	out[0] = x;
+	memcpy(out + 1, r, (size_t)n * sizeof(letter));
+	return n + 1;
+}
+
 #ifdef WDEBUG
-//    printf("\n");
-//    printf("A1:  %s %s\n",atmp,a1);
-//   printf("B1:  %s %s\n",btmp,b1);
+/* the string form of tokens, from its character k (the debugging prints of the string form) */
+static const char *
+tok_string(const letter *tok, int n, int k) {
+	static char buf[4][32 * MAXLETTERS + 64];
+	static int i = 0;
+	char *s;
+	i = (i + 1) % 4;
+	s = buf[i];
+	WordToString(tok, n, 0, s, sizeof(buf[0]));
+	return ((size_t)k <= strlen(s)) ? s + k : s + strlen(s);
+}
+#define TOKS(tok, n, k) tok_string((tok), (n), (k))
+#define TBS(r) tok_string((r)->t + (r)->s, MAXTOK - (r)->s, 0)
 #endif
-		checkone(a1);
-		checkone(b1);
-		return 1;
+
+static int product1(const letter *a, int na, const letter *b, int nb, tokbuf *a1, tokbuf *b1);
+
+/* the value of a function on the constant k (it was evaluated when it had all its arguments) */
+static void
+EvaluateFunction(long fi, long k) {
+	if (f[fi].narg == 1) { /* valuto la funzione di 1 variabile*/
+#ifdef WDEBUG
+		printf("%d) function evaluation (1)\n", rank);
+#endif
+		StoreComputedValue(f[fi].type, ((USERTYPE(*)(USERTYPE))f[fi].fun)(k_value[k]));
+	} else if (f[fi].narg == 2) { /* valuto la funzione di 2 variabili */
+#ifdef WDEBUG
+		printf("%d) function evaluation (2)\n", rank);
+#endif
+		StoreComputedValue(f[fi].type, ((USERTYPE(*)(USERTYPE, USERTYPE))f[fi].fun)((f[fi].s)[0], k_value[k]));
+	} else if (f[fi].narg == 3) { /* valuto la funzione di 3 variabili */
+#ifdef WDEBUG
+		printf("%d) function evaluation (3)\n", rank);
+#endif
+		StoreComputedValue(f[fi].type, ((USERTYPE(*)(USERTYPE, USERTYPE, USERTYPE))f[fi].fun)(
+		                                   (f[fi].s)[0], (f[fi].s)[1], k_value[k]));
+	} else
+		printf("EXCEPTION\n");
+#ifdef WDEBUG
+	printf("--R-- %d ", kindex);
+	pelcr_value_print(stdout, &k_value[kindex]);
+	printf("\n%d) VALORE CALCOLATO ", rank);
+	pelcr_value_print(stdout, &k_value[kindex]);
+	printf("\n");
+#endif
+}
+
+/***************** Algebra esterna ********************/
+/* the two heads are external letters X(i1,l1), X(i2,l2) */
+static int
+product_external(const letter *a, int na, const letter *b, int nb, tokbuf *a1, tokbuf *b1) {
+	long i1 = XL_SUB(a[0]), l1 = XL_VALUE(a[0]);
+	long i2 = XL_SUB(b[0]), l2 = XL_VALUE(b[0]);
+	const letter *ar = a + 1, *br = b + 1;
+	int nar = na - 1, nbr = nb - 1;
+	letter tmp[MAXTOK];
+	int ft;
+
+#ifdef WDEBUG
+	printf("\nExtern Algebra --> %s\n", TOKS(a, na, 2));
+	printf("\nExtern Algebra --> %s\n", TOKS(b, nb, 2));
+	printf("Extern Algebra --> branch: %d , %d\n", (int)i1, (int)i2);
+	printf("Extern Algebra -->  %s %s\n", TOKS(ar, nar, 0), TBS(a1));
+	printf("Extern Algebra -->  %s %s\n", TOKS(br, nbr, 0), TBS(b1));
+#endif
+
+	if ((i1 == TYPE) && (i2 == ARG)) {
+#ifdef WDEBUG
+		printf("\t%d) TYPE ARG\n", rank);
+#endif
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		tb_prefix(a1, MakeX(SYNC, (t[l1][1] == TIN) ? l2 - 1 : l2, 0));
+		return 12;
 	}
 
-	/*************************************/
-
-	else if (btmp[0] == '\0') {
-		sprintf(a1, "%s%s", a1, atmp);
+	else if ((i1 == TYPE) && (i2 == ARGLAST)) {
 #ifdef WDEBUG
-//    printf("A2 %s %s\n",atmp,a1);
-//    printf("B2 %s %s\n",btmp,b1);
+		printf("\t%d) TYPE LASTARG\n", rank);
 #endif
-		checkone(a1);
-		checkone(b1);
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		tb_prefix(a1, MakeX(SYNC, (t[l1][1] == TIN) ? l2 - 1 : l2, 0));
+		if (t[l1][1] == TOUT)
+			return 40 + (int)(l2 % 2);
+		else
+			return 13;
+	}
+
+	else if ((i1 == ARG) && (i2 == TYPE)) {
+#ifdef WDEBUG
+		printf("\t%d) ARG TYPE\n", rank);
+#endif
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		tb_prefix(b1, MakeX(SYNC, (t[l2][1] == TIN) ? l1 - 1 : l1, 0));
+		return 14;
+	}
+
+	else if ((i1 == ARGLAST) && (i2 == TYPE)) {
+#ifdef WDEBUG
+		printf("\t%d) ARG TYPE\n", rank);
+#endif
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		tb_prefix(b1, MakeX(SYNC, (t[l2][1] == TIN) ? l1 - 1 : l1, 0));
+		if (t[l2][1] == TOUT)
+			return 42 + (int)(l1 % 2);
+		else
+			return 15;
+	}
+
+	else if ((i1 == SYNC) && (i2 == ARG)) {
+#ifdef WDEBUG
+		printf("\t%d) SYNC ARG\n", rank);
+#endif
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		tb_prefix(a1, MakeX(SYNC, l2, 0));
+		return 16;
+	}
+
+	else if ((i1 == ARG) && (i2 == SYNC)) {
+#ifdef WDEBUG
+		printf("\t%d) ARG SYNC\n", rank);
+#endif
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		tb_prefix(b1, MakeX(SYNC, l1, 0));
+		return 17;
+	}
+
+	else if ((i1 == SYNC) && (i2 == FUNC)) {
+#ifdef WDEBUG
+		printf("\t%d) SYNC FUNC\n", rank);
+#endif
+		if (l1 == 0) {
+			nbr = with_head(MakeX(FUNC, l2, 0), br, nbr, tmp);
+			br = tmp;
+		}
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		if (l1 == 0) {
+			ft = findType(f[l2].type);
+			tb_prefix(a1, MakeX(TYPE, ft, 0));
+		} else if (l1 == f[l2].narg) {
+			ft = findType(f[l2].type);
+			tb_prefix(a1, MakeX(TYPE, ft + 1, 0));
+			tb_prefix(b1, MakeX(FUNC, l2, 0));
+		} else
+			return 0;
+		return 18;
+	}
+
+	else if ((i1 == FUNC) && (i2 == SYNC)) {
+#ifdef WDEBUG
+		printf("\t%d) FUNC SYNC\n", rank);
+#endif
+		if (l2 == 0) {
+			nar = with_head(MakeX(FUNC, l1, 0), ar, nar, tmp);
+			ar = tmp;
+		}
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		if (l2 == 0) {
+			ft = findType(f[l1].type);
+			tb_prefix(b1, MakeX(TYPE, ft, 0));
+		} else if (l2 == f[l1].narg) {
+			ft = findType(f[l1].type);
+			tb_prefix(a1, MakeX(FUNC, l1, 0));
+			tb_prefix(b1, MakeX(TYPE, ft + 1, 0));
+		} else
+			return 0;
+		return 19;
+	}
+
+	else if ((i1 == KONST) && (i2 == FUNC)) {
+#ifdef WDEBUG
+		printf("%d) CONST-FUNC WAIT %d, NARG %d\n", rank, f[l2].wait, f[l2].narg);
+#endif
+		if (f[l2].wait == f[l2].narg) {
+			EvaluateFunction(l2, l1);
+			if (!product1(ar, nar, br, nbr, a1, b1))
+				return 0;
+			tb_prefix(a1, MakeX(KONST, kindex, 0));
+			tb_prefix(b1, MakeX(FUNC, l2, 0));
+			return 20;
+		} else {
+			/* valuto parzialmente la funzione */
+#ifdef WDEBUG
+			printf("%d) PARTIAL EVAL FUNC\n", rank);
+#endif
+			pelcr_value_set(&(f[l2].s)[f[l2].wait - 1], &k_value[l1]);
+			f[l2].wait++;
+			if (!product1(ar, nar, br, nbr, a1, b1))
+				return 0;
+			tb_prefix(b1, MakeX(FUNC, l2, 0));
+			return 21;
+		}
+	}
+
+	else if ((i1 == FUNC) && (i2 == KONST)) {
+#ifdef WDEBUG
+		printf("%d) FUNC-CONST WAIT %d, NARG %d\n", rank, f[l1].wait, f[l1].narg);
+#endif
+		if (f[l1].wait == f[l1].narg) {
+			EvaluateFunction(l1, l2);
+			if (!product1(ar, nar, br, nbr, a1, b1))
+				return 0;
+			tb_prefix(b1, MakeX(KONST, kindex, 0));
+			tb_prefix(a1, MakeX(FUNC, l1, 0));
+			return 22;
+		} else {
+			/* valuto parzialmente la funzione */
+#ifdef WDEBUG
+			printf("%d) PARTIAL EVAL FUNC\n", rank);
+#endif
+			pelcr_value_set(&(f[l1].s)[f[l1].wait - 1], &k_value[l2]);
+			f[l1].wait++;
+			if (!product1(ar, nar, br, nbr, a1, b1))
+				return 0;
+			tb_prefix(a1, MakeX(FUNC, l1, 0));
+			return 23;
+		}
+	}
+
+	else if ((i1 == FUNC) && (i2 == FUNC)) {
+#ifdef WDEBUG
+		printf("\t%d) FUNC FUNC\n", rank);
+#endif
+		if ((l1 == l2) && (product1(ar, nar, br, nbr, a1, b1)))
+			return 24;
+		else
+			return 0;
+	}
+
+	else if (((i1 == SYNC) && (i2 == SYNC)) || ((i1 == TYPE) && (i2 == TYPE))) {
+		int res;
+#ifdef WDEBUG
+		printf("\t%d) SYNC SYNC\n", rank);
+		printf("--> %s, %s\n", TOKS(ar, nar, 0), TOKS(br, nbr, 0));
+#endif
+		res = product1(ar, nar, br, nbr, a1, b1);
+#ifdef WDEBUG
+		printf("%d\n", res);
+		printf("%d , %d\n", (int)l1, (int)l2);
+#endif
+		if ((l1 == l2) && (res)) {
+#ifdef WDEBUG
+			printf("%d) TYPE-TYPE\n", rank);
+			printf("%s, %s\n", TBS(a1), TBS(b1));
+#endif
+			return 25;
+		} else
+			return 0;
+	}
+
+	/********************* Interazioni relative all'if_then_else ***********/
+
+	else if ((i1 == ITE) && (i2 == KONST)) {
+#ifdef WDEBUG
+		printf("\t%d) ITE CONST\n", rank);
+#endif
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		tb_prefix(a1, MakeX(ITE, pelcr_value_is_zero(&k_value[l2]) ? 2 : 1, 0));
+		return 26;
+	}
+
+	else if ((i1 == KONST) && (i2 == ITE)) {
+#ifdef WDEBUG
+		printf("\t%d) KONST ITE\n", rank);
+#endif
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		tb_prefix(b1, MakeX(ITE, pelcr_value_is_zero(&k_value[l1]) ? 2 : 1, 0));
+		return 27;
+	}
+
+	else if ((i1 == ITE) && (i2 == ITE)) {
+#ifdef WDEBUG
+		printf("\t%d) ITE ITE\n", rank);
+#endif
+		if (l1 == l2)
+			return product1(ar, nar, br, nbr, a1, b1) ? 28 : 0;
+		else
+			return 0;
+	}
+
+	else if ((i1 == ITE) && (i2 == SYNC)) {
+#ifdef WDEBUG
+		printf("\t%d) ITE SYNC\n", rank);
+#endif
+		/* (the string form also had a case l2 == 1 here, under l2 == 0: never taken) */
+		if (l2 == 0 && l1 == 0) {
+			nar = with_head(MakeX(ITE, 0, 0), ar, nar, tmp);
+			return product1(tmp, nar, br, nbr, a1, b1) ? 29 : 0;
+		} else
+			return 0;
+	}
+
+	else if ((i1 == SYNC) && (i2 == ITE)) {
+#ifdef WDEBUG
+		printf("\t%d) SYNC ITE\n", rank);
+#endif
+		if (l1 == 0 && l2 == 0) {
+			nbr = with_head(MakeX(ITE, 0, 0), br, nbr, tmp);
+			br = tmp;
+		}
+		if (!product1(ar, nar, br, nbr, a1, b1))
+			return 0;
+		if (l1 == 0 && l2 == 0)
+			return 31;
+		else if ((l1 == 1) && (l2 == 1 || l2 == 2)) {
+			tb_prefix(b1, MakeX(ITE, l2, 0));
+			return 32;
+		} else
+			return 0;
+	}
+
+	return 0;
+}
+
+/* a^* b = b1 a1^* on two words in token form; 0 if a^* b = 0.  The return value tells
+   which rule applied (40, 42: change of polarity, see NodeCombustion). */
+static int
+product1(const letter *a, int na, const letter *b, int nb, tokbuf *a1, tokbuf *b1) {
+	letter ha, hb, tmp[MAXTOK];
+	int ka, kb, n, r;
+	wexp px;
+	long k;
+
+	if (na == 0) {
+		tb_append(b1, b, nb);
+		return 1;
+	}
+	if (nb == 0) {
+		tb_append(a1, a, na);
 		return 2;
 	}
+	ha = a[0];
+	hb = b[0];
+	ka = LETTER_KIND(ha);
+	kb = LETTER_KIND(hb);
 
-	/*************************************/
-
-	else if (((atmp[0] == 'p') && (btmp[0] == 'p')) || ((atmp[0] == 'q') && (btmp[0] == 'q'))) {
-		atmp++;
-		btmp++;
-		if (product1(atmp, btmp, a1, b1)) {
-#ifdef WDEBUG
-//      printf("A3:  %s %s\n",atmp,a1);
-//      printf("B3:  %s %s\n",btmp,b1);
-#endif
-			checkone(a1);
-			checkone(b1);
+	if (((ka == L_P) && (kb == L_P)) || ((ka == L_Q) && (kb == L_Q))) {
+		if (product1(a + 1, na - 1, b + 1, nb - 1, a1, b1)) {
 			local_family_reductions++;
 			return 3;
 		} else
 			return 0;
 	}
 
-	/*************************************/
-
-	else if (IS_GENERATOR(atmp[0]) && IS_GENERATOR(btmp[0])) {
+	else if (IS_GEN_LETTER(ha) && IS_GEN_LETTER(hb)) {
 		/* w(i,l): fan generator; c(h,1): choice generator (component 0 of Lambda*_nd only).
 		   x^* y = 1 if x = y, 0 otherwise (ANNIHILATION) */
-		if (atmp[0] != btmp[0])
+		if (ka != kb)
 			return 0;
-#ifdef WDEBUG
-//    printf("%s\n",&atmp[2]);
-//    printf("%s\n",&btmp[2]);
-#endif
-		i1 = strtol(&atmp[2], &r, 10);
-		atmp = r + 1;
-		i2 = strtol(&btmp[2], &r, 10);
-		btmp = r + 1;
-#ifdef WDEBUG
-//    printf("branch: %d , %d\n",i1,i2);
-#endif
-		if (i1 == i2) {
-#ifdef WDEBUG
-//      printf("%s\n",atmp);
-//      printf("%s\n",btmp);
-#endif
-			strtol(atmp, &r, 10);
-			atmp = r + 1;
-			strtol(btmp, &r, 10);
-			btmp = r + 1;
-#ifdef WDEBUG
-//      printf("A4:  %s %s\n",atmp,a1);
-//      printf("B4:  %s %s\n",btmp,b1);
-#endif
-			if (product1(atmp, btmp, a1, b1)) {
-#ifdef WDEBUG
-//	printf("A4b: %s %s\n",atmp,a1);
-//	printf("B4b: %s %s\n",btmp,b1);
-#endif
-				checkone(a1);
-				checkone(b1);
-				return 4;
-			} else
-				return 0;
-		} else
-			return 0;
-	}
-
-	/*******************************************************/
-
-	else if ((atmp[0] == '!') && (btmp[0] == '!')) {
-		int propagaInv = 0;
-		p1 = strtol(&atmp[1], &r, 10);
-		atmp = r;
-		p2 = strtol(&btmp[1], &r, 10);
-		btmp = r;
-#ifdef WDEBUG
-//    printf("\nlift: %d , %d\n",p1,p2);
-#endif
-		if (p1 == p2) {
-#ifdef WDEBUG
-//      printf("!eq %s\n",atmp);
-//      printf("!eq %s\n",btmp);
-#endif
-			propagaInv = product1(atmp, btmp, a1, b1);
-			if (propagaInv) {
-#ifdef WDEBUG
-//	printf("A5:  %s %s\n",atmp,a1);
-//	printf("B5:  %s %s\n",btmp,b1);
-#endif
-				{
-					char ax[MAXLENWEIGHT];
-					char bx[MAXLENWEIGHT];
-					sprintf(ax, "%s", a1);
-					sprintf(bx, "%s", b1);
-					sprintf(a1, "!%ld%s", p1, ax);
-					sprintf(b1, "!%ld%s", p1, bx);
-				}
-				checkone(a1);
-				checkone(b1);
-				if ((propagaInv == 30) || (propagaInv == 31) || (propagaInv == 32) || (propagaInv == 33))
-					return propagaInv;
-				else
-					return 5;
-			} else
-				return 0;
-		} else if (p1 < p2) {
-			char ax[MAXLENWEIGHT];
-			char bx[MAXLENWEIGHT];
-			sprintf(bx, "!%ld%s", p2 - p1, btmp);
-			if (product1(atmp, bx, a1, b1)) {
-				sprintf(ax, "%s", a1);
-				sprintf(bx, "%s", b1);
-				sprintf(a1, "!%ld%s", p1, ax);
-				sprintf(b1, "!%ld%s", p1, bx);
-				checkone(a1);
-				checkone(b1);
-				return 6;
-			} else
-				return 0;
-		} else {
-			char ax[MAXLENWEIGHT];
-			char bx[MAXLENWEIGHT];
-			sprintf(ax, "!%ld%s", p1 - p2, atmp);
-			if (product1(ax, btmp, a1, b1)) {
-				sprintf(ax, "%s", a1);
-				sprintf(bx, "%s", b1);
-				sprintf(a1, "!%ld%s", p2, ax);
-				sprintf(b1, "!%ld%s", p2, bx);
-				checkone(a1);
-				checkone(b1);
-				return 7;
-			} else
-				return 0;
-		}
-	}
-
-	/*************************************/
-
-	else if ((atmp[0] == '!') && IS_GENERATOR(btmp[0])) {
-		/* !(u)^* x = x !^{e(x)}(u)^* (COMMUTATION, x = w or c of lift e(x)) */
-		char letter = btmp[0];
-		char ax[MAXLENWEIGHT];
-		char bx[MAXLENWEIGHT];
-		long px;
-		char *Xstr = NULL;
-		int konst_index = 0;
-
-		p1 = strtol(&atmp[1], &r, 10);
-		atmp = r;
-		i2 = strtol(&btmp[2], &r, 10);
-		btmp = r + 1;
-		l2 = strtol(btmp, &r, 10);
-		btmp = r + 1;
-#ifdef WDEBUG
-//    printf("p1=%d,i2=%d,l2=%d\n",p1,i2,l2);
-//    printf("A8:  %s %s\n",atmp,a1);
-//    printf("B8:  %s %s\n",btmp,b1);
-#endif
-		px = p1 + l2 - 1;
-		if (px != 0)
-			sprintf(ax, "!%ld%s", px, atmp);
+		if (GEN_INDEX(ha) == GEN_INDEX(hb))
+			return product1(a + 1, na - 1, b + 1, nb - 1, a1, b1) ? 4 : 0;
 		else
-			sprintf(ax, "%s", atmp);
-		if (product1(ax, btmp, a1, b1)) {
-			sprintf(bx, "%s", b1);
-			sprintf(b1, "%c(%ld,%ld)%s", letter, i2, l2, bx);
-		} else
 			return 0;
-		checkone(a1);
-		checkone(b1);
+	}
 
-		Xstr = strstr(a1, "X(2");
-
-		if (Xstr != NULL) {
-			konst_index = atoi(&Xstr[4]);
-			k_refs[konst_index]++;
+	else if ((ka == L_BANG) && (kb == L_BANG)) {
+		wexp p1 = BANG_VALUE(ha), p2 = BANG_VALUE(hb);
+		if (p1 == p2) {
+			r = product1(a + 1, na - 1, b + 1, nb - 1, a1, b1);
+			if (!r)
+				return 0;
+			tb_prefix(a1, MakeBang(p1));
+			tb_prefix(b1, MakeBang(p1));
+			if ((r == 30) || (r == 31) || (r == 32) || (r == 33))
+				return r;
+			else
+				return 5;
+		} else if (p1 < p2) {
+			n = with_head(MakeBang(p2 - p1), b + 1, nb - 1, tmp);
+			if (!product1(a + 1, na - 1, tmp, n, a1, b1))
+				return 0;
+			tb_prefix(a1, MakeBang(p1));
+			tb_prefix(b1, MakeBang(p1));
+			return 6;
+		} else {
+			n = with_head(MakeBang(p1 - p2), a + 1, na - 1, tmp);
+			if (!product1(tmp, n, b + 1, nb - 1, a1, b1))
+				return 0;
+			tb_prefix(a1, MakeBang(p2));
+			tb_prefix(b1, MakeBang(p2));
+			return 7;
 		}
+	}
+
+	else if ((ka == L_BANG) && IS_GEN_LETTER(hb)) {
+		/* !(u)^* x = x !^{e(x)}(u)^* (COMMUTATION, x = w or c of lift e(x)) */
+		px = BANG_VALUE(ha) + GEN_LIFT(hb) - 1;
+		if (px != 0) {
+			n = with_head(MakeBang(px), a + 1, na - 1, tmp);
+			r = product1(tmp, n, b + 1, nb - 1, a1, b1);
+		} else
+			r = product1(a + 1, na - 1, b + 1, nb - 1, a1, b1);
+		if (!r)
+			return 0;
+		tb_prefix(b1, hb);
+		k = tb_konst(a1);
+		if (k >= 0)
+			k_refs[k]++;
 		return 8;
 	}
 
-	/*************************************/
-
-	else if (IS_GENERATOR(atmp[0]) && (btmp[0] == '!')) {
-		char letter = atmp[0];
-		char ax[MAXLENWEIGHT];
-		char bx[MAXLENWEIGHT];
-		long px;
-		char *Xstr = NULL;
-		int konst_index = 0;
-
-		i1 = strtol(&atmp[2], &r, 10);
-		atmp = r + 1;
-		l1 = strtol(atmp, &r, 10);
-		atmp = r + 1;
-		p2 = strtol(&btmp[1], &r, 10);
-		btmp = r;
-#ifdef WDEBUG
-//    printf("i1=%d,l1=%d, p2=%d\n",i1,l1,p2);
-//    printf("A9:  %s %s\n",atmp,a1);
-//    printf("B9:  %s %s\n",btmp,b1);
-#endif
-		px = p2 + l1 - 1;
-		if (px != 0)
-			sprintf(bx, "!%ld%s", px, btmp);
-		else
-			sprintf(bx, "%s", btmp);
-		if (product1(atmp, bx, a1, b1)) {
-			sprintf(ax, "%s", a1);
-			sprintf(a1, "%c(%ld,%ld)%s", letter, i1, l1, ax);
+	else if (IS_GEN_LETTER(ha) && (kb == L_BANG)) {
+		px = BANG_VALUE(hb) + GEN_LIFT(ha) - 1;
+		if (px != 0) {
+			n = with_head(MakeBang(px), b + 1, nb - 1, tmp);
+			r = product1(a + 1, na - 1, tmp, n, a1, b1);
 		} else
+			r = product1(a + 1, na - 1, b + 1, nb - 1, a1, b1);
+		if (!r)
 			return 0;
-		checkone(a1);
-		checkone(b1);
-		Xstr = strstr(b1, "X(2");
-
-		if (Xstr != NULL) {
-			konst_index = atoi(&Xstr[4]);
-			k_refs[konst_index]++;
-		}
+		tb_prefix(a1, ha);
+		k = tb_konst(b1);
+		if (k >= 0)
+			k_refs[k]++;
 		return 9;
 	}
 
-	/*************************************/
-
-	else if ((atmp[0] == '!') && ((btmp[0] == 'p') || (btmp[0] == 'q'))) {
+	else if ((ka == L_BANG) && ((kb == L_P) || (kb == L_Q))) {
 		/* !(u)^* x = x !(u)^* for x = p, q of lift 1 (COMMUTATION) */
-		char letter = btmp[0];
-		char bx[MAXLENWEIGHT];
-		btmp++;
-		if (product1(atmp, btmp, a1, b1)) {
-			sprintf(bx, "%s", b1);
-			sprintf(b1, "%c%s", letter, bx);
-			checkone(a1);
-			checkone(b1);
-			return 50;
-		} else
+		if (!product1(a, na, b + 1, nb - 1, a1, b1))
 			return 0;
+		tb_prefix(b1, hb);
+		return 50;
 	}
 
-	/*************************************/
-
-	else if (((atmp[0] == 'p') || (atmp[0] == 'q')) && (btmp[0] == '!')) {
+	else if (((ka == L_P) || (ka == L_Q)) && (kb == L_BANG)) {
 		/* x^* !(u) = !(u) x^* for x = p, q of lift 1 (COMMUTATION) */
-		char letter = atmp[0];
-		char ax[MAXLENWEIGHT];
-		atmp++;
-		if (product1(atmp, btmp, a1, b1)) {
-			sprintf(ax, "%s", a1);
-			sprintf(a1, "%c%s", letter, ax);
-			checkone(a1);
-			checkone(b1);
-			return 51;
-		} else
+		if (!product1(a + 1, na - 1, b, nb, a1, b1))
 			return 0;
+		tb_prefix(a1, ha);
+		return 51;
 	}
 
-	/*************************************/
+	/* (the string form skipped the letter 1 here: the integer form has no such letter) */
 
-	else if (atmp[0] == '1') {
-		atmp++;
-		if (product1(atmp, btmp, a1, b1)) {
-			checkone(a1);
-			checkone(b1);
-			return 10;
-		} else
-			return 0;
-	}
+	else if ((ka == L_X) && (kb == L_X))
+		return product_external(a, na, b, nb, a1, b1);
 
-	/*************************************/
-
-	else if (btmp[0] == '1') {
-		btmp++;
-		if (product1(atmp, btmp, a1, b1)) {
-			checkone(a1);
-			checkone(b1);
-			return 11;
-		} else
-			return 0;
-	}
-
-	/***************** Algebra esterna ********************/
-
-	else if ((atmp[0] == 'X') && (btmp[0] == 'X')) {
-
-#ifdef WDEBUG
-		printf("\nExtern Algebra --> %s\n", &atmp[2]);
-		printf("\nExtern Algebra --> %s\n", &btmp[2]);
-#endif
-		i1 = strtol(&atmp[2], &r, 10);
-		atmp = r + 1;
-		i2 = strtol(&btmp[2], &r, 10);
-		btmp = r + 1;
-#ifdef WDEBUG
-		printf("Extern Algebra --> branch: %d , %d\n", i1, i2);
-#endif
-		l1 = strtol(atmp, &r, 10);
-		atmp = r + 1;
-		l2 = strtol(btmp, &r, 10);
-		btmp = r + 1;
-#ifdef WDEBUG
-		printf("Extern Algebra -->  %s %s\n", atmp, a1);
-		printf("Extern Algebra -->  %s %s\n", btmp, b1);
-#endif
-
-		/*************************************/
-
-		if ((i1 == TYPE) && (i2 == ARG)) {
-#ifdef WDEBUG
-			printf("\t%d) TYPE ARG\n", rank);
-#endif
-			if (product1(atmp, btmp, a1, b1)) {
-				char ax[MAXLENWEIGHT];
-				if (t[l1][1] == TIN)
-					sprintf(ax, "X(%d,%ld)%s", SYNC, l2 - 1, a1);
-				else
-					sprintf(ax, "X(%d,%ld)%s", SYNC, l2, a1);
-
-				sprintf(a1, "%s", ax);
-				checkone(a1);
-				checkone(b1);
-				return 12;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if ((i1 == TYPE) && (i2 == ARGLAST)) {
-#ifdef WDEBUG
-			printf("\t%d) TYPE LASTARG\n", rank);
-#endif
-			if (product1(atmp, btmp, a1, b1)) {
-				char ax[MAXLENWEIGHT];
-				if (t[l1][1] == TIN)
-					sprintf(ax, "X(%d,%ld)%s", SYNC, l2 - 1, a1);
-				else
-					sprintf(ax, "X(%d,%ld)%s", SYNC, l2, a1);
-
-				sprintf(a1, "%s", ax);
-				checkone(a1);
-				checkone(b1);
-				if (t[l1][1] == TOUT)
-					return 40 + l2 % 2;
-				else
-					return 13;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if ((i1 == ARG) && (i2 == TYPE)) {
-#ifdef WDEBUG
-			printf("\t%d) ARG TYPE\n", rank);
-#endif
-			if (product1(atmp, btmp, a1, b1)) {
-				char bx[MAXLENWEIGHT];
-				if (t[l2][1] == TIN)
-					sprintf(bx, "X(%d,%ld)%s", SYNC, l1 - 1, b1);
-				else
-					sprintf(bx, "X(%d,%ld)%s", SYNC, l1, b1);
-
-				sprintf(b1, "%s", bx);
-				checkone(b1);
-				checkone(a1);
-				return 14;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if ((i1 == ARGLAST) && (i2 == TYPE)) {
-#ifdef WDEBUG
-			printf("\t%d) ARG TYPE\n", rank);
-#endif
-			if (product1(atmp, btmp, a1, b1)) {
-				char bx[MAXLENWEIGHT];
-				if (t[l2][1] == TIN)
-					sprintf(bx, "X(%d,%ld)%s", SYNC, l1 - 1, b1);
-				else
-					sprintf(bx, "X(%d,%ld)%s", SYNC, l1, b1);
-
-				sprintf(b1, "%s", bx);
-				checkone(b1);
-				checkone(a1);
-				if (t[l2][1] == TOUT)
-					return 42 + l1 % 2;
-				else
-					return 15;
-			} else
-				return 0;
-		}
-
-		/****************************************/
-
-		else if ((i1 == SYNC) && (i2 == ARG)) {
-#ifdef WDEBUG
-			printf("\t%d) SYNC ARG\n", rank);
-#endif
-			if (product1(atmp, btmp, a1, b1)) {
-				char ax[MAXLENWEIGHT];
-				sprintf(ax, "X(%d,%ld)%s", SYNC, l2, a1);
-
-				sprintf(a1, "%s", ax);
-				checkone(a1);
-				checkone(b1);
-				return 16;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if ((i1 == ARG) && (i2 == SYNC)) {
-#ifdef WDEBUG
-			printf("\t%d) ARG SYNC\n", rank);
-#endif
-			if (product1(atmp, btmp, a1, b1)) {
-				char bx[MAXLENWEIGHT];
-				sprintf(bx, "X(%d,%ld)%s", SYNC, l1, b1);
-
-				sprintf(b1, "%s", bx);
-				checkone(a1);
-				checkone(b1);
-				return 17;
-			} else
-				return 0;
-		}
-
-		/******************************************/
-
-		else if ((i1 == SYNC) && (i2 == FUNC)) {
-			char bcarlo[MAXLENWEIGHT];
-#ifdef WDEBUG
-			printf("\t%d) SYNC FUNC\n", rank);
-#endif
-			/*      if (f[l2].wait==1) {   fare lA COPIA della funzione
-
-
-		  findex++;
-
-		  f[findex].type=f[l2].type;
-		  f[findex].narg=f[l2].narg;
-		  f[findex].wait=f[l2].wait;
-		  f[findex].fun=f[l2].fun;
-		  l2=findex;
-
-			}
-			*/
-
-			if (l1 == 0) {
-				sprintf(bcarlo, "X(%d,%ld)", FUNC, l2);
-				strcat(bcarlo, btmp);
-				strcpy(btmp, bcarlo);
-			}
-			if (product1(atmp, btmp, a1, b1)) {
-				int ft;
-				char ax[MAXLENWEIGHT];
-				char bx[MAXLENWEIGHT];
-
-				if (l1 == 0) {
-					ft = findType(f[l2].type);
-					sprintf(ax, "X(%d,%d)%s", TYPE, ft, a1);
-					sprintf(a1, "%s", ax);
-
-					sprintf(bx, "%s", b1);
-					sprintf(b1, "%s", bx);
-
-				} else if (l1 == f[l2].narg) {
-					ft = findType(f[l2].type);
-					sprintf(ax, "X(%d,%d)%s", TYPE, ft + 1, a1);
-					sprintf(a1, "%s", ax);
-
-					sprintf(bx, "X(%d,%ld)%s", FUNC, l2, b1);
-					sprintf(b1, "%s", bx);
-				}
-
-				else
-					return 0;
-
-				checkone(a1);
-				checkone(b1);
-				return 18;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if ((i1 == FUNC) && (i2 == SYNC)) {
-			char acarlo[MAXLENWEIGHT];
-#ifdef WDEBUG
-			printf("\t%d) FUNC SYNC\n", rank);
-#endif
-
-			/*
-			if (f[l1].wait==1) {   fare lA COPIA della funzione
-
-		  findex++;
-
-		  f[findex].type=f[l1].type;
-		  f[findex].narg=f[l1].narg;
-		  f[findex].wait=f[l1].wait;
-		  f[findex].fun=f[l1].fun;
-		  l1=findex;
-
-			}
-			*/
-
-			if (l2 == 0) {
-				sprintf(acarlo, "X(%d,%ld)", FUNC, l1);
-				strcat(acarlo, atmp);
-				strcpy(atmp, acarlo);
-			}
-			if (product1(atmp, btmp, a1, b1)) {
-				int ft;
-				char ax[MAXLENWEIGHT];
-				char bx[MAXLENWEIGHT];
-
-				if (l2 == 0) {
-					ft = findType(f[l1].type);
-
-					sprintf(ax, "%s", a1);
-					sprintf(a1, "%s", ax);
-
-					sprintf(bx, "X(%d,%d)%s", TYPE, ft, b1);
-					sprintf(b1, "%s", bx);
-				} else if (l2 == f[l1].narg) {
-					ft = findType(f[l1].type);
-					sprintf(ax, "X(%d,%ld)%s", FUNC, l1, a1);
-					sprintf(a1, "%s", ax);
-
-					sprintf(bx, "X(%d,%d)%s", TYPE, ft + 1, b1);
-					sprintf(b1, "%s", bx);
-				} else
-					return 0;
-				checkone(a1);
-				checkone(b1);
-				return 19;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if ((i1 == KONST) && (i2 == FUNC)) {
-#ifdef WDEBUG
-			printf("%d) CONST-FUNC WAIT %d, NARG %d\n", rank, f[l2].wait, f[l2].narg);
-#endif
-			if (f[l2].wait == f[l2].narg) {
-				if (f[l2].narg == 1) { /* valuto la funzione di 1 variabile*/
-#ifdef WDEBUG
-					printf("%d) function evaluation (1)\n", rank);
-#endif
-					StoreComputedValue(f[l2].type, ((USERTYPE(*)(USERTYPE))f[l2].fun)(k_value[l1]));
-				} else if (f[l2].narg == 2) { /* valuto la funzione di 2 variabili */
-#ifdef WDEBUG
-					printf("%d) function evaluation (2)\n", rank);
-#endif
-					StoreComputedValue(
-					    f[l2].type,
-					    ((USERTYPE(*)(USERTYPE, USERTYPE))f[l2].fun)((f[l2].s)[0], k_value[l1]));
-				} else if (f[l2].narg == 3) { /* valuto la funzione di 3 variabili */
-#ifdef WDEBUG
-					printf("%d) function evaluation (3)\n", rank);
-#endif
-					StoreComputedValue(
-					    f[l2].type,
-					    ((USERTYPE(*)(USERTYPE, USERTYPE, USERTYPE))f[l2].fun)(
-					        (f[l2].s)[0], (f[l2].s)[1], k_value[l1]));
-				} else
-					printf("EXCEPTION\n");
-
-				/** Avvertire tutti i processi della modifica */
-				/*
-			printf("\n\n\t\t\t1) A-Il processo %d modifica le tabelle  f e  k (e i loro index)\n\n",rank);
-				*/
-
-#ifdef WDEBUG
-				printf("--R-- %d ", kindex);
-				pelcr_value_print(stdout, &k_value[kindex]);
-				printf("\n%d) VALORE CALCOLATO ", rank);
-				pelcr_value_print(stdout, &k_value[kindex]);
-				printf("\n");
-#endif
-				if (product1(atmp, btmp, a1, b1)) {
-					char ax[MAXLENWEIGHT];
-					char bx[MAXLENWEIGHT];
-					sprintf(ax, "X(%d,%d)%s", KONST, kindex, a1);
-					sprintf(bx, "X(%d,%ld)%s", FUNC, l2, b1);
-					sprintf(a1, "%s", ax);
-					sprintf(b1, "%s", bx);
-					checkone(a1);
-					checkone(b1);
-
-					return 20;
-				} else
-					return 0;
-
-			} else {
-				/* valuto parzialmente la funzione */
-#ifdef WDEBUG
-				printf("%d) PARTIAL EVAL FUNC\n", rank);
-#endif
-				pelcr_value_set(&(f[l2].s)[f[l2].wait - 1], &k_value[l1]);
-				f[l2].wait++;
-
-				/** Avvertire tutti i processi della modifica */
-				/*
-			printf("\n\n\t\t\t2) A-Il processo %d modifica le tabelle  f e  k (e i loro index)\n\n",rank);
-				*/
-
-				if (product1(atmp, btmp, a1, b1)) {
-					char bx[MAXLENWEIGHT];
-					sprintf(bx, "X(%d,%ld)%s", FUNC, l2, b1);
-					sprintf(b1, "%s", bx);
-					checkone(a1);
-					checkone(b1);
-					return 21;
-				} else
-					return 0;
-			}
-
-			/** Avvertire tutti i processi della modifica, forse al posto delle 2 precedenti*/
-			/*
-	  printf("\n\n\t\t\t3) Il processo %d modifica le tabelle  f e  k (e i loro index)\n\n",rank);
-			*/
-		}
-
-		/*************************************/
-
-		else if ((i1 == FUNC) && (i2 == KONST)) {
-#ifdef WDEBUG
-			printf("%d) FUNC-CONST WAIT %d, NARG %d\n", rank, f[l1].wait, f[l1].narg);
-#endif
-			if (f[l1].wait == f[l1].narg) {
-				if (f[l1].narg == 1) { /* valuto la funzione di 1 variabile*/
-#ifdef WDEBUG
-					printf("%d) function evaluation (1)\n", rank);
-#endif
-					StoreComputedValue(f[l1].type, ((USERTYPE(*)(USERTYPE))f[l1].fun)(k_value[l2]));
-				} else if (f[l1].narg == 2) { /* valuto la funzione di 2 variabili */
-#ifdef WDEBUG
-					printf("%d) function evaluation (2)\n", rank);
-#endif
-					StoreComputedValue(
-					    f[l1].type,
-					    ((USERTYPE(*)(USERTYPE, USERTYPE))f[l1].fun)((f[l1].s)[0], k_value[l2]));
-				} else if (f[l1].narg == 3) { /* valuto la funzione di 2 variabili */
-#ifdef WDEBUG
-					printf("%d) function evaluation (3)\n", rank);
-#endif
-					StoreComputedValue(
-					    f[l1].type,
-					    ((USERTYPE(*)(USERTYPE, USERTYPE, USERTYPE))f[l1].fun)(
-					        (f[l1].s)[0], (f[l1].s)[1], k_value[l2]));
-				}
-
-				else
-					printf("EXCEPTION\n");
-
-				/** Avvertire tutti i processi della modifica */
-				/*
-			printf("\n\n\t\t\t1) B-Il processo %d modifica le tabelle  f e  k (e i loro index)\n\n",rank);
-				*/
-
-#ifdef WDEBUG
-				printf("--R-- %d ", kindex);
-				pelcr_value_print(stdout, &k_value[kindex]);
-				printf("\n%d) VALORE CALCOLATO ", rank);
-				pelcr_value_print(stdout, &k_value[kindex]);
-				printf("\n");
-#endif
-				if (product1(atmp, btmp, a1, b1)) {
-					char ax[MAXLENWEIGHT];
-					char bx[MAXLENWEIGHT];
-					sprintf(bx, "X(%d,%d)%s", KONST, kindex, b1);
-					sprintf(ax, "X(%d,%ld)%s", FUNC, l1, a1);
-					sprintf(a1, "%s", ax);
-					sprintf(b1, "%s", bx);
-					checkone(a1);
-					checkone(b1);
-
-					return 22;
-				} else
-					return 0;
-			} else {
-				/* valuto parzialmente la funzione */
-#ifdef WDEBUG
-				printf("%d) PARTIAL EVAL FUNC\n", rank);
-#endif
-				pelcr_value_set(&(f[l1].s)[f[l1].wait - 1], &k_value[l2]);
-				f[l1].wait++;
-
-				/** Avvertire tutti i processi della modifica */
-				/*
-			  printf("\n\n\t\t\t2) B-Il processo %d modifica le tabelle  f e  k (e i loro index)\n\n",rank);
-				*/
-
-				if (product1(atmp, btmp, a1, b1)) {
-					char ax[MAXLENWEIGHT];
-					sprintf(ax, "X(%d,%ld)%s", FUNC, l1, a1);
-					sprintf(a1, "%s", ax);
-					checkone(a1);
-					checkone(b1);
-					return 23;
-				} else
-					return 0;
-			}
-
-			/** Avvertire tutti i processi della modifica, forse al posto delle 2 precedenti*/
-			/*
-	  printf("\n\n\t\t\t3) Il processo %d modifica le tabelle  f e  k (e i loro index)\n\n",rank);
-			*/
-		}
-
-		/*************************************/
-
-		else if ((i1 == FUNC) && (i2 == FUNC)) {
-#ifdef WDEBUG
-			printf("\t%d) FUNC FUNC\n", rank);
-#endif
-			if ((l1 == l2) && (product1(atmp, btmp, a1, b1))) {
-				checkone(a1);
-				checkone(b1);
-
-				return 24;
-				/*Aggiungere un controllo sul nr. di argomenti (deve essere 0) */
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if (((i1 == SYNC) && (i2 == SYNC)) || ((i1 == TYPE) && (i2 == TYPE))) {
-#ifdef WDEBUG
-			printf("\t%d) SYNC SYNC\n", rank);
-			printf("--> %s, %s\n", atmp, btmp);
-#endif
-			{
-				int res = product1(atmp, btmp, a1, b1);
-#ifdef WDEBUG
-				printf("%d\n", res);
-				printf("%d , %d\n", l1, l2);
-#endif
-				if ((l1 == l2) && (res)) {
-#ifdef WDEBUG
-					printf("%d) TYPE-TYPE\n", rank);
-					printf("%s, %s\n", a1, b1);
-#endif
-					checkone(a1);
-					checkone(b1);
-					return 25;
-				} else
-					return 0;
-			}
-		}
-
-		/********************* Interazioni relative all'if_then_else ***********/
-
-		else if ((i1 == ITE) && (i2 == KONST)) {
-#ifdef WDEBUG
-			printf("\t%d) ITE CONST\n", rank);
-#endif
-			if (product1(atmp, btmp, a1, b1)) {
-				char ax[MAXLENWEIGHT];
-				if (pelcr_value_is_zero(&k_value[l2]))
-					sprintf(ax, "X(%d,%d)%s", ITE, 2, a1);
-				else
-					sprintf(ax, "X(%d,%d)%s", ITE, 1, a1);
-
-				sprintf(a1, "%s", ax);
-				checkone(a1);
-				checkone(b1);
-				return 26;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if ((i1 == KONST) && (i2 == ITE)) {
-#ifdef WDEBUG
-			printf("\t%d) KONST ITE\n", rank);
-#endif
-			if (product1(atmp, btmp, a1, b1)) {
-				char bx[MAXLENWEIGHT];
-				if (pelcr_value_is_zero(&k_value[l1]))
-					sprintf(bx, "X(%d,%d)%s", ITE, 2, b1);
-				else
-					sprintf(bx, "X(%d,%d)%s", ITE, 1, b1);
-
-				sprintf(b1, "%s", bx);
-				checkone(a1);
-				checkone(b1);
-				return 27;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if ((i1 == ITE) && (i2 == ITE)) {
-#ifdef WDEBUG
-			printf("\t%d) ITE ITE\n", rank);
-#endif
-			if (l1 == l2) {
-				if (product1(atmp, btmp, a1, b1)) {
-					checkone(a1);
-					checkone(b1);
-					return 28;
-				} else
-					return 0;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		/*
-		else if ( (i1==ITE)&&(i2==ITE) ) {
-	#ifdef WDEBUG
-		  printf("\t%d) ITE ITE\n",rank);
-	#endif
-		  if (product1(atmp,btmp,a1,b1)) {
-		checkone(a1);
-		checkone(b1);
-		return 215;
-		  }
-		  else  return 0;
-		}
-
-		*/
-
-		/*************************************/
-
-		else if ((i1 == ITE) && (i2 == SYNC)) {
-#ifdef WDEBUG
-			printf("\t%d) ITE SYNC\n", rank);
-#endif
-			if (l2 == 0 && l1 == 0) {
-				char acarlo[MAXLENWEIGHT];
-				sprintf(acarlo, "X(%d,%d)", ITE, 0);
-				strcat(acarlo, atmp);
-				strcpy(atmp, acarlo);
-				if (product1(atmp, btmp, a1, b1)) {
-					checkone(a1);
-					checkone(b1);
-					return 29;
-				} else if ((l2 == 1) && (l1 == 1 || l1 == 2)) {
-					char ax[MAXLENWEIGHT];
-					sprintf(ax, "X(%d,%ld)%s", ITE, l1, a1);
-
-					sprintf(a1, "%s", ax);
-					if (product1(atmp, btmp, a1, b1)) {
-						checkone(a1);
-						checkone(b1);
-						return 30;
-					} else
-						return 0;
-				} else
-					return 0;
-			} else
-				return 0;
-		}
-
-		/*************************************/
-
-		else if ((i1 == SYNC) && (i2 == ITE)) {
-
-#ifdef WDEBUG
-			printf("\t%d) SYNC ITE\n", rank);
-#endif
-			if (l1 == 0 && l2 == 0) {
-				char bcarlo[MAXLENWEIGHT];
-				sprintf(bcarlo, "X(%d,%d)", ITE, 0);
-				strcat(bcarlo, btmp);
-				strcpy(btmp, bcarlo);
-			}
-			if (product1(atmp, btmp, a1, b1)) {
-				if (l1 == 0 && l2 == 0) {
-					return 31;
-				} else if ((l1 == 1) && (l2 == 1 || l2 == 2)) {
-					char bx[MAXLENWEIGHT];
-					sprintf(bx, "X(%d,%ld)%s", ITE, l2, b1);
-
-					sprintf(b1, "%s", bx);
-					checkone(a1);
-					checkone(b1);
-					return 32;
-				} else
-					return 0;
-			} else
-				return 0;
-		} else
-			return 0;
-	} else
-		return 0;
-	/*  {
-	    printf("Illegal Interaction: (%s,%s)\nABORTING\nPlease, check your input graph!!\n",a,b);
-	    exit(-1);
-	    };
-	*/
+	return 0;
 }
 
 /* ---------------------------------------------------------------------------
@@ -1023,223 +573,266 @@ product1(char *a, char *b, char *a1, char *b1) {
    products, involution and lift are componentwise, and a pair with a zero
    component is 0.
 
-   A weight is a positive element.  It is written either
-       "u1|u0"   (component 1, then component 0), or
-       "u1"      for the pair (erase(u1), u1),
-   where erase(u1) deletes p, q and the external letters X(..).  The second form
-   is exact for every weight built from P, Q, W_j and lifts (component 0 of such a
-   product is the same word without p and q), so choice-free computations keep
-   the classical representation and the classical product.  Choice generators
-   c(h,1) occur only in component 0; fan generators w(i,l) in both.
+   A weight is a positive element: the word u1 of component 1 and, when component 0
+   is not erase(u1), the word u0 of component 0 (h/weight.h), where erase(u1)
+   deletes p, q and the external letters X(..).  Without u0 the weight is exact for
+   every product of P, Q, W_j and lifts (component 0 of such a product is the same
+   word without p and q), so choice-free computations keep the classical
+   representation and the classical product.  Choice generators c(h,1) occur only in
+   component 0; fan generators w(i,l) in both.
    --------------------------------------------------------------------------- */
 
-long max_weight_length = 0;
+/* a word in token form: "!n" before a letter whose index exceeds the previous one, and
+   at the end up to t */
+static int
+to_tokens(const letter *l, int n, wexp tend, letter *out) {
+	int k, j = 0;
+	wexp cur = 0;
+	for (k = 0; k < n; k++) {
+		wexp m = LETTER_EXP(l[k]);
+		if (m > cur) {
+			out[j++] = MakeBang(m - cur);
+			cur = m;
+		}
+		out[j++] = LETTER_WITH_EXP(l[k], 0);
+	}
+	if (tend > cur)
+		out[j++] = MakeBang(tend - cur);
+	return j;
+}
+
+/* tokens -> letters {x, m}; *t receives the index at the end */
+static int
+from_tokens(const letter *tok, int n, letter *out, int room, wexp *tend) {
+	int k, j = 0;
+	wexp cur = 0;
+	for (k = 0; k < n; k++) {
+		if (LETTER_KIND(tok[k]) == L_BANG)
+			cur += BANG_VALUE(tok[k]);
+		else {
+			WeightExpCheck(cur);
+			if (j >= room)
+				WeightCheck(MAXLETTERS + 1, "product");
+			out[j++] = LETTER_WITH_EXP(tok[k], cur);
+		}
+	}
+	WeightExpCheck(cur);
+	*tend = cur;
+	return j;
+}
+
+/* erase: the generators w, c of a word, with their indices */
+static int
+erase_word(const letter *l, int n, letter *out) {
+	int k, j = 0;
+	for (k = 0; k < n; k++)
+		if (IS_GEN_LETTER(l[k]))
+			out[j++] = l[k];
+	return j;
+}
+
+/* component 0 of a weight */
+static int
+component0(const weight *w, letter *out) {
+	const letter *l = WLETTERS_C(w);
+	if (!W_IS_PAIR(w))
+		return erase_word(l, w->n1, out);
+	memcpy(out, l + w->n1, (size_t)w->n0 * sizeof(letter));
+	return w->n0;
+}
+
+/* the pair (u0,u1) into w, in the classical form when u0 = erase(u1) (nd_join): u1 as it
+   is with its index at the end t1, u0 by its generators; in the pair form u1 without
+   letters is the identity 1 */
+static void
+join(weight *w, const letter *u1, int n1, wexp t1, const letter *u0, int n0) {
+	letter e1[MAXTOK], e0[MAXTOK];
+	int ne1 = erase_word(u1, n1, e1);
+	int ne0 = erase_word(u0, n0, e0);
+	letter *l = WLETTERS(w);
+
+	if (ne1 == ne0 && memcmp(e1, e0, (size_t)ne1 * sizeof(letter)) == 0) {
+		WeightCheck(n1, "nd_join");
+		memmove(l, u1, (size_t)n1 * sizeof(letter));
+		w->n1 = n1;
+		w->n0 = W_CLASSICAL;
+		w->t1 = t1;
+		w->one = 0;
+	} else {
+		WeightCheck(n1 + ne0, "nd_join");
+		memmove(l, u1, (size_t)n1 * sizeof(letter));
+		memcpy(l + n1, e0, (size_t)ne0 * sizeof(letter));
+		w->n1 = n1;
+		w->n0 = ne0;
+		w->t1 = ((n1 == 0) ? 0 : t1);
+		w->one = 0;
+	}
+}
 
 static void
-nd_overflow(const char *what, const char *w) {
-	fprintf(stderr, "(%d) PELCR: weight too long in %s (MAXLENWEIGHT=%d): %.60s...\n", rank, what, MAXLENWEIGHT, w);
-	fprintf(stderr, "(%d) PELCR: rebuild with a larger MAXLENWEIGHT (make MAXLENWEIGHT=...)\n", rank);
-	exit(-1);
+join_tokens(weight *w, const tokbuf *r1, const tokbuf *r0) {
+	letter u1[MAXTOK], u0[MAXTOK];
+	wexp t1, t0;
+	int n1 = from_tokens(r1->t + r1->s, MAXTOK - r1->s, u1, MAXTOK, &t1);
+	int n0 = from_tokens(r0->t + r0->s, MAXTOK - r0->s, u0, MAXTOK, &t0);
+	join(w, u1, n1, t1, u0, n0);
 }
 
-void
-CheckWeightLength(const char *w, const char *what) {
-	long n = (long)strlen(w);
-	if (n > max_weight_length)
-		max_weight_length = n;
-	if (n >= MAXLENWEIGHT - 1)
-		nd_overflow(what, w);
+static void
+classical_tokens(weight *w, const tokbuf *r) {
+	wexp t1;
+	int n1 = from_tokens(r->t + r->s, MAXTOK - r->s, WLETTERS(w), MAXLETTERS, &t1);
+	w->n1 = n1;
+	w->n0 = W_CLASSICAL;
+	w->t1 = t1;
+	w->one = 0;
 }
 
+/* stable form in Lambda*_nd: a^* b = b1 a1^* (0 if a^* b = 0); a1 and b1 have room for
+   MAXLETTERS letters */
 int
-nd_is_pair(const char *w) {
-	return strchr(w, '|') != NULL;
-}
+product(const weight *a, const weight *b, weight *a1, weight *b1) {
+	letter ta[MAXTOK], tb[MAXTOK], c[MAXTOK];
+	tokbuf r1, s1, r0, s0;
+	int na, nb, nc, out;
 
-/* component 0 of a classical word: p, q, 1 and X(..) deleted, consecutive lifts merged */
-void
-nd_erase(const char *u1, char *u0) {
-	long bang = 0;
-	char *out = u0;
-	const char *s = u1;
-	char *r;
-
-	*out = '\0';
-	while (*s != '\0' && *s != '|') {
-		if (*s == '!') {
-			bang += strtol(s + 1, &r, 10);
-			s = r;
-		} else if (*s == 'X') {
-			const char *e = strchr(s, ')');
-			s = (e != NULL) ? e + 1 : s + strlen(s);
-		} else if (IS_GENERATOR(*s)) {
-			const char *e = strchr(s, ')');
-			size_t n = (e != NULL) ? (size_t)(e - s + 1) : strlen(s);
-			if ((size_t)(out - u0) + n + 24 >= MAXLENWEIGHT)
-				nd_overflow("nd_erase", u1);
-			if (bang != 0) {
-				out += sprintf(out, "!%ld", bang);
-				bang = 0;
-			}
-			memcpy(out, s, n);
-			out += n;
-			*out = '\0';
-			s += n;
-		} else
-			s++; /* p, q, 1, and the EOT mark * */
+	if (!W_IS_PAIR(a) && !W_IS_PAIR(b)) {
+		na = to_tokens(WLETTERS_C(a), a->n1, a->t1, ta);
+		nb = to_tokens(WLETTERS_C(b), b->n1, b->t1, tb);
+		tb_init(&r1);
+		tb_init(&s1);
+		out = product1(ta, na, tb, nb, &r1, &s1);
+		if (out) {
+			classical_tokens(a1, &r1);
+			classical_tokens(b1, &s1);
+		}
+		return out;
 	}
-}
 
-/* the two components of a weight */
-void
-nd_split(const char *w, char *u1, char *u0) {
-	const char *bar = strchr(w, '|');
-	if (bar == NULL) {
-		strcpy(u1, w);
-		nd_erase(w, u0);
-	} else {
-		size_t n = (size_t)(bar - w);
-		memcpy(u1, w, n);
-		u1[n] = '\0';
-		nd_erase(bar + 1, u0); /* normal form of component 0 */
-	}
-}
-
-/* writes the pair (u0,u1) into w, in the classical form when u0 = erase(u1) */
-void
-nd_join(char *w, const char *u1, const char *u0) {
-	char e0[MAXLENWEIGHT], n0[MAXLENWEIGHT];
-	nd_erase(u1, e0);
-	nd_erase(u0, n0);
-	if (strlen(u1) + strlen(n0) + 2 >= MAXLENWEIGHT)
-		nd_overflow("nd_join", u1);
-	if (strcmp(e0, n0) == 0)
-		strcpy(w, u1);
-	else
-		/* a component without generators is the identity: written 1 (e.g. "!2" = !^2(1) = 1) */
-		sprintf(w, "%s|%s", isone((char *)u1) ? "1" : u1, (n0[0] == '\0') ? "1" : n0);
-}
-
-/* stable form in Lambda*_nd: a^* b = b1 a1^* (0 if a^* b = 0); same convention as product1 */
-int
-product(char *a, char *b, char *a1, char *b1) {
-	char a_1[MAXLENWEIGHT], a_0[MAXLENWEIGHT], b_1[MAXLENWEIGHT], b_0[MAXLENWEIGHT];
-	char p1[MAXLENWEIGHT], n1[MAXLENWEIGHT], p0[MAXLENWEIGHT], n0[MAXLENWEIGHT];
-	int out;
-
-	if (!nd_is_pair(a) && !nd_is_pair(b))
-		return product1(a, b, a1, b1);
-
-	nd_split(a, a_1, a_0);
-	nd_split(b, b_1, b_0);
 	/* component 0 first: it has no external letters, hence no side effects */
-	p0[0] = n0[0] = '\0';
-	if (!product1(a_0, b_0, p0, n0))
+	nc = component0(a, c);
+	na = to_tokens(c, nc, 0, ta);
+	nc = component0(b, c);
+	nb = to_tokens(c, nc, 0, tb);
+	tb_init(&r0);
+	tb_init(&s0);
+	if (!product1(ta, na, tb, nb, &r0, &s0))
 		return 0;
-	p1[0] = n1[0] = '\0';
-	out = product1(a_1, b_1, p1, n1);
+	na = to_tokens(WLETTERS_C(a), a->n1, a->t1, ta);
+	nb = to_tokens(WLETTERS_C(b), b->n1, b->t1, tb);
+	tb_init(&r1);
+	tb_init(&s1);
+	out = product1(ta, na, tb, nb, &r1, &s1);
 	if (!out)
 		return 0;
-	nd_join(a1, p1, p0);
-	nd_join(b1, n1, n0);
+	join_tokens(a1, &r1, &r0);
+	join_tokens(b1, &s1, &s0);
 	return out;
 }
 
-/* ---- lifts and prefixes used by the graph builder ---- */
+int
+isone(const weight *w) {
+	return WeightIsOne(w);
+}
 
-/* !(u) on a word whose first letter is not the head of a free-variable edge */
+/* ---- lifts and prefixes used by the graph builder (in place: the edges of the graph
+   builder have room for MAXLETTERS letters) ---- */
+
+/* !(u) on a word whose first letter is not the head of a free-variable edge; the
+   identity stays as it is */
 static void
-lift_word(char *u) {
-	char tmp[MAXLENWEIGHT];
-	char *r;
-	long n;
-
-	if (u[0] == '\0' || strcmp(u, "1") == 0)
+lift_word(letter *l, int n, wexp *tend) {
+	int k;
+	if (n == 0 && *tend == 0)
 		return;
-	if (u[0] == '!') {
-		n = strtol(u + 1, &r, 10);
-		snprintf(tmp, sizeof(tmp), "!%ld%s", n + 1, r);
-	} else
-		snprintf(tmp, sizeof(tmp), "!1%s", u);
-	strcpy(u, tmp);
+	for (k = 0; k < n; k++) {
+		wexp m = LETTER_EXP(l[k]) + 1;
+		WeightExpCheck(m);
+		l[k] = LETTER_WITH_EXP(l[k], m);
+	}
+	WeightExpCheck(*tend + 1);
+	(*tend)++;
 }
 
 /* the edge of a free variable starts with its fan generator w(i,l): a lift of the
    term raises the lift l of that generator (the variable is one box deeper) */
 static void
-lift_fan_head(char *u) {
-	char tmp[MAXLENWEIGHT];
-	char *r;
-	long i, l;
+lift_fan_head(letter *l) {
+	*l = MakeGen(L_W, GEN_INDEX(*l), GEN_LIFT(*l) + 1, LETTER_EXP(*l));
+}
 
-	i = strtol(u + 2, &r, 10);
-	l = strtol(r + 1, &r, 10);
-	snprintf(tmp, sizeof(tmp), "%c(%ld,%ld)%s", u[0], i, l + 1, r + 1);
-	strcpy(u, tmp);
+static int
+fan_head(const letter *l, int n) {
+	return n > 0 && LETTER_KIND(l[0]) == L_W && LETTER_EXP(l[0]) == 0;
 }
 
 void
-LiftWeight(char *w) {
-	char u1[MAXLENWEIGHT], u0[MAXLENWEIGHT];
-	int fan_head;
+LiftWeight(weight *w) {
+	letter *l = WLETTERS(w);
+	letter u1[MAXTOK], u0[MAXTOK];
+	int n1 = w->n1, n0, fh;
+	wexp t1 = w->t1, t0 = 0;
 
-	if (!nd_is_pair(w)) {
-		if (w[0] == 'w')
-			lift_fan_head(w);
-		else
-			lift_word(w);
-		CheckWeightLength(w, "LiftWeight");
+	if (!W_IS_PAIR(w)) {
+		if (fan_head(l, n1))
+			lift_fan_head(l);
+		else {
+			lift_word(l, n1, &t1);
+			w->t1 = t1;
+		}
+		WeightCheck(W_NLETTERS(w), "LiftWeight");
 		return;
 	}
-	nd_split(w, u1, u0);
-	fan_head = (u1[0] == 'w');
-	if (fan_head)
+	n0 = w->n0;
+	memcpy(u1, l, (size_t)n1 * sizeof(letter));
+	memcpy(u0, l + n1, (size_t)n0 * sizeof(letter));
+	fh = fan_head(u1, n1);
+	if (fh)
 		lift_fan_head(u1);
 	else
-		lift_word(u1);
-	if (fan_head && u0[0] == 'w')
+		lift_word(u1, n1, &t1);
+	if (fh && fan_head(u0, n0))
 		lift_fan_head(u0);
 	else
-		lift_word(u0);
-	nd_join(w, u1, u0);
-	CheckWeightLength(w, "LiftWeight");
+		lift_word(u0, n0, &t0);
+	join(w, u1, n1, t1, u0, n0);
+	WeightCheck(W_NLETTERS(w), "LiftWeight");
 }
 
 /* left multiplication by a multiplicative letter (p or q): component 1 only */
 void
-PrefixWeight1(char *w, const char *x) {
-	char u1[MAXLENWEIGHT], u0[MAXLENWEIGHT], tmp[MAXLENWEIGHT];
+PrefixWeight1(weight *w, int kind) {
+	letter *l = WLETTERS(w);
+	letter u1[MAXTOK], u0[MAXTOK];
+	int n1 = w->n1, n0;
 
-	if (!nd_is_pair(w)) {
-		if (strcmp(w, "1") == 0 || w[0] == '\0')
-			snprintf(tmp, sizeof(tmp), "%s", x);
-		else
-			snprintf(tmp, sizeof(tmp), "%s%s", x, w);
-		strcpy(w, tmp);
-	} else {
-		nd_split(w, u1, u0);
-		if (strcmp(u1, "1") == 0 || u1[0] == '\0')
-			snprintf(tmp, sizeof(tmp), "%s", x);
-		else
-			snprintf(tmp, sizeof(tmp), "%s%s", x, u1);
-		nd_join(w, tmp, u0);
+	if (!W_IS_PAIR(w)) {
+		WeightCheck(n1 + 1, "PrefixWeight1");
+		memmove(l + 1, l, (size_t)n1 * sizeof(letter));
+		l[0] = MakePQ(kind, 0);
+		w->n1 = (n1 + 1);
+		w->one = 0;
+		return;
 	}
-	CheckWeightLength(w, "PrefixWeight1");
+	n0 = w->n0;
+	u1[0] = MakePQ(kind, 0);
+	memcpy(u1 + 1, l, (size_t)n1 * sizeof(letter));
+	memcpy(u0, l + n1, (size_t)n0 * sizeof(letter));
+	join(w, u1, n1 + 1, w->t1, u0, n0);
+	WeightCheck(W_NLETTERS(w), "PrefixWeight1");
 }
 
 /* left multiplication by the choice generator C_h = (c_h, 1): component 0 only */
 void
-PrefixChoice(char *w, long h) {
-	char u1[MAXLENWEIGHT], u0[MAXLENWEIGHT], tmp[MAXLENWEIGHT];
+PrefixChoice(weight *w, long h) {
+	letter *l = WLETTERS(w);
+	letter u0[MAXTOK];
+	int n1 = w->n1, n0 = component0(w, u0);
 
-	nd_split(w, u1, u0);
-	snprintf(tmp, sizeof(tmp), "c(%ld,1)%s", h, u0);
-	if (u1[0] == '\0')
-		strcpy(u1, "1");
-	if (strlen(u1) + strlen(tmp) + 2 >= MAXLENWEIGHT)
-		nd_overflow("PrefixChoice", w);
-	sprintf(w, "%s|%s", u1, tmp);
-	CheckWeightLength(w, "PrefixChoice");
+	WeightCheck(n1 + n0 + 1, "PrefixChoice");
+	memcpy(l + n1 + 1, u0, (size_t)n0 * sizeof(letter));
+	l[n1] = MakeGen(L_C, h, 1, 0);
+	w->n0 = (n0 + 1);
 }
 
 /* renames the choice generators of a weight: copies of a #def symbol get fresh
@@ -1248,44 +841,35 @@ PrefixChoice(char *w, long h) {
    a family i is mapped to a fresh family i' (from/to hold family indices) and the
    branch parity is kept, as the read-back orders the branches by their codes. */
 void
-RenameChoices(char *w, long *from, long *to, int *n, int max, long *counter) {
-	char out[MAXLENWEIGHT];
-	char *bar = strchr(w, '|');
-	char *s, *r, *o;
+RenameChoices(weight *w, long *from, long *to, int *n, int max, long *counter) {
+	letter *l = WLETTERS(w);
 	long h, fam;
-	int k;
+	int j, k;
 
-	if (bar == NULL || strstr(bar, "c(") == NULL)
+	if (!W_IS_PAIR(w))
 		return;
-	o = out;
-	for (s = w; s <= bar; s++)
-		*o++ = *s;
-	while (*s != '\0') {
-		if (s[0] == 'c' && s[1] == '(') {
-			h = strtol(s + 2, &r, 10);
-			fam = h / 2;
-			for (k = 0; k < *n && from[k] != fam; k++)
-				;
-			if (k == *n) {
-				if (*n >= max) {
-					fprintf(stderr, "(%d) PELCR: too many choices in a copied symbol\n", rank);
-					exit(-1);
-				}
-				if (*counter % 2 != 0)
-					(*counter)++;
-				from[k] = fam;
-				to[k] = *counter / 2;
-				*counter += 2;
-				(*n)++;
+	for (j = w->n1; j < w->n1 + w->n0; j++) {
+		if (LETTER_KIND(l[j]) != L_C)
+			continue;
+		h = GEN_INDEX(l[j]);
+		fam = h / 2;
+		for (k = 0; k < *n && from[k] != fam; k++)
+			;
+		if (k == *n) {
+			if (*n >= max) {
+				fprintf(stderr, "(%d) PELCR: too many choices in a copied symbol\n", rank);
+				exit(-1);
 			}
-			o += sprintf(o, "c(%ld", 2 * to[k] + h % 2);
-			s = r;
-		} else
-			*o++ = *s++;
+			if (*counter % 2 != 0)
+				(*counter)++;
+			from[k] = fam;
+			to[k] = *counter / 2;
+			*counter += 2;
+			(*n)++;
+		}
+		l[j] = MakeGen(L_C, 2 * to[k] + h % 2, GEN_LIFT(l[j]), LETTER_EXP(l[j]));
 	}
-	*o = '\0';
-	CheckWeightLength(out, "RenameChoices");
-	strcpy(w, out);
+	WeightCheck(W_NLETTERS(w), "RenameChoices");
 }
 
 int

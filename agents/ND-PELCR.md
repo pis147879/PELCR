@@ -41,9 +41,16 @@ Gli elementi designati sono P = (1,p), Q = (1,q), W_j = (w_j,w_j), C_h = (w_h,1)
   e della Def. `exgoi`, che prima mancavano (le statistiche delle run deterministiche non cambiano).
 - Le relazioni del Lemma `nd-product-equations` (c_h* p = p c_h*, !(u) c_h = c_h !(u), …) seguono dal calcolo
   componente per componente, come nella prova dell'articolo.
-- `isone` riconosce anche `c`; `CheckWeightLength` ferma la run se un peso supera `MAXLENWEIGHT`
-  (default 100, `make MAXLENWEIGHT=...`); la lunghezza massima osservata è stampata a fine run
-  (`max weight length`; ≤ 25 caratteri negli esempi).
+- `isone` riconosce anche `c`; un peso ha al più `MAXLETTERS` lettere (default 16, `make MAXLETTERS=...`,
+  vedi sotto); il numero massimo di lettere osservato è stampato a fine run (`max weight length`).
+- Pesi aritmetici (branch `pesi-aritmetici`, `h/weight.h`, `weight.c`): un peso non è più una stringa ma una
+  parola di lettere intere {x, m} = !^m(x) come nel prototipo Wolfram (64 bit: tipo, indice m
+  dell'esponenziale su 40 bit, indice e lift del generatore o tipo e valore della lettera esterna), con la
+  parola u1 della componente 1 e, se la componente 0 non è erase(u1), la parola u0. m arriva a 3069 in dd4 (e
+  cresce con dd5, dd6): per questo 40 bit. Il prodotto (`symbolic.c`) applica le stesse regole della forma a
+  stringa, sui token lettera e "!n" ricavati dalla parola; la forma a stringa resta solo ai bordi (parser,
+  dump JSON/GML, stampe), identica a prima. Un arco occupa 48 byte più 8 per lettera (prima 136; in dd4 i
+  pesi hanno in media una lettera), un messaggio 288 byte (prima 432).
 
 ## Parser e traduzione (`parser.y`, `buildgraph.c`)
 

@@ -66,6 +66,7 @@ int XAddEntryInf(char *, int);
 int XAddFun(int, int);
 
 edge *AddAnEdge(edge *, char *, node *, int);
+edge *AddAnEdgeW(edge *, const weight *, node *, int);
 void Lift(termGraph *t);
 void LiftEdges(edge *e);
 void P_Q(node *, char *);

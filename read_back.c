@@ -100,7 +100,7 @@ write_edges(FILE *f, node *head, int *first) {
 	node *v;
 	edge *e;
 	long count = 0;
-	char tid[64], sid[64];
+	char tid[64], sid[64], ws[MAXLENWEIGHT];
 	int side;
 
 	for (v = head; v != NULL; v = v->nextpuit) {
@@ -113,7 +113,7 @@ write_edges(FILE *f, node *head, int *first) {
 				        "%s\n  {\"target\": \"%s\", \"target_side\": %d, \"source\": \"%s\", \"source_side\": %d, "
 				        "\"sign\": %d, \"sto\": %d, \"rankpuit\": %d, \"creator\": %d, \"weight\": \"%s\"}",
 				        *first ? "" : ",", tid, (side == 0) ? LEFT : RIGHT, sid, e->side, e->sign, e->sto, e->rankpuit,
-				        e->creator, e->weight);
+				        e->creator, WeightToString(&e->weight, ws, sizeof(ws)));
 				*first = 0;
 				count++;
 			}
@@ -294,7 +294,7 @@ write_final_gml(node *principal, const char *path) {
 			int s2;
 			for (s2 = 0; s2 < 2; s2++) {
 				for (e = (s2 == 0) ? v->left.vector : v->right.vector; e != NULL; e = e->vector) {
-					char u1[MAXLENWEIGHT], u0[MAXLENWEIGHT];
+					char u1[MAXLENWEIGHT], u0[MAXLENWEIGHT], ws[MAXLENWEIGHT];
 					long src = node_index(sorted, n, source_node(e));
 					if (src < 0) {
 						/* unresolved source: a node of its own */
@@ -305,7 +305,7 @@ write_final_gml(node *principal, const char *path) {
 						        src, e->creator, (unsigned long)e->source);
 					} else
 						src = order[src];
-					nd_split(e->weight, u1, u0);
+					WeightComponents(&e->weight, u1, sizeof(u1), u0, sizeof(u0));
 					fprintf(f,
 					        "  edge [ id %ld source %ld target %ld graphics [ fill \"%s\" targetArrow \"standard\" ]"
 					        " targetSide %d sourceSide %d weight1 ",
@@ -315,7 +315,7 @@ write_final_gml(node *principal, const char *path) {
 					fprintf(f, " weight0 ");
 					gml_string(f, u0);
 					fprintf(f, " label ");
-					gml_string(f, e->weight);
+					gml_string(f, WeightToString(&e->weight, ws, sizeof(ws)));
 					fprintf(f, " ]\n");
 					nedges++;
 				}

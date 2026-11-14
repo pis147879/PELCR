@@ -506,7 +506,7 @@ GML_edge_det(struct GML_pair *list, struct messaggio *cut_node_messages, int cut
 
 	struct messaggio m;
 
-	char weight[MAXLENWEIGHT];
+	wbuf w;
 	struct GML_pair *tmp = list;
 
 	printf("AddEdge(%ld,", tmp->value.integer);
@@ -550,7 +550,7 @@ GML_edge_det(struct GML_pair *list, struct messaggio *cut_node_messages, int cut
 		vsource->sto = storeclass;
 
 		printf("%s\n", (tmp->next->next->value.string) + 3);
-		strcpy(weight, (tmp->next->next->value.string) + 3);
+		WeightParse((tmp->next->next->value.string) + 3, &w.h);
 
 		if (tmp->next->next->next != NULL) {
 			vtarget->sto = OUT;
@@ -560,7 +560,7 @@ GML_edge_det(struct GML_pair *list, struct messaggio *cut_node_messages, int cut
 
 		{
 
-			StoreMessage(&m, vtarget, vsource, weight, storeclass, polarity);
+			StoreMessage(&m, vtarget, vsource, &w.h, storeclass, polarity);
 			PushMessage(&m);
 			if (vtarget->sto == IN)
 				cut_node_count = SinkList(&m, cut_node_messages, cut_node_count);
@@ -844,7 +844,11 @@ SinkList(struct messaggio *m, struct messaggio *l, int length) {
 		exit(EXIT_FAILURE);
 	}
 
-	StoreMessage(&l[length], &(m->vtarget), &(m->vtarget), (char *)"*", m->vtarget.sto, m->side);
+	{
+		wbuf eot;
+		WeightSetOne(&eot.h);
+		StoreMessage(&l[length], &(m->vtarget), &(m->vtarget), &eot.h, m->vtarget.sto, m->side);
+	}
 #ifdef _DEBUG
 	DEBUG_MEM ShowMessage(&l[length]);
 #endif

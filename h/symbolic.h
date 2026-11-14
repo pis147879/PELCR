@@ -20,8 +20,6 @@
 #ifndef symbolic_h
 #define symbolic_h
 
-typedef char term;
-
 /* Constant values, types and reference counts are declared in lambdastar.h. */
 /* extern functionstack f[MAXFUNCTIONS]; */
 /* extern int  t[5][2]; */
@@ -34,21 +32,14 @@ extern int fcounter;
 /* extern double (*funcs[MAXFUNCTIONS])(double); */
 /* extern void *vars[MAXDATAVARS]; */
 
-void checkone(char *s);
 int findType(int tipo);
-int product(char *a, char *b, char *a1, char *b1);
-int isone(char *a);
 
-/* non-deterministic dynamic algebra Lambda*_nd (weights "u1|u0", see symbolic.c) */
-extern long max_weight_length;
-void CheckWeightLength(const char *w, const char *what);
-int nd_is_pair(const char *w);
-void nd_erase(const char *u1, char *u0);
-void nd_split(const char *w, char *u1, char *u0);
-void nd_join(char *w, const char *u1, const char *u0);
-void LiftWeight(char *w);
-void PrefixWeight1(char *w, const char *x);
-void PrefixChoice(char *w, long h);
-void RenameChoices(char *w, long *from, long *to, int *n, int max, long *counter);
+/* the dynamic algebra Lambda*_nd on the weights of h/weight.h (see symbolic.c) */
+int product(const weight *a, const weight *b, weight *a1, weight *b1);
+int isone(const weight *w);
+void LiftWeight(weight *w);
+void PrefixWeight1(weight *w, int kind);
+void PrefixChoice(weight *w, long h);
+void RenameChoices(weight *w, long *from, long *to, int *n, int max, long *counter);
 
 #endif

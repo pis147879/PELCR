@@ -53,7 +53,7 @@ struct messaggio {
 	int side;                  /* the side of the edge on the target */
 	edge vsource;              /* the structure storing the "source" of the edge carried by the message*/
 	edge vtarget;              /* the structure storing the "target" of the edge carried by the message*/
-	char weight[MAXLENWEIGHT]; /* weight string */
+	wbuf weight;               /* the weight, with room for MAXLETTERS letters */
 
 	/* side effects */
 	int funWhich;     /* this message carries a functional symbol: this is symbol table entry */
@@ -92,7 +92,7 @@ int BDumpS(struct mbuffer *);
 int BDump(struct mbuffer *);
 
 void NodeCombustion(node *n, int polarity);
-void StoreMessage(struct messaggio *m, edge *t, edge *s, char *w, int sto, int p);
+void StoreMessage(struct messaggio *m, edge *t, edge *s, const weight *w, int sto, int p);
 void ShowMessage(struct messaggio *m);
 
 #if MINPRIORITY > 1

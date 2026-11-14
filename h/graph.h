@@ -54,8 +54,11 @@ typedef struct edge {
 	int side;
 	int rankpuit;
 	int creator;
-	char weight[MAXLENWEIGHT];
+	weight weight; /* last: its letters follow the edge in memory (h/weight.h, NewReference) */
 } edge;
+
+/* the letters of the weight of an edge start right after its header (NewReferenceLetters) */
+_Static_assert(offsetof(edge, weight) + sizeof(weight) <= sizeof(edge), "edge: weight last");
 
 typedef struct graph {
 	node *hot;
@@ -64,8 +67,9 @@ typedef struct graph {
 
 node *NewNode(void);
 edge *NewReference(void);
+edge *NewReferenceLetters(int nletters);
 void LiberaV(edge *P);
-void AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int side);
+void AddEdge(node *S, int rk, node *nS, int sto, const weight *w, int c, int polarity, int side);
 node *CreateNewNode(node *S);
 void AttachNodeToCold(node *P);
 void AttachSingleEotHotNodesToCold(void);

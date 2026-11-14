@@ -68,7 +68,8 @@ _Ultimo aggiornamento: 2026-10-30_
 - Sintassi `[t + u]`; pesi in Λ*_nd scritti `u1|u0` (o `u1` per (erase(u1), u1)); generatori di choice
   `c(2i,1)`/`c(2i+1,1)` solo nella componente 0; dettagli e verifiche in `agents/ND-PELCR.md`.
 - `-readback <file>`: `read_back.c` scrive il grafo finale in JSON (anche variabili libere); niente più gdb.
-- `MAXLENWEIGHT` resta 100 (override `make MAXLENWEIGHT=...`); a fine run si stampa `max weight length`.
+- Pesi: parole di lettere intere (`h/weight.h`, branch `pesi-aritmetici`), al più `MAXLETTERS` = 16 lettere
+  (override `make MAXLETTERS=...`); a fine run `max weight length` = lettere del peso più lungo.
 - Test: `python3 agents/readback/test_c_readback.py --random 200 --seed 7` (serve `NDPELCR_PYTHON`);
   confronto con il prototipo Wolfram: `agents/readback/compare_wolfram.py` (wolframscript o Mathics 3).
 

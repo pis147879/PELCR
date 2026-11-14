@@ -978,17 +978,28 @@ BuildVar(char *n) {
 	return termine;
 }
 
+/* an edge of the graph builder: room for MAXLETTERS letters, as its weight changes in
+   place (P_Q, PrefixChoiceNode) */
 edge *
-AddAnEdge(edge *old, char *peso, node *sorgente, int lato) {
-	edge *new = (edge *)malloc(sizeof(edge));
+AddAnEdgeW(edge *old, const weight *peso, node *sorgente, int lato) {
+	edge *new = NewReference();
 
-	strcpy(new->weight, peso);
+	WeightCopy(&new->weight, peso);
 	new->sto = OUT;
 	new->source = sorgente;
 	new->side = lato;
 	new->sign = PLUS;
 	new->vector = old;
 	return new;
+}
+
+/* the same with the weight in its string form ("1", "q", "w(3,0)", "X(3,1)X(7,1)") */
+edge *
+AddAnEdge(edge *old, char *peso, node *sorgente, int lato) {
+	wbuf w;
+
+	WeightParse(peso, &w.h);
+	return AddAnEdgeW(old, &w.h, sorgente, lato);
 }
 
 termGraph *
@@ -1227,7 +1238,7 @@ LiftEdges(edge *e) {
 	/* !(w) on each weight; the edge of a free variable raises the lift of its fan
 	   generator instead (see LiftWeight in symbolic.c) */
 	for (tmp = e; tmp != NULL; tmp = tmp->vector)
-		LiftWeight(tmp->weight);
+		LiftWeight(&tmp->weight);
 }
 
 void
@@ -1236,9 +1247,9 @@ P_Q(node *n, char *ch) {
 
 	/* left multiplication by p or q (component 1 of Lambda*_nd) */
 	for (tmp = n->right.vector; tmp != NULL; tmp = tmp->vector)
-		PrefixWeight1(tmp->weight, ch);
+		PrefixWeight1(&tmp->weight, (ch[0] == 'p') ? L_P : L_Q);
 	for (tmp = n->left.vector; tmp != NULL; tmp = tmp->vector)
-		PrefixWeight1(tmp->weight, ch);
+		PrefixWeight1(&tmp->weight, (ch[0] == 'p') ? L_P : L_Q);
 }
 
 /* left multiplication by the choice generator C_h = (c_h,1) of Lambda*_nd */
@@ -1247,9 +1258,9 @@ PrefixChoiceNode(node *n, long h) {
 	edge *tmp;
 
 	for (tmp = n->right.vector; tmp != NULL; tmp = tmp->vector)
-		PrefixChoice(tmp->weight, h);
+		PrefixChoice(&tmp->weight, h);
 	for (tmp = n->left.vector; tmp != NULL; tmp = tmp->vector)
-		PrefixChoice(tmp->weight, h);
+		PrefixChoice(&tmp->weight, h);
 }
 
 /* codes of the choice branches: a fresh generator c_h (lift 1) for each branch of
@@ -1286,12 +1297,12 @@ BuildChoice(termGraph *t1, termGraph *t2) {
 	root = t1->root;
 	for (tmpe = (t2->root->right).vector; tmpe != NULL; tmpe = tmpe->vector) {
 		(root->right).length++;
-		(root->right).vector = AddAnEdge((root->right).vector, tmpe->weight, tmpe->source, tmpe->side);
+		(root->right).vector = AddAnEdgeW((root->right).vector, &tmpe->weight, tmpe->source, tmpe->side);
 		(root->right).vector->sto = tmpe->sto;
 	}
 	for (tmpe = (t2->root->left).vector; tmpe != NULL; tmpe = tmpe->vector) {
 		(root->left).length++;
-		(root->left).vector = AddAnEdge((root->left).vector, tmpe->weight, tmpe->source, tmpe->side);
+		(root->left).vector = AddAnEdgeW((root->left).vector, &tmpe->weight, tmpe->source, tmpe->side);
 		(root->left).vector->sto = tmpe->sto;
 	}
 
@@ -1415,12 +1426,12 @@ MeltNodes(node *n1, node *n2) {
 	/*mette i vector left di n2 in n1 left*/
 	for (tmp2 = (n2->left).vector; tmp2 != NULL; tmp2 = tmp2->vector) {
 		(n1->left).length++;
-		(n1->left).vector = AddAnEdge((n1->left).vector, tmp2->weight, tmp2->source, tmp2->side);
+		(n1->left).vector = AddAnEdgeW((n1->left).vector, &tmp2->weight, tmp2->source, tmp2->side);
 	}
 	/*mette i vector right di n2 in n1 right*/
 	for (tmp2 = (n2->right).vector; tmp2 != NULL; tmp2 = tmp2->vector) {
 		(n1->right).length++;
-		(n1->right).vector = AddAnEdge((n1->right).vector, tmp2->weight, tmp2->source, tmp2->side);
+		(n1->right).vector = AddAnEdgeW((n1->right).vector, &tmp2->weight, tmp2->source, tmp2->side);
 	}
 	FreeNode(n2);
 }
@@ -1562,9 +1573,9 @@ Duplicate(termGraph *old) {
 	for (oldNode = old->root; oldNode != NULL; oldNode = oldNode->nextpuit) {
 		primo = 1;
 		for (edgeOld = (oldNode->left).vector; edgeOld != NULL; edgeOld = edgeOld->vector) {
-			edgeNew = (edge *)malloc(sizeof(edge));
+			edgeNew = NewReference();
 			edgeNew->vector = NULL;
-			strcpy(edgeNew->weight, edgeOld->weight);
+			WeightCopy(&edgeNew->weight, &edgeOld->weight);
 			edgeNew->sto = edgeOld->sto;
 			edgeNew->sign = edgeOld->sign;
 			edgeNew->side = edgeOld->side;
@@ -1591,9 +1602,9 @@ Duplicate(termGraph *old) {
 
 		primo = 1;
 		for (edgeOld = (oldNode->right).vector; edgeOld != NULL; edgeOld = edgeOld->vector) {
-			edgeNew = (edge *)malloc(sizeof(edge));
+			edgeNew = NewReference();
 			edgeNew->vector = NULL;
-			strcpy(edgeNew->weight, edgeOld->weight);
+			WeightCopy(&edgeNew->weight, &edgeOld->weight);
 			edgeNew->sto = edgeOld->sto;
 			edgeNew->sign = edgeOld->sign;
 			edgeNew->side = edgeOld->side;
@@ -1627,9 +1638,9 @@ Duplicate(termGraph *old) {
 		int nmap = 0;
 		for (oldNode = new->root; oldNode != NULL; oldNode = oldNode->nextpuit) {
 			for (edgeNew = (oldNode->left).vector; edgeNew != NULL; edgeNew = edgeNew->vector)
-				RenameChoices(edgeNew->weight, from, to, &nmap, MAXCHOICECOPY, &choicename);
+				RenameChoices(&edgeNew->weight, from, to, &nmap, MAXCHOICECOPY, &choicename);
 			for (edgeNew = (oldNode->right).vector; edgeNew != NULL; edgeNew = edgeNew->vector)
-				RenameChoices(edgeNew->weight, from, to, &nmap, MAXCHOICECOPY, &choicename);
+				RenameChoices(&edgeNew->weight, from, to, &nmap, MAXCHOICECOPY, &choicename);
 		}
 	}
 
@@ -1682,7 +1693,6 @@ InitializeIncoming(termGraph *t) {
 	edge *vsource, *vtarget;
 	int storeclass, polarity;
 	struct messaggio m;
-	char weight[MAXLENWEIGHT];
 	table *fv;
 
 	/* the cut nodes of this term (they were never reset: the list of a file with several terms
@@ -1714,7 +1724,6 @@ InitializeIncoming(termGraph *t) {
 			vsource->rankpuit = rank;
 
 			//  DEBUG printf("peso dell'arco da inserire %s\n",arco->weight);
-			sprintf(weight, "%s", arco->weight);
 
 			vsource->source = arco->source;
 			/* carlo : BookedAddress(size,(long) arco->source) ;*/
@@ -1732,7 +1741,7 @@ InitializeIncoming(termGraph *t) {
 
 			vtarget->side = LEFT;
 			//  DEBUG printf("il peso %s\n",weight);
-			StoreMessage(&m, vtarget, vsource, weight, storeclass, polarity);
+			StoreMessage(&m, vtarget, vsource, &arco->weight, storeclass, polarity);
 
 			//  DEBUG printf("after store message\n");
 			ShowMessage(&m);
@@ -1757,7 +1766,6 @@ InitializeIncoming(termGraph *t) {
 			vsource->rankpuit = rank;
 
 			//  DEBUG printf("peso dell'arco da inserire %s\n",arco->weight);
-			sprintf(weight, "%s", arco->weight);
 
 			vsource->source = arco->source;
 			/* carlo: BookedAddress(size,(long) arco->source) ;*/
@@ -1775,7 +1783,7 @@ InitializeIncoming(termGraph *t) {
 
 			vtarget->side = RIGHT;
 			//  DEBUG printf("il peso %s\n",weight);
-			StoreMessage(&m, vtarget, vsource, weight, storeclass, polarity);
+			StoreMessage(&m, vtarget, vsource, &arco->weight, storeclass, polarity);
 
 			//  DEBUG printf("after store message\n");
 			TRACING ShowMessage(&m);
@@ -1799,7 +1807,10 @@ InitializeIncoming(termGraph *t) {
 			endpoint.sto = OUT;
 			endpoint.side = nodo->left.eot ? LEFT : RIGHT;
 
-			StoreMessage(&m, &endpoint, &endpoint, (char *)"*", OUT, endpoint.side);
+			wbuf eot;
+
+			WeightSetOne(&eot.h);
+			StoreMessage(&m, &endpoint, &endpoint, &eot.h, OUT, endpoint.side);
 			m.tpy = EOT_TAG;
 			PushMessage(&m);
 		}
@@ -1886,7 +1897,8 @@ MostraArchi(edge *e) {
 	int i = 1;
 
 	for (tmp = e; tmp != NULL; tmp = tmp->vector) {
-		printf("\t\t edge%i = %s ", i++, tmp->weight);
+		char ws[MAXLENWEIGHT];
+		printf("\t\t edge%i = %s ", i++, WeightToString(&tmp->weight, ws, sizeof(ws)));
 		if (tmp->sto == IN)
 			printf("\t sto = IN ");
 		else

@@ -321,7 +321,7 @@ buf_flush() {
 
 void
 PopMessage(struct messaggio *m, struct mbuffer *l) {
-	int i;
+	int i, k;
 
 	if (l->first == l->last) {
 		printf("Pop from empty buffer\n Abort\n");
@@ -343,14 +343,13 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 	}
 	l->first = (l->first + 1) % l->capacity;
 
-	if (strstr(m->weight, "X(3")) {
-		char *atmp;
-		int indice = 0, i;
-		atmp = strstr(m->weight, "X(3");
-		indice = atoi(&atmp[4]);
+	/* the external letters: the string form wrote the new index with sprintf(&X[4], "%d)", ..),
+	   which also cut the weight after the letter (WeightSetXAndTruncate) */
+	if ((k = WeightFindX(&m->weight.h, FUNC)) >= 0) {
+		int indice = (int)XL_VALUE(m->weight.l[k]), i;
 
 		if (m->funWhich == EXT) {
-			sprintf(&atmp[4], "%d)", XAddFun(indice, m->funWait));
+			WeightSetXAndTruncate(&m->weight.h, k, XAddFun(indice, m->funWait));
 
 			for (i = 0; i < m->funWait - 1; i++)
 				pelcr_value_from_wire(&f[fcounter].s[i], m->funArgs[i]);
@@ -387,12 +386,9 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 					break;
 			}
 		}
-	} else if (strstr(m->weight, "X(2")) {
-		char *atmp;
-		atmp = strstr(m->weight, "X(2");
-
+	} else if ((k = WeightFindX(&m->weight.h, KONST)) >= 0) {
 		SetNextKIndex();
-		sprintf(&atmp[4], "%d)", kindex);
+		WeightSetXAndTruncate(&m->weight.h, k, kindex);
 		k_type[kindex] = m->funType;
 		pelcr_value_from_wire(&k_value[kindex], m->funValue);
 		k_refs[kindex]++;
@@ -697,12 +693,14 @@ ThreadInteraction() {
 			pthread_mutex_unlock(&mutex);
 
 			DEBUG {
-				fprintf(logfile, "-> %s store:", msg.weight);
+				char ws[MAXLENWEIGHT];
+				fprintf(logfile, "-> %s store:", WeightToString(&msg.weight.h, ws, sizeof(ws)));
 				fprintf(logfile, "%d sign:%d side:%d\n", msg.vsource.sto, msg.vsource.side, msg.side);
 			}
 
 			DEBUG {
-				fprintf(logfile, "-> %s store:", msg.weight);
+				char ws[MAXLENWEIGHT];
+				fprintf(logfile, "-> %s store:", WeightToString(&msg.weight.h, ws, sizeof(ws)));
 				fprintf(logfile, "%d sign:%d side:%d\n", msg.vsource.sto, msg.vsource.side, msg.side);
 			}
 
@@ -731,7 +729,7 @@ ThreadInteraction() {
 					targetaddress
 					    = StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, msg.vtarget.sto);
 					e = msg.vsource;
-					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, msg.weight, e.creator, msg.side, e.side);
+					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, &msg.weight.h, e.creator, msg.side, e.side);
 
 					NodeCombustion(targetaddress, msg.side);
 					/*            DEBUG Print(G,&incoming,edge_compositions); */

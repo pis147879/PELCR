@@ -58,8 +58,10 @@ writelabel(FILE *wstream, edge *e) {
 	memset(symboliclabel, 0, sizeof(symboliclabel));
 	memset(PrintWeight, 0, sizeof(PrintWeight));
 
-	CopyWeight = strdup(e->weight); /*allocates sufficient memory for a copy of the
-	                                 weight, does the copy, and returns a pointer to it*/
+	{
+		char ws[MAXLENWEIGHT];
+		CopyWeight = strdup(WeightToString(&e->weight, ws, sizeof(ws))); /* the string form of the weight */
+	}
 
 	CurrentWeight = CopyWeight;
 
@@ -255,7 +257,7 @@ mmwrite(FILE *wstream, struct messaggio *mm, int priority) {
 			}
 
 			e->source = source;
-			sprintf(e->weight, "%s", mm->weight);
+			WeightCopy(&e->weight, &mm->weight.h);
 			e->rankpuit = (mm->vsource).rankpuit;
 			e->sto = (mm->vsource).sto;
 

@@ -43,17 +43,25 @@ NewNode() {
 	return nS;
 }
 
+/* an edge with room for the letters of its weight, which follow it in memory */
 edge *
-NewReference() {
+NewReferenceLetters(int nletters) {
 	edge *nS;
 
-	nS = (edge *)calloc(1, sizeof(edge));
+	nS = (edge *)calloc(1, sizeof(edge) + (size_t)nletters * sizeof(letter));
 
 	if (!nS) {
 		fprintf(logfile, "edge allocation failure - ABORT");
 		return 0;
 	}
+	WeightSetOne(&nS->weight);
 	return nS;
+}
+
+/* an edge whose weight can be any weight (graph builder, temporary edges) */
+edge *
+NewReference() {
+	return NewReferenceLetters(MAXLETTERS);
 }
 
 static void PropagateColdToSourceEndpoints(edge *P);
@@ -276,20 +284,17 @@ LiberaV(edge *P) {
 		if (P->vector != NULL)
 			LiberaV(P->vector);
 		if (P->sign == PLUS) {
-			StoreMessage(&m, P, P, (char *)"*", P->sto, P->side);
+			wbuf eot;
+			WeightSetOne(&eot.h);
+			StoreMessage(&m, P, P, &eot.h, P->sto, P->side);
 			m.tpy = EOT_TAG;
 			PushMessage(&m);
 		};
 
-		char *Xstr = NULL;
-		int konst_index = 0;
+		long konst_index = WeightKonstIndex(WLETTERS_C(&P->weight), P->weight.n1);
 
-		Xstr = strstr(P->weight, "X(2");
-
-		if (Xstr != NULL) {
-			konst_index = atoi(&Xstr[4]);
+		if (konst_index >= 0)
 			k_refs[konst_index]--;
-		}
 
 		free(P);
 		graph_edges--;
@@ -302,7 +307,7 @@ LiberaV(edge *P) {
 }
 
 void
-AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int side) {
+AddEdge(node *S, int rk, node *nS, int sto, const weight *w, int c, int polarity, int side) {
 	edge *p;
 	seminode *v;
 
@@ -311,7 +316,8 @@ AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int si
 			StoreBookedAddress(c, (long)nS, OUT);
 	}
 
-	p = NewReference();
+	WeightCheck(W_NLETTERS(w), "AddEdge");
+	p = NewReferenceLetters(W_NLETTERS(w)); /* exactly the letters of its weight */
 	if (p == NULL) {
 		/*
 		DEBUG fprintf(logfile,"(%d) REFERENCE ALLOCATION FAILURE - ABORTING\n",rank);
@@ -319,8 +325,7 @@ AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int si
 		*/
 		exit(-1);
 	} else {
-		CheckWeightLength(w, "AddEdge");
-		strcpy(p->weight, w);
+		WeightCopy(&p->weight, w);
 		if (polarity == LEFT) {
 			v = &(S->left);
 		} else
@@ -386,7 +391,10 @@ ShowEdge(edge *e) {
 
 	fprintf(logfile, "          on side %d of the source (%ld)[%p]\n", e->side, (long)e->source, e->source);
 
-	fprintf(logfile, "          weight |%s| and", e->weight);
+	{
+		char ws[MAXLENWEIGHT];
+		fprintf(logfile, "          weight |%s| and", WeightToString(&e->weight, ws, sizeof(ws)));
+	}
 	fprintf(logfile, " status one-opt. sign %d\n", e->sign);
 	fprintf(logfile, "          next edge on the same node [%p] \n", e->vector);
 	fflush(logfile);

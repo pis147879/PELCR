@@ -61,7 +61,7 @@ def run_pelcr(plcr_path, exe, workdir, timeout=600, fires=0, use_gdb=False, need
     if 'ERROR:' in head:
         raise RuntimeError('PELCR parse error, see %s' % (base + '.log'))
     if 'weight too long' in head:
-        raise RuntimeError('weight longer than MAXLENWEIGHT, see %s' % (base + '.log'))
+        raise RuntimeError('weight longer than MAXLETTERS letters, see %s' % (base + '.log'))
     if need_dump and not os.path.exists(base + '.json'):
         raise RuntimeError('no graph dump, see %s' % (base + '.log'))
     return base + '.json', base + '.log', time.time() - t0
