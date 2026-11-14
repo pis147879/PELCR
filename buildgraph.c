@@ -60,9 +60,6 @@ BuildF1Arg(char *namef, termGraph *arg) {
 	(root->left).eot = 0;
 	(root->right).eot = 0;
 
-	(root->left).weot = 1;
-	(root->right).weot = 1;
-
 	(root->left).length = 0;
 	(root->left).vector = NULL;
 
@@ -77,9 +74,6 @@ BuildF1Arg(char *namef, termGraph *arg) {
 	(tmp->left).eot = 0;
 	(tmp->right).eot = 0;
 
-	(tmp->left).weot = 1;
-	(tmp->right).weot = 1;
-
 	(tmp->left).length = 0;
 	(tmp->left).vector = NULL;
 
@@ -92,9 +86,6 @@ BuildF1Arg(char *namef, termGraph *arg) {
 
 	(tmp2->left).eot = 0;
 	(tmp2->right).eot = 0;
-
-	(tmp2->left).weot = 0;
-	(tmp2->right).weot = 1;
 
 	(tmp2->left).length = 1;
 	(tmp2->left).vector = NULL;
@@ -150,9 +141,6 @@ BuildXF1Arg(char *namef, termGraph *arg) {
 	(root->left).eot = 0;
 	(root->right).eot = 0;
 
-	(root->left).weot = 1;
-	(root->right).weot = 1;
-
 	(root->left).length = 0;
 	(root->left).vector = NULL;
 
@@ -167,9 +155,6 @@ BuildXF1Arg(char *namef, termGraph *arg) {
 	(tmp->left).eot = 0;
 	(tmp->right).eot = 0;
 
-	(tmp->left).weot = 1;
-	(tmp->right).weot = 1;
-
 	(tmp->left).length = 0;
 	(tmp->left).vector = NULL;
 
@@ -182,9 +167,6 @@ BuildXF1Arg(char *namef, termGraph *arg) {
 
 	(tmp2->left).eot = 0;
 	(tmp2->right).eot = 0;
-
-	(tmp2->left).weot = 0;
-	(tmp2->right).weot = 1;
 
 	(tmp2->left).length = 1;
 	(tmp2->left).vector = NULL;
@@ -246,9 +228,6 @@ BuildF2Arg(char *namef, termGraph *arg1, termGraph *arg2) {
 	(root->left).eot = 0;
 	(root->right).eot = 0;
 
-	(root->left).weot = 1;
-	(root->right).weot = 1;
-
 	(root->left).length = 0;
 	(root->left).vector = NULL;
 
@@ -262,9 +241,6 @@ BuildF2Arg(char *namef, termGraph *arg1, termGraph *arg2) {
 
 	(tmp1->left).eot = 0;
 	(tmp1->right).eot = 0;
-
-	(tmp1->left).weot = 1;
-	(tmp1->right).weot = 1;
 
 	(tmp1->left).length = 0;
 	(tmp1->left).vector = NULL;
@@ -282,8 +258,6 @@ BuildF2Arg(char *namef, termGraph *arg1, termGraph *arg2) {
 	(tmp2->right).eot = 0;
 
 	/******************* BOH ******************************/
-	(tmp2->left).weot = 1;
-	(tmp2->right).weot = 1;
 	/*****************************************************/
 
 	(tmp2->left).length = 1;
@@ -370,9 +344,6 @@ BuildXF2Arg(char *namef, termGraph *arg1, termGraph *arg2) {
 	(root->left).eot = 0;
 	(root->right).eot = 0;
 
-	(root->left).weot = 1;
-	(root->right).weot = 1;
-
 	(root->left).length = 0;
 	(root->left).vector = NULL;
 
@@ -386,9 +357,6 @@ BuildXF2Arg(char *namef, termGraph *arg1, termGraph *arg2) {
 
 	(tmp1->left).eot = 0;
 	(tmp1->right).eot = 0;
-
-	(tmp1->left).weot = 1;
-	(tmp1->right).weot = 1;
 
 	(tmp1->left).length = 0;
 	(tmp1->left).vector = NULL;
@@ -406,8 +374,6 @@ BuildXF2Arg(char *namef, termGraph *arg1, termGraph *arg2) {
 	(tmp2->right).eot = 0;
 
 	/******************* BOH ******************************/
-	(tmp2->left).weot = 1;
-	(tmp2->right).weot = 1;
 	/*****************************************************/
 
 	(tmp2->left).length = 1;
@@ -767,9 +733,6 @@ BuildNumber(char *i) {
 	(root->left).eot = 0;
 	(root->right).eot = 0;
 
-	(root->left).weot = 1;
-	(root->right).weot = 1;
-
 	(root->left).length = 0;
 	(root->left).vector = NULL;
 
@@ -790,9 +753,6 @@ BuildNumber(char *i) {
 
 	(tmp->left).eot = 0;
 	(tmp->right).eot = 0;
-
-	(tmp->left).weot = 1;
-	(tmp->right).weot = 1;
 
 	(tmp->left).length = 0;
 	(tmp->left).vector = NULL;
@@ -826,9 +786,6 @@ BuildBool(char *b) {
 	(root->left).eot = 0;
 	(root->right).eot = 0;
 
-	(root->left).weot = 1;
-	(root->right).weot = 1;
-
 	(root->left).length = 0;
 	(root->left).vector = NULL;
 
@@ -855,9 +812,6 @@ BuildBool(char *b) {
 
 	(tmp->left).eot = 0;
 	(tmp->right).eot = 0;
-
-	(tmp->left).weot = 1;
-	(tmp->right).weot = 1;
 
 	(tmp->left).length = 0;
 	(tmp->left).vector = NULL;
@@ -989,33 +943,27 @@ BuildVar(char *n) {
 	tmp2->nextpuit = NULL;
 
 	(root->left).eot = 0;
-	(root->left).weot = 1;
 
 	(root->left).length = 0;
 	(root->left).vector = NULL;
 	(root->right).eot = 0;
-	(root->right).weot = 1;
 	(root->right).length = 1;
 	(root->right).vector = NULL;
 	(root->right).vector = AddAnEdge((root->right).vector, "1", tmp2, LEFT);
 
 	(tmp1->left).eot = 0;
-	(tmp1->left).weot = 1;
 	(tmp1->left).length = 0;
 	(tmp1->left).vector = NULL;
 	(tmp1->right).eot = 0;
-	(tmp1->right).weot = 1;
 	(tmp1->right).length = 1;
 	(tmp1->right).vector = NULL;
 	sprintf(tmpnamevar, "%s%d%s", "w(", varname++, ",0)");
 	(tmp1->right).vector = AddAnEdge((tmp1->right).vector, tmpnamevar, tmp2, RIGHT);
 
 	(tmp2->left).eot = 0;
-	(tmp2->left).weot = 1;
 	(tmp2->left).length = 0;
 	(tmp2->left).vector = NULL;
 	(tmp2->right).eot = 0;
-	(tmp2->right).weot = 1;
 	(tmp2->right).length = 0;
 	(tmp2->right).vector = NULL;
 
@@ -1110,7 +1058,6 @@ BuildRec(char *xname, termGraph *M) {
 	TRACING printf("\n nome del termine %s\n", newT->nameTerm);
 
 	Lift(M);
-	lift++;
 
 	/*il ciclo cerca la variabile x tra le variabili di M*/
 	for (t = M->listOfVar; t != NULL && !find; t = t->next) {
@@ -1206,13 +1153,10 @@ BuildApplication(termGraph *t1, termGraph *t2) {
 	(newNode->right).vector = NULL;
 	(newNode->left).vector = NULL;
 	(newNode->right).eot = 0;
-	(newNode->right).weot = 1;
 	(newNode->left).eot = 0;
-	(newNode->left).weot = 1;
 	(newNode->right).length = 0;
 	(newNode->left).length = 0;
 	Lift(t2);
-	lift++;
 	P_Q(t2->root, "p");
 
 	(t1->root)->left = (t2->root)->right;
@@ -1230,9 +1174,7 @@ BuildApplication(termGraph *t1, termGraph *t2) {
 
 	(newTerm->root)->pro = (long)(newTerm->root);
 	((newTerm->root)->left).eot = 0;
-	((newTerm->root)->left).weot = 1;
 	((newTerm->root)->right).eot = 0;
-	((newTerm->root)->right).weot = 1;
 	((newTerm->root)->left).vector = 0;
 	((newTerm->root)->right).vector = 0;
 	((newTerm->root)->right).length = 0;
@@ -1924,11 +1866,9 @@ MostraNodo(node *n) {
 
 	printf("Nodo %ld :\n", (long)n->pro);
 	printf("\tLEFT) eot    = %d\n", (n->left).eot);
-	printf("\tLEFT) weot    = %d\n", (n->left).weot);
 	printf("\tLEFT) length = %d\n", (n->left).length);
 	MostraArchi((n->left).vector);
 	printf("\tRIGHT) eot    = %d\n", (n->right).eot);
-	printf("\tRIGHT) weot    = %d\n", (n->right).weot);
 	printf("\tRIGHT) length = %d\n", (n->right).length);
 	MostraArchi((n->right).vector);
 	printf("\t Next is %p\n", (void *)n->nextpuit);

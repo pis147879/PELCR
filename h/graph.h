@@ -23,17 +23,17 @@
 typedef struct seminode {
 	int eot; /* numero di eot ricevuto */
 	int length;
-	int weot; /* numero di eot attesi */
 	struct edge *vector;
-	struct edge *dejavu;
 } seminode;
 
 typedef struct node {
 	long pro;
 	seminode left;
 	seminode right;
+#if MINPRIORITY > 1
 	int mu_local;  /* misura di localita' del nodo  = n. archi con sorgente locale*/
 	int mu_remote; /* n. archi con sorgente remota */
+#endif
 	struct node *nextpuit;
 	struct node *prevpuit;
 	int sto;      /* node storage: IN = hot graph, OUT = cold graph */
@@ -60,8 +60,6 @@ typedef struct edge {
 typedef struct graph {
 	node *hot;
 	node *cold;
-
-	node *border;
 } graph;
 
 graph *NewGraph(void);

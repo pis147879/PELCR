@@ -54,7 +54,6 @@ PELCR_EXTERN const char *error;
 
 PELCR_EXTERN long maxloop, maxfires;
 
-PELCR_EXTERN long timestamp, outtimestamp;
 PELCR_EXTERN long aggregation_cumulate, num_receives;
 
 PELCR_EXTERN long global_physical_msgs;
@@ -64,13 +63,12 @@ PELCR_EXTERN int schedule;
 PELCR_EXTERN int pflag;
 
 PELCR_EXTERN int traceflag, inflag, outflag, verflag, dumpflag;
-PELCR_EXTERN long failed_compositions, processed_actions, edge_compositions, bip4, family_reductions;
+PELCR_EXTERN long failed_compositions, processed_actions, edge_compositions, family_reductions;
 PELCR_EXTERN int local_family_reductions;
 PELCR_EXTERN long fires, loops, prnsteps, one_optimizations;
-PELCR_EXTERN int unaddtest, uneottest;
 PELCR_EXTERN int laddtest, leottest;
 PELCR_EXTERN long idle, lidle, lbip2;
-PELCR_EXTERN int graph_nodes, nhot, ncold, scount;
+PELCR_EXTERN int graph_nodes, nhot, scount;
 PELCR_EXTERN long hot_nodes, cold_nodes;
 PELCR_EXTERN long computing_loops, lastloop;
 
@@ -81,7 +79,7 @@ PELCR_EXTERN int incoming_actions_snapshot;
 
 PELCR_EXTERN struct tms smtime;
 
-PELCR_EXTERN FILE *readfile, *writefile, *firfile, *tempfile, *coldfile, *anamfile, *statsfile;
+PELCR_EXTERN FILE *writefile, *firfile, *tempfile, *coldfile, *anamfile, *statsfile;
 PELCR_EXTERN FILE *mawfile[MAXNPROCESS], *maxwinfile[MAXNPROCESS];
 PELCR_EXTERN FILE *trivfile, *hotfile, *nofile, *logfile;
 PELCR_EXTERN char infile[MAXNAMELEN], outfile[MAXNAMELEN], directoryname[MAXNAMELEN];
@@ -92,25 +90,20 @@ PELCR_EXTERN char finalgmlfile[MAXNAMELEN]; /* -gml <file>: the final graph in G
 PELCR_EXTERN int nfreevars;
 PELCR_EXTERN char freevar_name[MAXFREEVARS][64];
 PELCR_EXTERN long freevar_key[MAXFREEVARS];
-PELCR_EXTERN char rline[MAXLENWEIGHT];
-PELCR_EXTERN node *environment;
 
-PELCR_EXTERN int comm, rank, size, ierr;
+PELCR_EXTERN int rank, size;
 PELCR_EXTERN int TempProcess[MAXNPROCESS], TableProcess[MAXNPROCESS], number_of_processes;
 PELCR_EXTERN int OutCounter[MAXNPROCESS], InCounter[MAXNPROCESS];
-PELCR_EXTERN int combusted;
-PELCR_EXTERN int ending, end_computation, check_passed;
+PELCR_EXTERN int end_computation;
 
 PELCR_EXTERN MPI_Status status;
-PELCR_EXTERN MPI_Request data_request, add_request, create_request, eot_request, die_request, request;
-PELCR_EXTERN MPI_Request send_add_request, send_eot_request[MAXNPROCESS], send_die_request;
+PELCR_EXTERN MPI_Request add_request, eot_request, request;
 
-PELCR_EXTERN int dataflag, saddflag, addflag, createflag, eotflag, dieflag, flag, h;
-PELCR_EXTERN int sebuf[MAXLENWEIGHT];
+PELCR_EXTERN int dataflag, saddflag, eotflag, dieflag, flag, h;
 PELCR_EXTERN int sbuf[MAXLENWEIGHT];
 PELCR_EXTERN long sbuflong[10];
 // int reotbuf[10],raddbuf[MAXLENWEIGHT+7*sizeof(long)],rcreatebuf[10],rdiebuf[10];
-PELCR_EXTERN int reotbuf[10], raddbuf[MAXLENWEIGHT], rcreatebuf[10], rdiebuf[10];
+PELCR_EXTERN int reotbuf[10], raddbuf[MAXLENWEIGHT];
 
 /*struct mbuffer incoming;*/
 PELCR_EXTERN struct mbuffer incoming[MINPRIORITY]; /* array of buffers of incoming messages */
@@ -153,7 +146,7 @@ PELCR_EXTERN int maxTick[MAXNPROCESS];
 PELCR_EXTERN long nTickSend; /* Quante volte spedisco allo scadere del tick */
 PELCR_EXTERN long nFullSend; /* Quante volte spedisco perche il messaggio fisico e' pieno */
 
-PELCR_EXTERN time_t inittime, finaltime, tim;
+PELCR_EXTERN time_t inittime, finaltime;
 
 /****************************************************/
 /*            per i thread                          */
@@ -177,7 +170,6 @@ PELCR_EXTERN HashTable *BookTable[MAXNPROCESS];
 
 PELCR_EXTERN struct messaggio cut_node_messages[MAXCUTNODES]; /*maximal number of cut-nodes in the parsed input*/
 
-PELCR_EXTERN int lift;
 PELCR_EXTERN int varname;
 PELCR_EXTERN symTbl *symbolTable;
 

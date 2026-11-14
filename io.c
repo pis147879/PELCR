@@ -49,8 +49,6 @@ OpenFileInitStruct() {
 	char namefile[MAXNAMELEN];
 	char command[5000];
 	/*************************/
-	timestamp = 0;
-	outtimestamp = 1;
 	aggregation_cumulate = 0;
 	num_receives = 0;
 	global_physical_msgs = 0;
@@ -58,7 +56,6 @@ OpenFileInitStruct() {
 	failed_compositions = 0;
 	processed_actions = 0;
 	edge_compositions = 0;
-	bip4 = 0;
 	fires = 0;
 	loops = 0;
 	incoming_actions_snapshot = 0;
@@ -73,7 +70,6 @@ OpenFileInitStruct() {
 	idle = 0;
 	lidle = 0;
 	lbip2 = 0;
-	check_passed = TRUE;
 	/*
 	 Finita una computazione e prima di iniziarne un'altra inizializzo
 	 le tabelle delle funzioni e delle costanti.
@@ -83,7 +79,6 @@ OpenFileInitStruct() {
 	 MAXNUMCOST e MAXFUNCTIONS alti e fregarsene.
 
   */
-	lift = 0;
 	newval = 0;
 
 #ifdef _DEBUG

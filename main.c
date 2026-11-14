@@ -52,8 +52,6 @@ main(int argc, char **argv) {
 	int j;
 	int parse_status = 0;
 
-	timestamp = 0;
-	outtimestamp = 1;
 	aggregation_cumulate = 0;
 	num_receives = 0;
 
@@ -70,13 +68,10 @@ main(int argc, char **argv) {
 	failed_compositions = 0;
 	processed_actions = 0;
 	edge_compositions = 0;
-	bip4 = 0;
 	fires = 0;
 	loops = 0;
 	prnsteps = 1;
 	one_optimizations = 0;
-	unaddtest = 0;
-	uneottest = 0;
 	laddtest = 0;
 	leottest = 0;
 	idle = 0;
@@ -85,9 +80,7 @@ main(int argc, char **argv) {
 	computing_loops = 0;
 	lastloop = 0;
 
-	ending = 0;
 	end_computation = 0;
-	check_passed = TRUE;
 
 	maxubound = 1;
 	local_pending = 0;
@@ -100,7 +93,6 @@ main(int argc, char **argv) {
 	inittime = 0;
 	finaltime = 0;
 	batch_processed_actions = 0;
-	lift = 0;
 	varname = 0;
 	symbolTable = NULL;
 
@@ -121,8 +113,6 @@ main(int argc, char **argv) {
 		}
 	}
 
-	timestamp = 0;
-	outtimestamp = 1;
 
 	maxloop = 1000;
 	maxfires = 0;
@@ -272,7 +262,6 @@ main(int argc, char **argv) {
 					number_of_processes = size;
 					OUTPUT printf("(%d) initial network created\n", rank);
 					OUTPUT printf("(%d) n. of activated processes %d\n", rank, number_of_processes);
-					environment = NULL;
 					TRACING fprintf(logfile, "(%d) COLDS=[%p] HOTS=[%p]\n", rank, (void *)G.cold, (void *)G.hot);
 					/*DEBUG Print(G,incoming,edge_compositions);*/
 				}
@@ -300,7 +289,7 @@ main(int argc, char **argv) {
 
 				if (size != 1)
 					loops = 0;
-				tim = time(&inittime);
+				time(&inittime);
 
 				/* ANTO */
 				BCastLoad();

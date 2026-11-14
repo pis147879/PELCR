@@ -357,7 +357,6 @@ AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int si
 		};
 #endif
 
-		combusted = 0;
 		return;
 	};
 }
@@ -424,16 +423,12 @@ CreateNewNode(node *S) {
 #endif
 
 	nS->left.eot = 0;
-	nS->left.weot = 1;
 	nS->left.length = 0;
 	nS->left.vector = NULL;
-	nS->left.dejavu = NULL;
 
 	nS->right.eot = 0;
-	nS->right.weot = 1;
 	nS->right.length = 0;
 	nS->right.vector = NULL;
-	nS->right.dejavu = NULL;
 
 	nS->nextpuit = S;
 	nS->sto = IN;
@@ -473,7 +468,6 @@ CreateNewBoundary(node *S) {
 #endif
 	nS->left.length = -1;
 	nS->left.vector = NULL;
-	nS->left.dejavu = NULL;
 	nS->nextpuit = S;
 	S->prevpuit = nS;
 	return nS;

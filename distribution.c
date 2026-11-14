@@ -212,12 +212,10 @@ SendAddEdge(edge *N, edge *E, char *sw, int sto) {
 						};
 #endif
 
-						addflag = 0;
 						h = h + 1;
 						MPI_Irecv(raddbuf, MAXLENWEIGHT, MPI_INT, MPI_ANY_SOURCE, ADD_TAG, MPI_COMM_WORLD,
 						          &add_request);
-					} else
-						unaddtest++;
+					}
 #ifdef _DEBUG
 					DEBUG_DISTRIBUTION {
 						fprintf(logfile, "(%d) TESTO EOT %d %d", rank, eotflag, reotbuf[1]);
@@ -266,8 +264,7 @@ SendAddEdge(edge *N, edge *E, char *sw, int sto) {
 						eotflag = 0;
 
 						MPI_Irecv(reotbuf, 2, MPI_INT, MPI_ANY_SOURCE, EOT_TAG, MPI_COMM_WORLD, &eot_request);
-					} else
-						uneottest++;
+					}
 				}
 			}
 		}
@@ -529,7 +526,6 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 	  exit(-1);
 	  }
 	*/
-	timestamp++;
 	InCounter[m->sender]++;
 	if (m->sender != rank) {
 		RememberProcessLoad(m->sender, m->sender_load);
@@ -606,9 +602,6 @@ PushMessage(struct messaggio *m) {
 	int nc;
 
 	dest = m->vtarget.rankpuit;
-
-	m->timestamp = outtimestamp;
-	outtimestamp++;
 
 	m->sender = rank;
 	OutCounter[dest]++;
@@ -959,7 +952,6 @@ ThreadReceiveMsgs() {
 			int maxdim = sizeof(int) + MAXAWIN * sizeof(struct messaggio);
 			char *position;
 
-			check_passed = FALSE;
 			MPI_Recv(rbuf, maxdim, MPI_CHAR, MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &status);
 			position = rbuf + sizeof(int);
 
@@ -1122,7 +1114,7 @@ ThreadInteraction() {
 
 					NodeCombustion(targetaddress, msg.side);
 					/*            DEBUG Print(G,&incoming,edge_compositions); */
-					tim = time(&finaltime);
+					time(&finaltime);
 				} break;
 			} /* END OF SWITCH */
 

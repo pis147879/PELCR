@@ -1006,8 +1006,10 @@ FunReceiveMessages() {
 	char *position;
 	int maxdim;
 
+#if MINPRIORITY > 1
 	int priority;
 	int ub;
+#endif
 
 	if (size != 1) {
 		/*  int received_action_count=0; */
@@ -1016,7 +1018,6 @@ FunReceiveMessages() {
 		while (dataflag) {
 			maxdim = sizeof(int) + (1 + MAXAWIN) * sizeof(struct messaggio);
 
-			check_passed = FALSE;
 			MPI_Recv(rbuf, maxdim, MPI_CHAR, MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &status);
 			position = rbuf + sizeof(int);
 
@@ -1220,7 +1221,7 @@ FunInteraction() {
 					//		DEBUG       printf("(%d) after combustion\n",rank);
 					//		DEBUG       fflush(stdout);
 					/*		DEBUG Print(G,incoming,edge_compositions);*/
-					/*  tim = time(&finaltime); */
+					/*  time(&finaltime); */
 				} break;
 			} /* END OF SWITCH */
 
@@ -1234,7 +1235,7 @@ FunInteraction() {
 			 schedule++;
 			 */
 
-			tim = time(&finaltime);
+			time(&finaltime);
 
 			for (h = 0; h < size; h++) {
 
@@ -1564,6 +1565,7 @@ PrintResult() {
 		printf("EXIT ...\n\n");
 	}
 
+#if MINPRIORITY > 1
 	/**************** Scheduler 6/10/2001 *****************************/
 	int UpperBound(struct messaggio * m) {
 		/* questa funzione calcola una approssimazione del carico esterno
@@ -1621,3 +1623,4 @@ PrintResult() {
 
 		return euristic;
 	}
+#endif

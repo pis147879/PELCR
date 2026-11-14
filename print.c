@@ -449,7 +449,6 @@ Print(graph g, struct mbuffer *b, long sq) {
 		P = P->nextpuit;
 	};
 
-	ncold = i;
 	/* before to exit we have to scan the incoming buffer to print all the edges waiting to be
 	    processed */
 
@@ -596,7 +595,6 @@ DebugPrint(graph g, int sq) {
 	for (i = 0; P != NULL; i++)
 		P = P->nextpuit;
 	OUTPUT printf("{%d} Cold nodes:     %d\n", rank, i);
-	ncold = i;
 	OUTPUTFILE if (rank == (size - 1)) fprintf(writefile, "]\n\n");
 	if (outflag == 1) {
 		fclose(writefile);

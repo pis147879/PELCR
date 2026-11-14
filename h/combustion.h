@@ -45,8 +45,6 @@
 #endif
 
 struct messaggio {
-	/* debugging */
-	long timestamp; /* debugging information to check non-overlapping of messages */
 	int sender_load; /* piggybacking of the workload of the sending process */
 
 	/* symbolic and graph information */
@@ -87,12 +85,6 @@ struct mbuffer {
 	struct messaggio *stack;
 };
 
-struct termination_msg {
-	int sender;
-	int OutCounter[MAXNPROCESS];
-	int InCounter[MAXNPROCESS];
-};
-
 void ComputeResult();
 void PrintResult();
 
@@ -103,7 +95,9 @@ void NodeCombustion(node *n, int polarity);
 void StoreMessage(struct messaggio *m, edge *t, edge *s, char *w, int sto, int p);
 void ShowMessage(struct messaggio *m);
 
+#if MINPRIORITY > 1
 int UpperBound(struct messaggio *m);
+#endif
 edge *InitReference(edge *aux);
 
 void FunReceiveMessages();
