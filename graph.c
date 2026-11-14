@@ -29,17 +29,6 @@
 
 /**/
 
-graph *
-NewGraph() {
-	graph *nS;
-	nS = (graph *)calloc(1, sizeof(graph));
-	if (!nS) {
-		fprintf(logfile, "graph allocation failure - ABORT");
-		return 0;
-	}
-	return nS;
-}
-
 node *
 NewNode() {
 	node *nS;
@@ -456,24 +445,6 @@ CreateNewNode(node *S) {
 }
 
 node *
-CreateNewBoundary(node *S) {
-	node *nS;
-
-	nS = NewNode();
-	nS->sto = OUT;
-#if FREE_HOT_BOOKTABLE_ENTRIES
-	nS->has_booktable_entry = 0;
-	nS->booktable_rank = -1;
-	nS->booktable_key = 0;
-#endif
-	nS->left.length = -1;
-	nS->left.vector = NULL;
-	nS->nextpuit = S;
-	S->prevpuit = nS;
-	return nS;
-}
-
-node *
 SinkRemove(node *P) {
 	node *father_of_P = P->prevpuit;
 
@@ -539,34 +510,4 @@ SinkRemove(node *P) {
 	}
 #endif
 	return father_of_P;
-}
-
-edge *
-EdgeRemove(edge *e, node *P) {
-	edge *p, *pp;
-
-	if (P->left.vector == NULL) {
-		return 0;
-	} else {
-		pp = NULL;
-		p = P->left.vector;
-		for (; ((p != e) && (p != NULL));) {
-			pp = p;
-			p = p->vector;
-		};
-		if ((p != NULL) && (pp != NULL)) {
-			pp->vector = p->vector;
-			pp = P->left.vector;
-		} else if ((p != NULL) && (pp == NULL)) {
-			pp = p->vector;
-		} else {
-			fprintf(logfile, "ERROR!\n ");
-			return 0;
-		};
-
-		free(e);
-		graph_edges--;
-		P->left.length = P->left.length - 1;
-		return pp;
-	};
 }

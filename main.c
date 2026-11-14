@@ -118,8 +118,6 @@ main(int argc, char **argv) {
 	maxfires = 0;
 
 	fires = 0;
-	scount = 0;
-	saddflag = 1;
 
 	{
 

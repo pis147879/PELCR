@@ -897,14 +897,6 @@ PushIncomingMessage(int priority, struct messaggio *m) {
 	return;
 }
 
-int
-EmptyBuffer(struct mbuffer *l) {
-	if (l->first == l->last)
-		return 1;
-	else
-		return 0;
-}
-
 void
 ShowMessage(struct messaggio *m) {
 	fprintf(logfile, "(%d) %20s : %d[(%d).(%d)%p]->%d[(%d).(%d)%p]\n", rank, m->weight, m->vsource.side,
@@ -1250,8 +1242,6 @@ FunInteraction() {
 					memcpy((char *)buf[h], (char *)&packet_action_count, sizeof(int));
 					/***************** Carlo *******************************/
 					nTickSend++;
-					nrApplMsg[h] += outcontrol[h];
-					nrFisicMsg[h]++;
 
 					/* VAB */
 
@@ -1336,8 +1326,6 @@ FunInteraction() {
 			memcpy((char *)buf[h], (char *)&packet_action_count, sizeof(int));
 			/***************** Carlo ***************************************/
 			nTickSend++;
-			nrApplMsg[h] += outcontrol[h];
-			nrFisicMsg[h]++;
 
 			/* MARCO */
 			cumulate_timeout[h] += maxTick[h];
@@ -1391,16 +1379,6 @@ ComputeResult() {
 	/* Temporarily skip the final graph dump while validating multi-rank runs. */
 	/* OUTPUTFILE Print(G, incoming, 1000000); */
 	printf("(%d) starting finalize \n", rank);
-}
-
-static int
-CountNodeList(node *head) {
-	int count = 0;
-	node *cursor;
-
-	for (cursor = head; cursor != NULL; cursor = cursor->nextpuit)
-		count++;
-	return count;
 }
 
 void

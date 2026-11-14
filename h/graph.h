@@ -62,17 +62,14 @@ typedef struct graph {
 	node *cold;
 } graph;
 
-graph *NewGraph(void);
 node *NewNode(void);
 edge *NewReference(void);
 void LiberaV(edge *P);
 void AddEdge(node *S, int rk, node *nS, int sto, term *w, int c, int polarity, int side);
 node *CreateNewNode(node *S);
-node *CreateNewBoundary(node *S);
 void AttachNodeToCold(node *P);
 void AttachSingleEotHotNodesToCold(void);
 node *SinkRemove(node *P);
-edge *EdgeRemove(edge *e, node *P);
 void ShowEdge(edge *);
 void ShowWeight(char *s);
 #endif

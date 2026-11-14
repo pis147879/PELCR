@@ -68,7 +68,7 @@ PELCR_EXTERN int local_family_reductions;
 PELCR_EXTERN long fires, loops, prnsteps, one_optimizations;
 PELCR_EXTERN int laddtest, leottest;
 PELCR_EXTERN long idle, lidle, lbip2;
-PELCR_EXTERN int graph_nodes, nhot, scount;
+PELCR_EXTERN int graph_nodes, nhot;
 PELCR_EXTERN long hot_nodes, cold_nodes;
 PELCR_EXTERN long computing_loops, lastloop;
 
@@ -97,13 +97,8 @@ PELCR_EXTERN int OutCounter[MAXNPROCESS], InCounter[MAXNPROCESS];
 PELCR_EXTERN int end_computation;
 
 PELCR_EXTERN MPI_Status status;
-PELCR_EXTERN MPI_Request add_request, eot_request, request;
 
-PELCR_EXTERN int dataflag, saddflag, eotflag, dieflag, flag, h;
-PELCR_EXTERN int sbuf[MAXLENWEIGHT];
-PELCR_EXTERN long sbuflong[10];
-// int reotbuf[10],raddbuf[MAXLENWEIGHT+7*sizeof(long)],rcreatebuf[10],rdiebuf[10];
-PELCR_EXTERN int reotbuf[10], raddbuf[MAXLENWEIGHT];
+PELCR_EXTERN int dataflag, dieflag;
 
 /*struct mbuffer incoming;*/
 PELCR_EXTERN struct mbuffer incoming[MINPRIORITY]; /* array of buffers of incoming messages */
@@ -135,10 +130,6 @@ PELCR_EXTERN float current_rate;
 PELCR_EXTERN graph G;
 
 /******************* Carlo ***********************************/
-
-PELCR_EXTERN int nrFisicMsg[MAXNPROCESS];
-PELCR_EXTERN int nrApplMsg[MAXNPROCESS];
-PELCR_EXTERN float aggregationRatio[MAXNPROCESS];
 
 PELCR_EXTERN int aggregationWindow[MAXNPROCESS];
 PELCR_EXTERN int maxTick[MAXNPROCESS];

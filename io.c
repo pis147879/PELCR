@@ -196,12 +196,9 @@ OpenFileInitStruct() {
 			OutTerminationStatus[i][j] = 0;
 			InTerminationStatus[i][j] = 0;
 		}
-		nrFisicMsg[i] = 0;
-		nrApplMsg[i] = 0;
 		cumulate_timeout[i] = 0;
 		physical_msgs[i] = 0;
 		applicative_msgs[i] = 0;
-		aggregationRatio[i] = (float)AGGREGATIONWINDOW / MAXAWIN;
 		aggregationWindow[i] = AGGREGATIONWINDOW;
 		maxTick[i] = TICK;
 	}
@@ -499,46 +496,6 @@ GML_free_list(struct GML_pair *list, struct GML_list_elem *keys) {
 		tmp = list;
 		list = tmp->next;
 		free(tmp);
-	}
-}
-
-void
-GML_print_list(struct GML_pair *list, int level) {
-
-	struct GML_pair *tmp = list;
-	int i;
-
-	while (tmp) {
-
-		for (i = 0; i < level; i++) {
-			printf("    ");
-		}
-
-		printf("*KEY* : %s", tmp->key);
-
-		switch (tmp->kind) {
-			case GML_INT:
-				printf("  *VALUE* (long) : %ld \n", tmp->value.integer);
-				break;
-
-			case GML_DOUBLE:
-				printf("  *VALUE* (double) : %f \n", tmp->value.floating);
-				break;
-
-			case GML_STRING:
-				printf("  *VALUE* (string) : %s \n", tmp->value.string);
-				break;
-
-			case GML_LIST:
-				printf("  *VALUE* (list) : \n");
-				GML_print_list(tmp->value.list, level + 1);
-				break;
-
-			default:
-				break;
-		}
-
-		tmp = tmp->next;
 	}
 }
 
