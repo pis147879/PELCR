@@ -1385,6 +1385,9 @@ void
 PrintResult() {
 	long hot_node_count;
 	long cold_node_count;
+#if !defined(SOLARIS) && !defined(LINUX)
+	int h; /* declared in the blocks of SOLARIS and LINUX below */
+#endif
 
 	AttachSingleEotHotNodesToCold();
 
