@@ -67,7 +67,7 @@ CFLAGS    =$(ARCHFLAGS) $(OPTFLAGS)
 CCFLAGS   = $(CFLAGS)
 FFLAGS    = $(OPTFLAGS)
 
-.PHONY: default all objects gcombustion ffi shared crypt crypto go go2 test test2 check-parallel test4 test-crypto test-nd run nf clean linux mac docker iulia home FORCE
+.PHONY: default all objects gcombustion ffi shared crypt crypto go go2 test test2 check-parallel test4 test-crypto test-nd run nf bench check-examples compare-wolfram clean linux mac docker iulia home FORCE
 
 default: gcombustion ffi
 
@@ -228,6 +228,77 @@ nf:
 	@if [ $(RUNNP) -gt 1 ]; then echo "make nf: the read-back needs one rank (NP=1)"; exit 2; fi
 	@$(MAKE) --no-print-directory run
 	@python3 agents/readback/pelcr_c_readback.py $(if $(filter-out 0,$(FIRES)),--partial) $(RUNDIR)/$(RUNNAME).json
+
+# make bench TESTFILE=dd6.plcr NPS="1 16" LIMIT=3600
+# For every number of ranks in NPS: status (completed, queue full, time limit, stopped), elapsed time,
+# peak memory (sum of the resident memory of the PELCR processes of this user on this machine, sampled
+# every second) and the work done: compositions, nodes, family reductions (final statistics, or the
+# last line of the statistics logs for a run that did not end; "MPI buffer": the buffer of MPI_Bsend
+# was full; "out of memory": an allocation failed; "killed (9)": a process got SIGKILL, e.g. from the
+# kernel when the memory is over on a machine without swap; "signal N": a process died on signal N;
+# "exit N": a process stopped with exit code N, e.g. 255 when PELCR could not allocate memory).  The queue limit is raised
+# (BENCH_PENDING_MAX, BENCH_RAM_PERCENT) so that a run stops on memory or on LIMIT, not on the default
+# size of the queue.  Then speedup and efficiency against NP=1 (both completed), or the ratio of the
+# compositions per second.  Summary in $(OUTDIR)/bench-<name>.txt, output of each run in
+# $(OUTDIR)/bench/<name>-np<N>.log; the statistics logs are deleted (KEEPLOGS=1 keeps them).
+NPS               ?= 1 16
+LIMIT             ?= 3600
+BENCH_PENDING_MAX ?= 2000000000
+BENCH_RAM_PERCENT ?= 25
+BENCHNAME = $(basename $(notdir $(TESTFILE)))
+
+bench: $(BUILDDIR)/$(EXECS)
+	@mkdir -p $(LOGDIR) $(OUTDIR)/bench
+	@name=$(BENCHNAME); stats=$$(echo "$$name" | sed 's/[^A-Za-z0-9_-]/_/g'); \
+	out=$(OUTDIR)/bench-$$name.txt; rec=$(OUTDIR)/bench/$$name.rec; : > $$rec; me=$$(id -un); \
+	printf 'PELCR bench: %s on %s, %s; time limit %s s, queue max %s, RAM for the queues %s %%\n' \
+	  '$(TESTFILE)' "$$(hostname)" "$$(date '+%Y-%m-%d %H:%M')" $(LIMIT) $(BENCH_PENDING_MAX) $(BENCH_RAM_PERCENT) | tee $$out; \
+	printf '%4s  %-13s %10s %9s %14s %14s %7s %11s\n' NP status elapsed_s peak_GB compositions nodes family comp/s | tee -a $$out; \
+	for np in $(NPS); do \
+	  log=$(OUTDIR)/bench/$$name-np$$np.log; rm -f $(LOGDIR)/$$stats-np=$$np-*stats.log; status=; peak=0; \
+	  t0=$$($(NOW)); \
+	  printf '\043setdir "%s" ; \043open "%s"\n' '$(PEXDIR)' '$(TESTFILE)' | \
+	    PELCR_PENDING_MAX=$(BENCH_PENDING_MAX) PELCR_PENDING_RAM_PERCENT=$(BENCH_RAM_PERCENT) \
+	    $(MPIR_HOME)/bin/mpirun $(MPIRUNFLAGS) -np $$np $(BUILDDIR)/$(EXECS) -- -loop $(LOOP) > $$log 2>&1 & pid=$$!; \
+	  while kill -0 $$pid 2>/dev/null; do \
+	    rss=$$(ps -U "$$me" -o rss= -o comm= | awk '/combustion/ {s += $$1} END {print s + 0}'); \
+	    [ "$$rss" -gt "$$peak" ] && peak=$$rss; \
+	    if awk -v a=$$t0 -v b=$$($(NOW)) -v l=$(LIMIT) 'BEGIN {exit !(b - a > l)}'; then status="time limit"; kill $$pid 2>/dev/null; fi; \
+	    sleep 1; \
+	  done; \
+	  wait $$pid 2>/dev/null; t1=$$($(NOW)); \
+	  if [ -z "$$status" ]; then \
+	    if grep -q 'family reductions' $$log; then status=completed; \
+	    elif grep -q 'Exceeded size of incoming buffer' $$log; then status="queue full"; \
+	    elif grep -q 'MPI_ERR_BUFFER' $$log; then status="MPI buffer"; \
+	    elif grep -q -i 'allocation fail' $$log; then status="out of memory"; \
+	    else sig=$$(grep -o -E 'exited on signal [0-9]+' $$log | head -1 | awk '{print $$NF}'); \
+	      code=$$(grep -o -E 'Exit code: +[0-9]+' $$log | head -1 | awk '{print $$NF}'); \
+	      case "$$sig" in 9) status="killed (9)";; "") status=$${code:+exit $$code}; status=$${status:-stopped};; *) status="signal $$sig";; esac; fi; fi; \
+	  if [ "$$status" = completed ]; then \
+	    work=$$(awk '/final nodes/ {n += $$NF} /edge compositions/ {c += $$NF} /family reductions/ {f += $$NF} END {print c, n, f}' $$log); \
+	  else \
+	    work=$$(for f in $(LOGDIR)/$$stats-np=$$np-*stats.log; do [ -f "$$f" ] && tail -1 "$$f"; done | \
+	            awk '{c += $$6; n += $$10} END {print c + 0, n + 0, "-"}'); fi; \
+	  [ -n "$(KEEPLOGS)" ] || rm -f $(LOGDIR)/$$stats-np=$$np-*stats.log; \
+	  echo "$$np $$t0 $$t1 $$peak $$work $$status" | awk '{ e = $$3 - $$2; st = $$8; for (i = 9; i <= NF; i++) st = st " " $$i; \
+	    printf "%4d  %-13s %10.1f %9.2f %14d %14d %7s %11.0f\n", $$1, st, e, $$4 / 1048576, $$5, $$6, $$7, (e > 0) ? $$5 / e : 0 }' | tee -a $$out; \
+	  echo "$$np $$t0 $$t1 $$work $$status" >> $$rec; \
+	done; \
+	awk '{ np = $$1; e[np] = $$3 - $$2; c[np] = $$4; st[np] = $$7 $$8; o[++k] = np } \
+	  END { if (!(1 in e)) exit; for (i = 1; i <= k; i++) { n = o[i]; if (n == 1) continue; \
+	    if (st[1] == "completed" && st[n] == "completed") \
+	      printf "NP=%d: speedup %.2f (ideal %d), efficiency %.1f %% of the ideal speedup\n", n, e[1] / e[n], n, 100 * e[1] / e[n] / n; \
+	    else if (e[1] > 0 && e[n] > 0 && c[1] > 0) \
+	      printf "NP=%d: compositions per second %.2f times those of NP=1 (not both completed)\n", n, (c[n] / e[n]) / (c[1] / e[1]); } }' $$rec | tee -a $$out; \
+	echo "summary: $$out"
+
+# the checks of the read-back (Python: the decoder and the model of the ND-PELCR article)
+check-examples: $(BUILDDIR)/$(EXECS)
+	python3 agents/readback/check_examples.py --exe $(BUILDDIR)/$(EXECS) --report $(OUTDIR)/check_examples.txt $(if $(BASE),--base $(BASE))
+
+compare-wolfram: $(BUILDDIR)/$(EXECS)
+	python3 agents/readback/compare_wolfram.py --exe $(BUILDDIR)/$(EXECS) $(if $(WOLFRAM),--wolfram "$(WOLFRAM)")
 
 test-crypto: NP=1
 test-crypto: TESTFILE=$(CRYPTO_TESTFILE)

@@ -41,27 +41,24 @@ Conversioni dalle convenzioni di PELCR (C) a quelle di ND-PELCR:
 
 ## Uso
 
-Dalla radice di PELCR, dopo la build:
+Tutto si lancia dal Makefile, dalla radice di PELCR; gli script Python qui sono l'implementazione del read-back
+(il decoder dell'articolo) e dei controlli, non vanno chiamati direttamente.
 
 ```
-python3 agents/readback/pelcr_run.py '(\x.(x)x)[\u.u + \v.\w.v]'
-python3 agents/readback/pelcr_run.py pelcrexamples/nd/three-phases.plcr pelcrexamples/dd2.plcr
-python3 agents/readback/pelcr_run.py --fires 3000 pelcrexamples/nd/delta-I-delta.plcr
-python3 agents/readback/pelcr_c_readback.py OUTPUT/readback/dd2.json
-python3 agents/readback/test_c_readback.py --random 200 --seed 7
-python3 agents/readback/compare_wolfram.py                      # serve wolframscript (Mathematica)
-python3 agents/readback/check_examples.py --report OUTPUT/check_examples.txt   # tutti gli esempi
-python3 agents/readback/check_examples.py --base build/combustion.master ...   # confronto con un'altra build
+make                                             # build
+make run FILE=nd/three-phases.plcr               # solo la macchina C: grafo finale in OUTPUT/run/
+make run EXPR='(\x.(x)x)[\u.u + \v.\w.v]'          # un termine scritto direttamente
+make nf FILE=nd/three-phases.plcr                # la stessa run e la forma normale (read-back)
+make nf FILE=nd/delta-I-delta.plcr FIRES=3000    # run interrotta: approssimante
+make check-parallel NP=16 TESTFILE=dd4.plcr      # 1 rank contro NP rank: tempi, speedup, efficienza
+make bench TESTFILE=dd6.plcr NPS="1 16" LIMIT=3600   # tempo, memoria di picco, stato, lavoro fatto per ogni NP
+make test-nd NDRANDOM=200                        # read-back = nf(t) e Obs = EX(tau(t)), termini fissi e casuali
+make check-examples [BASE=<altra build>]         # tutti gli esempi (rapporto in OUTPUT/check_examples.txt)
+make compare-wolfram [WOLFRAM="mathics --no-readline -f"]   # confronto con il prototipo Wolfram
 ```
 
-Oppure a mano: `printf '#setdir "pelcrexamples" ; #open "dd2.plcr"\n' | build/combustion.linux -- -loop 10000000 -readback dd2.json`.
-
-Con il Makefile: `make run FILE=nd/three-phases.plcr` (o `EXPR='<termine>'`, `FIRES=N`) esegue solo la macchina C e
-scrive il grafo finale in `OUTPUT/run/`; `make nf ...` fa la stessa run e poi il read-back
-(`pelcr_c_readback.py`, con `--partial` se `FIRES` e' dato).
-
-Il codice dell'articolo cerca `agents/review-3.3`; nel branch `nuova-mario` del repository dell'articolo e' stato
-spostato in `agents/audits/archive/*/review-3.3`: `pelcr_c_readback.py` lo trova anche li'.
+`pelcr_run.py` (run e read-back di un termine) e' stato sostituito da `make run` e `make nf`; resta perche' i controlli
+lo usano per lanciare PELCR. `pelcr_c_readback.py <dump.json>` legge un dump gia' scritto.
 
 Sintassi dei termini come in PELCR e nell'articolo: `\x.t`, `(t)u`, `[t + u]`, dove `(t)u` prende come
 argomento tutto il termine che segue (`(f)(f)x = (f)((f)x)`). Niente parentesi superflue: `((f)x)` da solo
