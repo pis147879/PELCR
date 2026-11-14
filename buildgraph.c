@@ -1378,8 +1378,8 @@ MergeNodes(termGraph *new, termGraph *t1, termGraph *t2) {
 						newLast->next = newTmp;
 					newLast = newTmp;
 					t2->listOfVar = RemoveFromList(t2->listOfVar, list2->name);
-				}
-				list2 = list2->next;
+				} else
+					list2 = list2->next; /* list2 has been freed when found */
 			}
 			/*
 			 end of while (list2 !=NULL)
@@ -1684,6 +1684,10 @@ InitializeIncoming(termGraph *t) {
 	struct messaggio m;
 	char weight[MAXLENWEIGHT];
 	table *fv;
+
+	/* the cut nodes of this term (they were never reset: the list of a file with several terms
+	   overflowed cut_node_messages[MAXCUTNODES] and resent EOTs to nodes of the previous terms) */
+	cut_node_count = 0;
 
 	/* the free variables of the term: boundary nodes for the read-back */
 	nfreevars = 0;

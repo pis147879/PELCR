@@ -834,10 +834,15 @@ SinkList(struct messaggio *m, struct messaggio *l, int length) {
 
 	/* printf("dentro sink\n"); */
 
-	for (i = 0; i <= length; i++)
+	for (i = 0; i < length; i++)
 		if (m->vtarget.source == l[i].vtarget.source) {
 			return length;
 		}
+
+	if (length >= MAXCUTNODES) {
+		fprintf(stderr, "(%d) ERROR: more than %d cut nodes (MAXCUTNODES)\n", rank, MAXCUTNODES);
+		exit(EXIT_FAILURE);
+	}
 
 	StoreMessage(&l[length], &(m->vtarget), &(m->vtarget), (char *)"*", m->vtarget.sto, m->side);
 #ifdef _DEBUG
