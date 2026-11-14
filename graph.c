@@ -125,6 +125,7 @@ AttachNodeToCold(node *P) {
 	}
 }
 
+/* the edges that point to a cold node are cold, and so are their sources */
 static void
 PropagateColdToSourceEndpoints(edge *P) {
 	for (; P != NULL; P = P->vector) {
@@ -133,7 +134,30 @@ PropagateColdToSourceEndpoints(edge *P) {
 			StoreBookedAddress(P->creator, (long)P->source, OUT);
 		else if (collect_remote_cold_sources)
 			QueueRemoteColdSource(P->rankpuit, P->creator, (long)P->source);
+		else
+			SendColdNotice(P->rankpuit, P->creator, P->source);
 	}
+}
+
+/* tells the process rk that the node (c, nS) is cold: it is the source of an edge that points
+   to a cold node (COLD_TAG, see FunInteraction) */
+void
+SendColdNotice(int rk, int c, node *nS) {
+	struct messaggio m;
+	edge where;
+	wbuf one;
+
+	memset(&where, 0, sizeof(where));
+	where.rankpuit = rk;
+	where.creator = c;
+	where.source = nS;
+	where.sto = OUT;
+	where.side = LEFT;
+	where.sign = PLUS;
+	WeightSetOne(&one.h);
+	StoreMessage(&m, &where, &where, &one.h, OUT, LEFT);
+	m.tpy = COLD_TAG;
+	PushMessage(&m);
 }
 
 void
@@ -311,6 +335,13 @@ AddEdge(node *S, int rk, node *nS, int sto, const weight *w, int c, int polarity
 	edge *p;
 	seminode *v;
 
+	/* an edge that points to a cold node is cold, and so is its source (the sender may not have
+	   known that the node had become cold) */
+	if (S->sto == OUT && sto != OUT) {
+		sto = OUT;
+		if (rk != rank)
+			SendColdNotice(rk, c, nS);
+	}
 	if (sto == OUT) {
 		if (rk == rank)
 			StoreBookedAddress(c, (long)nS, OUT);

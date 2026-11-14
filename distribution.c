@@ -717,11 +717,14 @@ ThreadInteraction() {
 					else
 						sourceaddress->right.eot++;
 
-					if ((e.sto != OUT) && (sourceaddress->left.eot == 1) && (sourceaddress->right.eot == 1))
+					if ((sourceaddress->sto != OUT) && (sourceaddress->left.eot == 1) && (sourceaddress->right.eot == 1))
 						sourceaddress = SinkRemove(sourceaddress);
 				}
 
 				break;
+				case COLD_TAG:
+					StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, OUT);
+					break;
 				case ADD_TAG: {
 					node *targetaddress;
 					edge e;

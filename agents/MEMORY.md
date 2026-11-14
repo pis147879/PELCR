@@ -70,6 +70,12 @@ _Ultimo aggiornamento: 2026-10-30_
 - `-readback <file>`: `read_back.c` scrive il grafo finale in JSON (anche variabili libere); niente più gdb.
 - Pesi: parole di lettere intere (`h/weight.h`, branch `pesi-aritmetici`), al più `MAXLETTERS` = 16 lettere
   (override `make MAXLETTERS=...`); a fine run `max weight length` = lettere del peso più lungo.
+- Nodi caldi e freddi (regole di Marco, 2026-11-15): un arco che punta a un nodo freddo è freddo e la sua
+  sorgente è fredda (`AddEdge`; sorgente su un altro rank: messaggio `COLD_TAG`, `SendColdNotice`); una
+  composizione con un arco di sorgente fredda crea un nodo freddo; un arco con sorgente fredda si ottimizza
+  (one-optimization) come gli altri; nel grafo iniziale la sorgente dell'arco della porta è fredda prima che
+  i suoi archi partano (`MarkColdNodes`). Freddo = non verrà mai consumato: a fine run completa tutti i nodi
+  sono già freddi e nessuno ha entrambi gli EOT; un nodo freddo non viene mai rimosso (`SinkRemove`).
 - Test: `python3 agents/readback/test_c_readback.py --random 200 --seed 7` (serve `NDPELCR_PYTHON`);
   confronto con il prototipo Wolfram: `agents/readback/compare_wolfram.py` (wolframscript o Mathics 3).
 

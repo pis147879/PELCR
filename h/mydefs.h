@@ -108,6 +108,7 @@
 /* ANTO */
 #define LOADLIB_TAG 10
 #define LOADFUN_TAG 11
+#define COLD_TAG 12 /* type of a message (not an MPI tag): its target node is cold (SendColdNotice in graph.c) */
 /* ANTO */
 
 /* passi per forzare la send */

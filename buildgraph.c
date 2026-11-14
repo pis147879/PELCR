@@ -1686,6 +1686,39 @@ CopyNode(node *old) {
  }
  */
 
+/* the cold nodes of the initial graph, in the field sto of its nodes: the two ends of the edges
+   built cold (the port of the term and the source of its edge, the free variables), and the
+   sources of the edges that point to a cold node.  An edge is sent cold when its source is cold:
+   the compositions with it then give cold residuals (NodeCombustion), with no node that becomes
+   cold after its edges have left */
+static void
+MarkColdNodes(termGraph *t) {
+	node *n;
+	edge *e;
+	int side, changed;
+
+	for (n = t->root; n != NULL; n = n->nextpuit)
+		n->sto = IN;
+	for (n = t->root; n != NULL; n = n->nextpuit)
+		for (side = 0; side < 2; side++)
+			for (e = side ? n->right.vector : n->left.vector; e != NULL; e = e->vector)
+				if (e->sto == OUT) {
+					n->sto = OUT;
+					e->source->sto = OUT;
+				}
+	do {
+		changed = 0;
+		for (n = t->root; n != NULL; n = n->nextpuit)
+			if (n->sto == OUT)
+				for (side = 0; side < 2; side++)
+					for (e = side ? n->right.vector : n->left.vector; e != NULL; e = e->vector)
+						if (e->source->sto != OUT) {
+							e->source->sto = OUT;
+							changed = 1;
+						}
+	} while (changed);
+}
+
 void
 InitializeIncoming(termGraph *t) {
 	node *nodo;
@@ -1710,6 +1743,8 @@ InitializeIncoming(termGraph *t) {
 		freevar_key[nfreevars] = (long)fv->ptrNode;
 		nfreevars++;
 	}
+
+	MarkColdNodes(t);
 
 	for (nodo = t->root; nodo != NULL; nodo = nodo->nextpuit) {
 		for (arco = (nodo->left).vector; arco != NULL; arco = arco->vector) {
@@ -1736,8 +1771,8 @@ InitializeIncoming(termGraph *t) {
 			/* if(size==1)outbuffer= &incoming; */
 			vsource->sto = IN;
 			/*  vsource->side=PLUS;*/
-			vtarget->sto = arco->sto;
-			storeclass = arco->sto;
+			vtarget->sto = nodo->sto;          /* the target node (MarkColdNodes) */
+			storeclass = arco->source->sto;    /* the source node: the edge is cold when its source is */
 
 			vtarget->side = LEFT;
 			//  DEBUG printf("il peso %s\n",weight);
@@ -1778,8 +1813,8 @@ InitializeIncoming(termGraph *t) {
 			/* if(size==1)outbuffer= &incoming; */
 			vsource->sto = IN;
 			/*  vsource->side=PLUS;*/
-			vtarget->sto = arco->sto;
-			storeclass = arco->sto;
+			vtarget->sto = nodo->sto;
+			storeclass = arco->source->sto;
 
 			vtarget->side = RIGHT;
 			//  DEBUG printf("il peso %s\n",weight);

@@ -72,6 +72,7 @@ void LiberaV(edge *P);
 void AddEdge(node *S, int rk, node *nS, int sto, const weight *w, int c, int polarity, int side);
 node *CreateNewNode(node *S);
 void AttachNodeToCold(node *P);
+void SendColdNotice(int rk, int c, node *nS);
 void AttachSingleEotHotNodesToCold(void);
 node *SinkRemove(node *P);
 void ShowEdge(edge *);

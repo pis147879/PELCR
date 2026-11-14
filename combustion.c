@@ -801,7 +801,7 @@ NodeCombustion(node *n, int polarity) {
 		if (!outp) {
 			TRACING fprintf(logfile, "NULL(%d)\n", outp);
 			failed_compositions++;
-		} else if (isone(&pos.h) && (XJ->sto == IN)) {
+		} else if (isone(&pos.h)) { /* also when the source is cold: the residual is then cold (AddEdge) */
 			TRACING {
 				Print(G, incoming, edge_compositions);
 				fprintf(logfile, "(%d) verify one-optimization \n", rank);
@@ -824,7 +824,7 @@ NodeCombustion(node *n, int polarity) {
 				StoreMessage(&m, XJ, XI, &neg.h, XI->sto, XI->side);
 			PushMessage(&m);
 			XI->sign = MINUS;
-		} else if (isone(&neg.h) && (XI->sto == IN)) {
+		} else if (isone(&neg.h)) {
 			// DEBUG Print(G,edge_compositions);
 			TRACING {
 				fprintf(logfile, "OPT %s\n", WeightToString(&pos.h, ws1, sizeof(ws1)));
@@ -1184,11 +1184,17 @@ FunInteraction() {
 					else
 						sourceaddress->right.eot++;
 
-					if ((e.sto != OUT) && (sourceaddress->left.eot == 1) && (sourceaddress->right.eot == 1)) {
+					/* a cold node is never removed (it belongs to the final graph) */
+					if ((sourceaddress->sto != OUT) && (sourceaddress->left.eot == 1) && (sourceaddress->right.eot == 1)) {
 						// sourceaddress=
 						SinkRemove(sourceaddress);
 					}
 				} break;
+
+				case COLD_TAG:
+					/* the node is the source of an edge that points to a cold node (SendColdNotice) */
+					StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, OUT);
+					break;
 
 				case ADD_TAG: {
 					node *targetaddress;
