@@ -185,22 +185,35 @@ AttachSingleEotHotNodesToCold(void) {
 	collect_remote_cold_sources = previous_collect_remote_cold_sources;
 }
 
+/* the hot nodes with one EOT go to the cold graph, each with the nodes that become cold with it
+   (AttachNodeToCold).  The candidates are known at once (moving a node changes no EOT) and the
+   hot list only loses nodes: they are collected in the order of the list and moved in that
+   order, skipping those already moved, which is the order of the former loop that started again
+   from the head of the list after each move (quadratic: minutes when a run stopped by -fires
+   leaves millions of hot nodes) */
 static void
 AttachSingleEotHotNodesToColdLocal(void) {
-	int changed;
+	node *cursor, **candidates;
+	long n = 0, k;
 
-	do {
-		node *cursor;
-
-		changed = 0;
-		for (cursor = G.hot; cursor != NULL; cursor = cursor->nextpuit) {
-			if ((cursor->left.eot + cursor->right.eot) == 1) {
-				AttachNodeToCold(cursor);
-				changed = 1;
-				break;
-			}
-		}
-	} while (changed);
+	for (cursor = G.hot; cursor != NULL; cursor = cursor->nextpuit)
+		if ((cursor->left.eot + cursor->right.eot) == 1)
+			n++;
+	if (n == 0)
+		return;
+	candidates = (node **)malloc((size_t)n * sizeof(node *));
+	if (candidates == NULL) {
+		fprintf(stderr, "(%d) PELCR: no memory for the final pass (%ld hot nodes with one EOT)\n", rank, n);
+		exit(-1);
+	}
+	k = 0;
+	for (cursor = G.hot; cursor != NULL; cursor = cursor->nextpuit)
+		if ((cursor->left.eot + cursor->right.eot) == 1)
+			candidates[k++] = cursor;
+	for (k = 0; k < n; k++)
+		if (candidates[k]->sto != OUT)
+			AttachNodeToCold(candidates[k]);
+	free(candidates);
 }
 
 static void
