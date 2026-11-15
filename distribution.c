@@ -319,6 +319,18 @@ buf_flush() {
 	local_pending = 0;
 }
 
+/* the first message of a queue, taken out without being processed: a run stopped by -fires on
+   several processes drains its channels before the end (StopComputation in combustion.c), and
+   its queued messages stay unprocessed as in a run on one process */
+void
+DropMessage(struct mbuffer *l) {
+	if (l->first == l->last)
+		return;
+	InCounter[(l->stack[l->first]).sender]++;
+	l->first = (l->first + 1) % l->capacity;
+	pending_actions--;
+}
+
 void
 PopMessage(struct messaggio *m, struct mbuffer *l) {
 	int i, k;

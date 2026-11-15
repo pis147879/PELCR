@@ -31,6 +31,7 @@ void ResetLightProcessPolicy(void);                    /**/
 void SendCreateNewNode(int dest, int sto, edge *nS); /**/
 int NouvelleReservation(int dest);                   /**/
 void PopMessage(struct messaggio *m, struct mbuffer *l);
+void DropMessage(struct mbuffer *l);
 void PushMessage(struct messaggio *m);
 
 void *ThreadReceiveMsgs();

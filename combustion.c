@@ -40,8 +40,10 @@
 #define DIE_NOTICE_ACTIVE 0
 #define DIE_NOTICE_IDLE 1
 #define DIE_NOTICE_FINAL 2
+#define DIE_NOTICE_STOP 3 /* -fires reached on some process: all of them stop (StopComputation) */
 
 static int die_idle_notice_sent = 0;
+static int die_stop = 0; /* stopped by -fires: the queued messages are dropped, the channels drained */
 static int die_idle_rank[MAXNPROCESS];
 static int die_max_pending_load = 0;
 static long pending_buffer_slots_hwm = 0;
@@ -357,6 +359,7 @@ ResetDieProtocol() {
 	int h;
 
 	die_idle_notice_sent = 0;
+	die_stop = 0;
 	die_max_pending_load = 0;
 	for (h = 0; h < MAXNPROCESS; h++)
 		die_idle_rank[h] = 0;
@@ -502,6 +505,35 @@ SendDieMessage(int dest, int state) {
 		RememberLastSentDieCounters();
 }
 
+/* -fires on several processes: the limit counts the compositions of each process, and the first
+   one that reaches it stops all of them (before, it went on to the end of the run alone and the
+   others, waiting for its messages, never stopped).  Rank 0 sends the stop to the others; then
+   every process drops its queued messages without processing them, as a run on one process
+   leaves them in its queue, and the protocol of termination ends the run when all the channels
+   are drained (DropMessage counts them as received) */
+static void
+StopComputation(void) {
+	int h;
+
+	if (die_stop)
+		return;
+	die_stop = 1;
+	if (rank == 0) {
+		for (h = 1; h < size; h++)
+			SendDieMessage(h, DIE_NOTICE_STOP);
+	} else
+		SendDieMessage(0, DIE_NOTICE_STOP);
+}
+
+static void
+DropPendingMessages(void) {
+	int h;
+
+	for (h = 0; h < MINPRIORITY; h++)
+		while (incoming[h].first != incoming[h].last)
+			DropMessage(&incoming[h]);
+}
+
 static void
 PollDieMessages() {
 	MPI_Status die_status;
@@ -518,8 +550,12 @@ PollDieMessages() {
 				RememberDieCounters(die_status.MPI_SOURCE, die_recvbuf);
 				die_idle_rank[die_status.MPI_SOURCE] = (die_recvbuf[1] == DIE_NOTICE_IDLE);
 			}
+			if (die_recvbuf[1] == DIE_NOTICE_STOP)
+				StopComputation();
 		} else if ((die_status.MPI_SOURCE == 0) && (die_recvbuf[1] == DIE_NOTICE_FINAL)) {
 			end_computation = 1;
+		} else if ((die_status.MPI_SOURCE == 0) && (die_recvbuf[1] == DIE_NOTICE_STOP)) {
+			die_stop = 1;
 		}
 
 		MPI_Iprobe(MPI_ANY_SOURCE, DIE_TAG, MPI_COMM_WORLD, &dieflag, &die_status);
@@ -1111,6 +1147,9 @@ FunInteraction() {
 		fflush(stdout);
 	};
 
+	if (die_stop) /* stopped by -fires: nothing is processed any more, the buffers are still sent below */
+		DropPendingMessages();
+
 	while ((pending_actions > 0) && (batch_processed_actions < CHECKTICKS)) {
 
 		lidle = idle;
@@ -1358,7 +1397,12 @@ void
 ComputeResult() {
 	printf("(%d) running...\n", rank);
 	ResetDieProtocol();
-	while ((!end_computation) && ((maxfires == 0) || edge_compositions < maxfires)) {
+	while (!end_computation) {
+		if ((maxfires != 0) && (edge_compositions >= maxfires)) {
+			if (size == 1)
+				break;
+			StopComputation();
+		}
 		maxubound = 1;
 		if (!THREAD) {
 			UpdateDiePendingLoad();
