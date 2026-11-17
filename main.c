@@ -227,7 +227,7 @@ main(int argc, char **argv) {
 	InitTable();
 
 	/* provide a buffer for buffered MPI_Send */
-	MPI_Buffer_attach(sendbuffer, 150 * (sizeof(int) + (1 + MAXAWIN) * sizeof(struct messaggio)));
+	MPI_Buffer_attach(sendbuffer, sizeof(sendbuffer));
 
 	/*******************************************/
 	if ((size < MAXNPROCESS) && (size >= 1)) {

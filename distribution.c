@@ -327,6 +327,7 @@ DropMessage(struct mbuffer *l) {
 	if (l->first == l->last)
 		return;
 	InCounter[(l->stack[l->first]).sender]++;
+	MessageFreeWeight(&l->stack[l->first]);
 	l->first = (l->first + 1) % l->capacity;
 	pending_actions--;
 }
@@ -357,11 +358,11 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 
 	/* the external letters: the string form wrote the new index with sprintf(&X[4], "%d)", ..),
 	   which also cut the weight after the letter (WeightSetXAndTruncate) */
-	if ((k = WeightFindX(&m->weight.h, FUNC)) >= 0) {
-		int indice = (int)XL_VALUE(m->weight.l[k]), i;
+	if ((k = WeightFindX(MessageWeight(m), FUNC)) >= 0) {
+		int indice = (int)XL_VALUE(WLETTERS(MessageWeight(m))[k]), i;
 
 		if (m->funWhich == EXT) {
-			WeightSetXAndTruncate(&m->weight.h, k, XAddFun(indice, m->funWait));
+			WeightSetXAndTruncate(MessageWeight(m), k, XAddFun(indice, m->funWait));
 
 			for (i = 0; i < m->funWait - 1; i++)
 				pelcr_value_from_wire(&f[fcounter].s[i], m->funArgs[i]);
@@ -398,9 +399,9 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 					break;
 			}
 		}
-	} else if ((k = WeightFindX(&m->weight.h, KONST)) >= 0) {
+	} else if ((k = WeightFindX(MessageWeight(m), KONST)) >= 0) {
 		SetNextKIndex();
-		WeightSetXAndTruncate(&m->weight.h, k, kindex);
+		WeightSetXAndTruncate(MessageWeight(m), k, kindex);
 		k_type[kindex] = m->funType;
 		pelcr_value_from_wire(&k_value[kindex], m->funValue);
 		k_refs[kindex]++;
@@ -410,11 +411,14 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 	return;
 }
 
+/* the message goes to its process: to the queue of this process, or as a record (h/message.h)
+   in the aggregation buffer of another one.  A message whose weight is allocated is pushed once:
+   the copy in the queue, or the record, takes its weight */
 void
 PushMessage(struct messaggio *m) {
 	char *lout;
 	// int h,packet_action_count;
-	long packet_action_count;
+	int packet_action_count; /* the receiver reads an int (FunReceiveMessages) */
 	int dest;
 	int nc;
 
@@ -460,10 +464,9 @@ PushMessage(struct messaggio *m) {
 #endif
 		return;
 	} else {
-		lout = buf[dest] + sizeof(int);
-		lout = lout + outcontrol[dest] * sizeof(struct messaggio);
-
-		memcpy((char *)lout, (char *)m, sizeof(struct messaggio));
+		/* the record of the message, as long as its weight (h/message.h) */
+		lout = buf[dest] + sizeof(int) + outbytes[dest];
+		outbytes[dest] += MessagePack(lout, m);
 		outcontrol[dest]++;
 
 		/*
@@ -472,16 +475,19 @@ PushMessage(struct messaggio *m) {
 		  memcpy((char*)buf[dest],(char*)&packet_action_count,sizeof(int));
 		*/
 
-		if (outcontrol[dest] >= aggregationWindow[dest]) {
+		/* the window closes after aggregationWindow messages, or when the buffer has no room
+		   for one more record with the longest weight */
+		if ((outcontrol[dest] >= aggregationWindow[dest])
+		    || (sizeof(int) + (size_t)outbytes[dest] + MESSAGE_MAXRECORD > MESSAGE_BUFFER)) {
 
 			/*
 		  int nc;
 			*/
 
 			packet_action_count = outcontrol[dest];
-			memcpy((char *)buf[dest], (char *)&packet_action_count, sizeof(long));
+			memcpy((char *)buf[dest], (char *)&packet_action_count, sizeof(int));
 
-			nc = sizeof(long) + outcontrol[dest] * sizeof(struct messaggio);
+			nc = sizeof(int) + outbytes[dest];
 			/***************** Carlo ***************************************/
 			nFullSend++;
 
@@ -526,6 +532,7 @@ PushMessage(struct messaggio *m) {
 		  }
 			*/
 			outcontrol[dest] = 0;
+			outbytes[dest] = 0;
 			tickcontrol[dest] = 0;
 		}
 	}
@@ -578,7 +585,7 @@ ThreadReceiveMsgs() {
 		dataflag = 1;
 		MPI_Iprobe(MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &dataflag, &status);
 		while (dataflag) {
-			int maxdim = sizeof(int) + MAXAWIN * sizeof(struct messaggio);
+			int maxdim = MESSAGE_BUFFER;
 			char *position;
 
 			MPI_Recv(rbuf, maxdim, MPI_CHAR, MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &status);
@@ -614,6 +621,7 @@ ThreadReceiveMsgs() {
 			/*  for(i= 0;i<AGGREGATIONWINDOW;i++)  */
 
 			for (i = 0; i < received_action_count; i++) {
+				struct messaggio rm;
 #if MINPRIORITY > 1
 				int priority;
 				int ub;
@@ -621,20 +629,20 @@ ThreadReceiveMsgs() {
 
 				pthread_mutex_lock(&mutex);
 
+				position = position + MessageUnpack(&rm, position);
 #if MINPRIORITY > 1
 				/*SCHEDULER*/
-				ub = UpperBound((struct messaggio *)position);
+				ub = UpperBound(&rm);
 				priority = floor((MINPRIORITY - 1) * (1 - (float)ub / (float)maxubound));
 				/*
 				  printf("ub = %d maxub = %d - priority = %d\n",ub,maxubound,priority);
 				*/
 				/* FINE SCHEDULER */
 
-				PushIncomingMessage(priority, (struct messaggio *)position);
+				PushIncomingMessage(priority, &rm);
 #else
-				PushIncomingMessage(0, (struct messaggio *)position);
+				PushIncomingMessage(0, &rm);
 #endif
-				position = position + sizeof(struct messaggio);
 				pthread_mutex_unlock(&mutex);
 			}
 			MPI_Iprobe(MPI_ANY_SOURCE, DATA_TAG, MPI_COMM_WORLD, &dataflag, &status);
@@ -706,13 +714,13 @@ ThreadInteraction() {
 
 			DEBUG {
 				char ws[MAXLENWEIGHT];
-				fprintf(logfile, "-> %s store:", WeightToString(&msg.weight.h, ws, sizeof(ws)));
+				fprintf(logfile, "-> %s store:", WeightToString(MessageWeight(&msg), ws, sizeof(ws)));
 				fprintf(logfile, "%d sign:%d side:%d\n", msg.vsource.sto, msg.vsource.side, msg.side);
 			}
 
 			DEBUG {
 				char ws[MAXLENWEIGHT];
-				fprintf(logfile, "-> %s store:", WeightToString(&msg.weight.h, ws, sizeof(ws)));
+				fprintf(logfile, "-> %s store:", WeightToString(MessageWeight(&msg), ws, sizeof(ws)));
 				fprintf(logfile, "%d sign:%d side:%d\n", msg.vsource.sto, msg.vsource.side, msg.side);
 			}
 
@@ -744,13 +752,14 @@ ThreadInteraction() {
 					targetaddress
 					    = StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, msg.vtarget.sto);
 					e = msg.vsource;
-					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, &msg.weight.h, e.creator, msg.side, e.side);
+					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, MessageWeight(&msg), e.creator, msg.side, e.side);
 
 					NodeCombustion(targetaddress, msg.side);
 					/*            DEBUG Print(G,&incoming,edge_compositions); */
 					time(&finaltime);
 				} break;
 			} /* END OF SWITCH */
+			MessageFreeWeight(&msg);
 
 			OUTPUT WriteStats();
 
@@ -761,7 +770,7 @@ ThreadInteraction() {
 			for (h = 0; h < size; h++) {
 				tickcontrol[h]++;
 				if ((outcontrol[h] > 0) && (tickcontrol[h] >= maxTick[h])) {
-					nc1 = sizeof(int) + outcontrol[h] * sizeof(struct messaggio);
+					nc1 = sizeof(int) + outbytes[h];
 					packet_action_count = outcontrol[h];
 
 					memcpy((char *)buf[h], (char *)&packet_action_count, sizeof(int));
@@ -784,6 +793,7 @@ ThreadInteraction() {
 					  MPI_Wait(&ireq,&stsq) ;
 					*/
 					outcontrol[h] = 0;
+					outbytes[h] = 0;
 					tickcontrol[h] = 0;
 				}
 			}
@@ -793,7 +803,7 @@ ThreadInteraction() {
 	for (h = 0; h < size; h++) {
 		tickcontrol[h]++;
 		if ((outcontrol[h] > 0) && (tickcontrol[h] >= maxTick[h])) {
-			nc1 = sizeof(int) + outcontrol[h] * sizeof(struct messaggio);
+			nc1 = sizeof(int) + outbytes[h];
 			packet_action_count = outcontrol[h];
 
 			memcpy((char *)buf[h], (char *)&packet_action_count, sizeof(int));
@@ -814,6 +824,7 @@ ThreadInteraction() {
 			  MPI_Wait(&ireq,&stsq);
 			*/
 			outcontrol[h] = 0;
+			outbytes[h] = 0;
 			tickcontrol[h] = 0;
 		}
 	} /* END FOR */

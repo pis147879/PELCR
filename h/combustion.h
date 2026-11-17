@@ -44,6 +44,21 @@
 #define PELCR_PENDING_SHRINK_GRACE 64
 #endif
 
+/* the letters of the weight of a message kept in the message itself: a longer weight is
+   allocated (h/message.h) */
+#ifndef MSGLETTERS
+#define MSGLETTERS 4
+#endif
+
+typedef struct mwbuf {
+	weight h;
+	letter l[MSGLETTERS];
+} mwbuf;
+
+_Static_assert(offsetof(mwbuf, l) == sizeof(weight), "mwbuf: letters right after the header");
+
+/* a message in the queues of a process; between processes it travels as a record of the
+   length of its weight (MessagePack, h/message.h) */
 struct messaggio {
 	int sender_load; /* piggybacking of the workload of the sending process */
 
@@ -53,9 +68,8 @@ struct messaggio {
 	int side;                  /* the side of the edge on the target */
 	edge vsource;              /* the structure storing the "source" of the edge carried by the message*/
 	edge vtarget;              /* the structure storing the "target" of the edge carried by the message*/
-	wbuf weight;               /* the weight, with room for MAXLETTERS letters */
 
-	/* side effects */
+	/* side effects (only in the messages whose weight has an external letter, h/message.h) */
 	int funWhich;     /* this message carries a functional symbol: this is symbol table entry */
 	int funWait;      /* the function is in the stack with a certain number of arguments */
 	                  /* ANTO
@@ -70,6 +84,11 @@ struct messaggio {
 	PELCR_WIRE_VALUE funValue;
 	PELCR_WIRE_VALUE funArgs[MAXNUMARG]; /* ??? Carlo che hai fatto, a che serve questo ? */
 	                             /* ANTO */
+
+	/* the weight (MessageWeight): here when it has at most MSGLETTERS letters, else allocated
+	   in wlong; a message owns wlong until it is sent, packed or processed */
+	weight *wlong;
+	mwbuf weight;
 };
 
 struct mbuffer {

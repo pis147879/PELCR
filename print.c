@@ -257,7 +257,7 @@ mmwrite(FILE *wstream, struct messaggio *mm, int priority) {
 			}
 
 			e->source = source;
-			WeightCopy(&e->weight, &mm->weight.h);
+			WeightCopy(&e->weight, MessageWeight(mm));
 			e->rankpuit = (mm->vsource).rankpuit;
 			e->sto = (mm->vsource).sto;
 

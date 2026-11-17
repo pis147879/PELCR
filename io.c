@@ -188,6 +188,7 @@ OpenFileInitStruct() {
 		BookTable[i] = p;
 		TableProcess[i] = 0;
 		outcontrol[i] = 0;
+		outbytes[i] = 0;
 		last_rate[i] = 0.0;
 		tickcontrol[i] = 0;
 		OutCounter[i] = 0;

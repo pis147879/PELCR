@@ -3,9 +3,9 @@ include Makefile.head
 ################ common part
 
 BUILDDIR    = build
-OBJECTS     = $(BUILDDIR)/parser.tab.o $(BUILDDIR)/lex.yy.o $(BUILDDIR)/read_back.o $(BUILDDIR)/dvm.o $(BUILDDIR)/io.o $(BUILDDIR)/graph.o $(BUILDDIR)/symbolic.o $(BUILDDIR)/weight.o $(BUILDDIR)/distribution.o $(BUILDDIR)/print.o $(BUILDDIR)/main.o $(BUILDDIR)/buildgraph.o $(BUILDDIR)/combustion.o $(BUILDDIR)/globals.o
+OBJECTS     = $(BUILDDIR)/parser.tab.o $(BUILDDIR)/lex.yy.o $(BUILDDIR)/read_back.o $(BUILDDIR)/dvm.o $(BUILDDIR)/io.o $(BUILDDIR)/graph.o $(BUILDDIR)/symbolic.o $(BUILDDIR)/weight.o $(BUILDDIR)/message.o $(BUILDDIR)/distribution.o $(BUILDDIR)/print.o $(BUILDDIR)/main.o $(BUILDDIR)/buildgraph.o $(BUILDDIR)/combustion.o $(BUILDDIR)/globals.o
 PARSERSRC = lex.yy.c parser.tab.c
-SRCS      = lex.yy.c parser.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)weight.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c $(COMPILINGRDIR)globals.c
+SRCS      = lex.yy.c parser.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)weight.c $(COMPILINGRDIR)message.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c $(COMPILINGRDIR)globals.c
 
 GMLDIR      = GML
 LOGDIR      = LOGS
@@ -37,10 +37,19 @@ FFI_TARGETS = shared crypt
 endif
 
 # Weights are words of integer letters (h/weight.h), at most 16 letters by default
-# (both components of Lambda*_nd).  Override with: make MAXLETTERS=32
+# (both components of Lambda*_nd, at most 2046): the room of the buffers of the product,
+# while edges and messages take the letters of their weight.  Override with:
+# make MAXLETTERS=32
 MAXLETTERS ?=
 ifneq ($(strip $(MAXLETTERS)),)
 USER_TYPE_FLAGS += -DMAXLETTERS=$(MAXLETTERS)
+endif
+
+# The letters of a weight kept in a message (h/combustion.h), 4 by default: a longer
+# weight is allocated.  Override with: make MSGLETTERS=8
+MSGLETTERS ?=
+ifneq ($(strip $(MSGLETTERS)),)
+USER_TYPE_FLAGS += -DMSGLETTERS=$(MSGLETTERS)
 endif
 
 SHARED_LIB  = shared.so

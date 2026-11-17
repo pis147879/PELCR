@@ -32,6 +32,7 @@
 #include "symbolic.h"
 #include "graph.h"
 #include "combustion.h"
+#include "message.h"
 #include "io.h"
 #include "dvm.h"
 #include "distribution.h"
@@ -113,15 +114,17 @@ PELCR_EXTERN long graph_edges;
 PELCR_EXTERN int newval;
 
 /********** Carlo *******************************************/
-PELCR_EXTERN char buf[MAXNPROCESS][sizeof(long) + (1 + MAXAWIN) * sizeof(struct messaggio)];
-PELCR_EXTERN char rbuf[sizeof(int) + (1 + MAXAWIN) * sizeof(struct messaggio)];
-PELCR_EXTERN char sendbuffer[150 * (sizeof(int) + (1 + MAXAWIN) * sizeof(struct messaggio))];
+/* the aggregation buffers (h/message.h) */
+PELCR_EXTERN char buf[MAXNPROCESS][MESSAGE_BUFFER];
+PELCR_EXTERN char rbuf[MESSAGE_BUFFER];
+PELCR_EXTERN char sendbuffer[150 * MESSAGE_BUFFER];
 
 /************************************************************/
 
 PELCR_EXTERN int OutTerminationStatus[MAXNPROCESS][MAXNPROCESS];
 PELCR_EXTERN int InTerminationStatus[MAXNPROCESS][MAXNPROCESS];
-PELCR_EXTERN int outcontrol[MAXNPROCESS];
+PELCR_EXTERN int outcontrol[MAXNPROCESS]; /* messages in the aggregation buffer of each process */
+PELCR_EXTERN int outbytes[MAXNPROCESS];   /* bytes of their records (h/message.h) */
 PELCR_EXTERN int tickcontrol[MAXNPROCESS];
 PELCR_EXTERN struct messaggio msg;
 

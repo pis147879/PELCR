@@ -36,8 +36,9 @@
 
    t1 is the index of the exponential at the end of u1 (a trailing "!n" of the string
    form, e.g. "!2" = !^2(1)): the product of symbolic.c treats such a word as the
-   string form does.  An edge allocates exactly the letters of its weight (graph.c);
-   a message and the buffers of the product have room for MAXLETTERS letters (wbuf). */
+   string form does.  An edge allocates exactly the letters of its weight (graph.c), and
+   so does a message (h/message.h): only the buffers of the product have room for
+   MAXLETTERS letters (wbuf). */
 
 #ifndef weight_h
 #define weight_h
@@ -77,14 +78,17 @@ letter MakeX(long sub, long value, wexp m);
 letter MakeBang(wexp n);
 void WeightExpCheck(wexp m);
 
-#define W_CLASSICAL 0xFF
+#define W_CLASSICAL 0x7FF
 
 typedef struct weight {
 	unsigned long long t1 : 40; /* index of the exponential at the end of u1 */
-	unsigned long long n1 : 8;  /* letters of component 1 */
-	unsigned long long n0 : 8;  /* letters of component 0, or W_CLASSICAL when component 0 is erase(u1) */
-	unsigned long long one : 8; /* the identity written "1" (the string form kept it), else 0 */
+	unsigned long long n1 : 11; /* letters of component 1 */
+	unsigned long long n0 : 11; /* letters of component 0, or W_CLASSICAL when component 0 is erase(u1) */
+	unsigned long long one : 2; /* the identity written "1" (the string form kept it), else 0 */
 } weight;
+
+_Static_assert(sizeof(weight) == 8, "weight: a header of one word");
+_Static_assert(MAXLETTERS < W_CLASSICAL, "MAXLETTERS: at most 2046 letters (the fields n1 and n0)");
 
 /* a weight with room for MAXLETTERS letters */
 typedef struct wbuf {
