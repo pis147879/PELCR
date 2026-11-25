@@ -239,7 +239,8 @@ mmwrite(FILE *wstream, struct messaggio *mm, int priority) {
 			TRACING printf("EOT \n");
 		} break;
 
-		case ADD_TAG: {
+		case ADD_TAG:
+		case EOTADD_TAG: {
 			node *target;
 			node *source;
 

@@ -793,8 +793,83 @@ WriteStats() {
 }
 /*END WRITE STATS*/
 
+/* ---- the EOT of the edges ----
+   An edge PLUS of a node owes an EOT to its source seminode (the side of its source it leaves
+   from): no more edges will arrive there from this node.  It owes it as soon as it can no longer
+   be composed, that is when the other side of its node is complete (its EOT has arrived): then
+   it is discharged (MINUS).  The EOT travels with the last edge sent to that seminode
+   (EOTADD_TAG), else as a message of its own (EOT_TAG).
+   - An edge that arrives with EOTADD_TAG closes its side: after its composition with an edge XI
+     of the other side, XI is discharged, and the residual sent to the source of XI carries
+     its EOT (an edge EOTADD generates residuals EOTADD).
+   - An edge that arrives when the other side of its node is already complete is composed once
+     with all the edges there and is discharged at the end: the messages of its combustion are
+     kept, and the last one to its source carries its EOT.
+   - An EOT_TAG that completes a side discharges the edges of the other side.
+   A cold node is never removed and sends no EOT (as before). */
+
+static struct messaggio *kept_messages = NULL;
+static int kept_count = 0, kept_capacity = 0;
+
+/* a message of a combustion: sent, or kept until the end of the combustion */
+static void
+CombustionSend(struct messaggio *m, int keep) {
+	if (!keep) {
+		PushMessage(m);
+		return;
+	}
+	if (kept_count == kept_capacity) {
+		int c = (kept_capacity == 0) ? 64 : 2 * kept_capacity;
+		struct messaggio *p = (struct messaggio *)realloc(kept_messages, (size_t)c * sizeof(struct messaggio));
+		if (p == NULL) {
+			fprintf(stderr, "(%d) PELCR: no memory for the messages of a combustion\n", rank);
+			exit(-1);
+		}
+		kept_messages = p;
+		kept_capacity = c;
+	}
+	memcpy(&kept_messages[kept_count++], m, sizeof(struct messaggio)); /* it takes its weight (h/message.h) */
+}
+
+/* the message goes to the source seminode of the edge P */
+static int
+ToSourceOf(const struct messaggio *m, const edge *P) {
+	return (m->vtarget.rankpuit == P->rankpuit) && (m->vtarget.creator == P->creator)
+	       && (m->vtarget.source == P->source) && (m->side == P->side);
+}
+
+/* P is discharged: its EOT goes with m (the last message to its source seminode) if there is one */
+static void
+Discharge(edge *P, struct messaggio *m, int keep) {
+	if (m != NULL && m->tpy == ADD_TAG && ToSourceOf(m, P)) {
+		m->tpy = EOTADD_TAG;
+		eot_with_edge++;
+	} else {
+		struct messaggio e;
+		StoreEot(&e, P);
+		CombustionSend(&e, keep);
+	}
+	P->sign = MINUS;
+}
+
+/* the edges PLUS of a side are discharged by an EOT_TAG on the other side */
+static void
+DischargeSide(edge *P) {
+	struct messaggio e;
+
+	for (; P != NULL; P = P->vector)
+		if (P->sign == PLUS) {
+			StoreEot(&e, P);
+			PushMessage(&e);
+			P->sign = MINUS;
+		}
+}
+
+/* the combustion of the newest edge XJ of the side polarity of n with the edges XI of the other
+   side.  closing: XJ is the last edge of its side (EOTADD_TAG), every XI is discharged; done: the
+   other side is complete, XJ is discharged at the end (see above) */
 void
-NodeCombustion(node *n, int polarity) {
+NodeCombustion(node *n, int polarity, int closing, int done) {
 	seminode v, vstar;
 	edge *XI, *XJ;
 	int counter;
@@ -816,6 +891,7 @@ NodeCombustion(node *n, int polarity) {
 	XI = vstar.vector;
 	counter = 0;
 	while (XI != NULL) {
+		int to_xi = 0; /* a message to the source of XI is in m */
 		counter++;
 
 		/*
@@ -874,7 +950,7 @@ NodeCombustion(node *n, int polarity) {
 				XJ->side = !XJ->side;
 			} else
 				StoreMessage(&m, XJ, XI, &neg.h, XI->sto, XI->side);
-			PushMessage(&m);
+			CombustionSend(&m, done);
 			XI->sign = MINUS;
 		} else if (isone(&neg.h) && !((XI->sto == OUT) && (XJ->sto != OUT))) {
 			// DEBUG Print(G,edge_compositions);
@@ -891,8 +967,8 @@ NodeCombustion(node *n, int polarity) {
 				XI->side = !XI->side;
 			} else
 				StoreMessage(&m, XI, XJ, &pos.h, XJ->sto, XJ->side);
-			PushMessage(&m);
 			XJ->sign = MINUS;
+			to_xi = 1;
 		} else {
 			fires++;
 			if ((XI->sto == OUT) || ((XJ->sto == OUT))) {
@@ -922,12 +998,64 @@ NodeCombustion(node *n, int polarity) {
 			SendCreateNewNode(proc, sto, aux);
 			TRACING fprintf(logfile, "(%d)- sto:%d pol:%d side:%d\n", rank, sto, LEFT, XJ->side);
 			StoreMessage(&m, XJ, aux, &neg.h, sto, LEFT);
-			PushMessage(&m);
+			CombustionSend(&m, done);
 			TRACING fprintf(logfile, "(%d)+ sto:%d pol:%d side:%d", rank, sto, RIGHT, XI->side);
 			StoreMessage(&m, XI, aux, &pos.h, sto, RIGHT);
-			PushMessage(&m);
+			to_xi = 1;
 		}
+		/* XI is composed for the last time: its EOT goes with the residual to its source */
+		if (closing && XI->sign == PLUS)
+			Discharge(XI, to_xi ? &m : NULL, done);
+		if (to_xi)
+			CombustionSend(&m, done);
 		XI = XI->vector;
+	}
+	if (done) {
+		/* XJ is composed for the last time: its EOT goes with the last message to its source */
+		int i, last = -1;
+		if (XJ != NULL && XJ->sign == PLUS) {
+			for (i = kept_count - 1; i >= 0 && last < 0; i--)
+				if (ToSourceOf(&kept_messages[i], XJ))
+					last = i;
+			if (last >= 0 && kept_messages[last].tpy == ADD_TAG)
+				Discharge(XJ, &kept_messages[last], 1);
+			else
+				Discharge(XJ, NULL, 1);
+		}
+		for (i = 0; i < kept_count; i++)
+			PushMessage(&kept_messages[i]);
+		kept_count = 0;
+	}
+}
+
+/* an edge arrives at n (ADD_TAG, EOTADD_TAG): its combustion, and the EOT it may carry */
+void
+EdgeArrival(node *n, struct messaggio *msg) {
+	seminode *here = (msg->side == LEFT) ? &n->left : &n->right;
+	seminode *there = (msg->side == LEFT) ? &n->right : &n->left;
+	int hot = (n->sto != OUT);
+
+	NodeCombustion(n, msg->side, hot && (msg->tpy == EOTADD_TAG), hot && (there->eot == 1));
+	if (msg->tpy == EOTADD_TAG) {
+		here->eot++;
+		if ((n->sto != OUT) && (n->left.eot == 1) && (n->right.eot == 1))
+			SinkRemove(n);
+	}
+}
+
+/* an EOT_TAG on the side side of n */
+void
+EotArrival(node *n, int side) {
+	if (side == LEFT)
+		n->left.eot++;
+	else
+		n->right.eot++;
+
+	/* a cold node is never removed (it belongs to the final graph) and sends no EOT */
+	if (n->sto != OUT) {
+		DischargeSide((side == LEFT) ? n->right.vector : n->left.vector);
+		if ((n->left.eot == 1) && (n->right.eot == 1))
+			SinkRemove(n);
 	}
 }
 
@@ -1236,16 +1364,7 @@ FunInteraction() {
 					edge e;
 					e = msg.vsource;
 					sourceaddress = StoreBookedAddress(e.creator, (long)e.source, e.sto);
-					if (msg.side == LEFT)
-						sourceaddress->left.eot++;
-					else
-						sourceaddress->right.eot++;
-
-					/* a cold node is never removed (it belongs to the final graph) */
-					if ((sourceaddress->sto != OUT) && (sourceaddress->left.eot == 1) && (sourceaddress->right.eot == 1)) {
-						// sourceaddress=
-						SinkRemove(sourceaddress);
-					}
+					EotArrival(sourceaddress, msg.side);
 				} break;
 
 				case COLD_TAG:
@@ -1253,7 +1372,8 @@ FunInteraction() {
 					StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, OUT);
 					break;
 
-				case ADD_TAG: {
+				case ADD_TAG:
+				case EOTADD_TAG: {
 					node *targetaddress;
 					edge e;
 
@@ -1274,7 +1394,7 @@ FunInteraction() {
 
 					//		DEBUG       printf("(%d) before combustion\n",rank);
 					//		DEBUG       fflush(stdout);
-					NodeCombustion(targetaddress, msg.side);
+					EdgeArrival(targetaddress, &msg);
 					//		DEBUG       printf("(%d) after combustion\n",rank);
 					//		DEBUG       fflush(stdout);
 					/*		DEBUG Print(G,incoming,edge_compositions);*/
@@ -1529,6 +1649,7 @@ PrintResult() {
 		printf("(%d) trivial             :  %ld optimized\n", rank, one_optimizations);
 		printf("(%d) family reductions   :  %ld\n", rank, family_reductions);
 		PrintMessageStats();
+		printf("(%d) EOT                 :  %ld alone, %ld with an edge (EOTADD)\n", rank, eot_alone, eot_with_edge);
 		printf("(%d) max weight length   :  %ld letters (MAXLETTERS %d)\n", rank, max_weight_length, MAXLETTERS);
 		printf("(%d) loops               :  %ld\n", rank, lastloop);
 		printf("(%d) computing loops     :  %ld\n", rank, computing_loops);

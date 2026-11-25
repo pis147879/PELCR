@@ -110,7 +110,10 @@ void PrintResult();
 int BDumpS(struct mbuffer *);
 int BDump(struct mbuffer *);
 
-void NodeCombustion(node *n, int polarity);
+void NodeCombustion(node *n, int polarity, int closing, int done);
+void EdgeArrival(node *n, struct messaggio *m);
+void EotArrival(node *n, int side);
+void StoreEot(struct messaggio *m, edge *P);
 void StoreMessage(struct messaggio *m, edge *t, edge *s, const weight *w, int sto, int p);
 void ShowMessage(struct messaggio *m);
 

@@ -1719,6 +1719,24 @@ MarkColdNodes(termGraph *t) {
 	} while (changed);
 }
 
+/* the sides of a node of the initial graph that receive their EOT at the start: both sides of a
+   cut node (a hot target of edges on its left, SinkList), or the side marked by the builder */
+static int
+InitialEot(node *nodo, int side) {
+	if ((nodo->sto == IN) && (nodo->left.vector != NULL))
+		return 1;
+	if ((nodo->left.eot + nodo->right.eot) == 1)
+		return (side == LEFT) ? nodo->left.eot : nodo->right.eot;
+	return 0;
+}
+
+/* such an EOT travels with the last edge of its side (EOTADD_TAG); a side without edges receives
+   it as a message of its own */
+static int
+InitialEotAlone(node *nodo, int side) {
+	return InitialEot(nodo, side) && (((side == LEFT) ? nodo->left.vector : nodo->right.vector) == NULL);
+}
+
 void
 InitializeIncoming(termGraph *t) {
 	node *nodo;
@@ -1777,6 +1795,10 @@ InitializeIncoming(termGraph *t) {
 			vtarget->side = LEFT;
 			//  DEBUG printf("il peso %s\n",weight);
 			StoreMessage(&m, vtarget, vsource, &arco->weight, storeclass, polarity);
+			if ((arco->vector == NULL) && InitialEot(nodo, LEFT)) {
+				m.tpy = EOTADD_TAG;
+				eot_with_edge++;
+			}
 
 			//  DEBUG printf("after store message\n");
 			ShowMessage(&m);
@@ -1819,6 +1841,10 @@ InitializeIncoming(termGraph *t) {
 			vtarget->side = RIGHT;
 			//  DEBUG printf("il peso %s\n",weight);
 			StoreMessage(&m, vtarget, vsource, &arco->weight, storeclass, polarity);
+			if ((arco->vector == NULL) && InitialEot(nodo, RIGHT)) {
+				m.tpy = EOTADD_TAG;
+				eot_with_edge++;
+			}
 
 			//  DEBUG printf("after store message\n");
 			TRACING ShowMessage(&m);
@@ -1833,7 +1859,8 @@ InitializeIncoming(termGraph *t) {
 	}
 
 	for (nodo = t->root; nodo != NULL; nodo = nodo->nextpuit) {
-		if ((nodo->left.eot + nodo->right.eot) == 1) {
+		if (((nodo->left.eot + nodo->right.eot) == 1) && !((nodo->sto == IN) && (nodo->left.vector != NULL))
+		    && InitialEotAlone(nodo, nodo->left.eot ? LEFT : RIGHT)) {
 			edge endpoint;
 
 			endpoint.creator = size;
@@ -1862,9 +1889,13 @@ InitializeIncoming(termGraph *t) {
 
 		for (i = 0; i < cut_node_count; i++) {
 			//  DEBUG printf("cut node n.%d node %d[%p]\n",i,(int)cut_node_messages[i].vtarget.source,cut_node_messages[i].vtarget.source);
-			PushMessage(&cut_node_messages[i]); /* In initIncoming */
+			node *cut = (node *)cut_node_messages[i].vtarget.source; /* a node of the initial graph */
+
+			if (InitialEotAlone(cut, cut_node_messages[i].side))
+				PushMessage(&cut_node_messages[i]); /* In initIncoming */
 			cut_node_messages[i].side = !(cut_node_messages[i].side);
-			PushMessage(&cut_node_messages[i]);
+			if (InitialEotAlone(cut, cut_node_messages[i].side))
+				PushMessage(&cut_node_messages[i]);
 
 			TRACING BDump(&incoming[schedule]);
 		}

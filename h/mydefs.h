@@ -109,6 +109,8 @@
 #define LOADLIB_TAG 10
 #define LOADFUN_TAG 11
 #define COLD_TAG 12 /* type of a message (not an MPI tag): its target node is cold (SendColdNotice in graph.c) */
+#define EOTADD_TAG 14 /* type of a message: an edge (ADD_TAG) that also carries the EOT of its target seminode, the
+                         last edge it receives (see EdgeArrival in combustion.c) */
 /* ANTO */
 
 /* passi per forzare la send */

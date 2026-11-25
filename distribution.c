@@ -731,21 +731,15 @@ ThreadInteraction() {
 
 					e = msg.vsource;
 					sourceaddress = StoreBookedAddress(e.creator, (long)e.source, e.sto);
-
-					if (msg.side == LEFT)
-						sourceaddress->left.eot++;
-					else
-						sourceaddress->right.eot++;
-
-					if ((sourceaddress->sto != OUT) && (sourceaddress->left.eot == 1) && (sourceaddress->right.eot == 1))
-						sourceaddress = SinkRemove(sourceaddress);
+					EotArrival(sourceaddress, msg.side);
 				}
 
 				break;
 				case COLD_TAG:
 					StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, OUT);
 					break;
-				case ADD_TAG: {
+				case ADD_TAG:
+				case EOTADD_TAG: {
 					node *targetaddress;
 					edge e;
 
@@ -754,7 +748,7 @@ ThreadInteraction() {
 					e = msg.vsource;
 					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, MessageWeight(&msg), e.creator, msg.side, e.side);
 
-					NodeCombustion(targetaddress, msg.side);
+					EdgeArrival(targetaddress, &msg);
 					/*            DEBUG Print(G,&incoming,edge_compositions); */
 					time(&finaltime);
 				} break;

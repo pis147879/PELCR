@@ -313,6 +313,17 @@ ExchangeRemoteColdSources(void) {
 	free(recv_buffer);
 }
 
+/* the EOT that an edge PLUS owes to its source seminode, as a message of its own */
+void
+StoreEot(struct messaggio *m, edge *P) {
+	wbuf eot;
+
+	WeightSetOne(&eot.h);
+	StoreMessage(m, P, P, &eot.h, P->sto, P->side);
+	m->tpy = EOT_TAG;
+	eot_alone++;
+}
+
 void
 LiberaV(edge *P) {
 	struct messaggio m;
@@ -321,10 +332,7 @@ LiberaV(edge *P) {
 		if (P->vector != NULL)
 			LiberaV(P->vector);
 		if (P->sign == PLUS) {
-			wbuf eot;
-			WeightSetOne(&eot.h);
-			StoreMessage(&m, P, P, &eot.h, P->sto, P->side);
-			m.tpy = EOT_TAG;
+			StoreEot(&m, P);
 			PushMessage(&m);
 		};
 

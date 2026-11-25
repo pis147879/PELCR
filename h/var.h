@@ -108,6 +108,8 @@ PELCR_EXTERN int maxubound;
 PELCR_EXTERN int local_pending;
 PELCR_EXTERN int pending_actions;
 PELCR_EXTERN long graph_edges;
+PELCR_EXTERN long eot_alone;     /* EOTs sent as messages of their own (EOT_TAG) */
+PELCR_EXTERN long eot_with_edge; /* EOTs carried by the last edge to a seminode (EOTADD_TAG) */
 
 /*outgoing,*outbuffer= &outgoing;*/
 

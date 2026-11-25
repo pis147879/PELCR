@@ -90,6 +90,8 @@ main(int argc, char **argv) {
 	hot_nodes = 0;
 	cold_nodes = 0;
 	graph_edges = 0;
+	eot_alone = 0;
+	eot_with_edge = 0;
 	inittime = 0;
 	finaltime = 0;
 	batch_processed_actions = 0;
