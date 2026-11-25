@@ -850,7 +850,10 @@ NodeCombustion(node *n, int polarity) {
 		if (!outp) {
 			TRACING fprintf(logfile, "NULL(%d)\n", outp);
 			failed_compositions++;
-		} else if (isone(&pos.h)) { /* also when the source is cold: the residual is then cold (AddEdge) */
+		} else if (isone(&pos.h) && !((XJ->sto == OUT) && (XI->sto != OUT))) {
+			/* the optimization of one would give the source of XI, hot, an edge toward the source of XJ,
+			   cold: not done (a fire creates a cold node instead), so that no node becomes cold after its
+			   creation; from a cold source it is done */
 			TRACING {
 				Print(G, incoming, edge_compositions);
 				fprintf(logfile, "(%d) verify one-optimization \n", rank);
@@ -873,7 +876,7 @@ NodeCombustion(node *n, int polarity) {
 				StoreMessage(&m, XJ, XI, &neg.h, XI->sto, XI->side);
 			PushMessage(&m);
 			XI->sign = MINUS;
-		} else if (isone(&neg.h)) {
+		} else if (isone(&neg.h) && !((XI->sto == OUT) && (XJ->sto != OUT))) {
 			// DEBUG Print(G,edge_compositions);
 			TRACING {
 				fprintf(logfile, "OPT %s\n", WeightToString(&pos.h, ws1, sizeof(ws1)));
