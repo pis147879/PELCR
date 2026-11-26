@@ -1649,6 +1649,7 @@ PrintResult() {
 		printf("(%d) trivial             :  %ld optimized\n", rank, one_optimizations);
 		printf("(%d) family reductions   :  %ld\n", rank, family_reductions);
 		PrintMessageStats();
+		PrintBookTableStats();
 		printf("(%d) EOT                 :  %ld alone, %ld with an edge (EOTADD)\n", rank, eot_alone, eot_with_edge);
 		printf("(%d) max weight length   :  %ld letters (MAXLETTERS %d)\n", rank, max_weight_length, MAXLETTERS);
 		printf("(%d) loops               :  %ld\n", rank, lastloop);

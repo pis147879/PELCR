@@ -42,6 +42,7 @@ HashEntry *delete_fromilist(HashTable *table, HashEntry *entry, unsigned long ke
 
 void table_iput(HashTable *table, unsigned long key, node *address);
 int table_iget(HashTable *table, unsigned long key, node **address);
+void PrintBookTableStats(void);
 
 void table_idelete(HashTable *table, unsigned long key, node **address);
 void table_idestroy(HashTable *table);
