@@ -823,16 +823,66 @@ BuildBool(char *b) {
 	return newT;
 }
 
+/* ---- the table of the constants ----
+   It grows when no entry is free (k_refs[i] == 0: no edge refers to the constant any more), up
+   to MAXNUMCOST entries, the largest index an external letter can hold. */
+
+_Static_assert(MAXNUMCOST <= XL_OFFSET, "MAXNUMCOST: the index of a constant is the value of a letter X");
+
+static void
+KonstTableResize(int capacity) {
+	int j;
+	int *t = (int *)realloc(k_type, (size_t)capacity * sizeof(int));
+	USERTYPE *v = (t == NULL) ? NULL : (USERTYPE *)realloc(k_value, (size_t)capacity * sizeof(USERTYPE));
+	int *r = (v == NULL) ? NULL : (int *)realloc(k_refs, (size_t)capacity * sizeof(int));
+
+	if (r == NULL) {
+		fprintf(stderr, "(%d) PELCR: no memory for %d constants\n", rank, capacity);
+		exit(-1);
+	}
+	k_type = t;
+	k_value = v;
+	k_refs = r;
+	for (j = k_capacity; j < capacity; j++) {
+		k_type[j] = 0;
+		pelcr_value_init(&k_value[j]);
+		k_refs[j] = 0;
+	}
+	k_capacity = capacity;
+}
+
+void
+InitKonstTable(void) {
+	if (k_capacity == 0)
+		KonstTableResize(KONST_INITIAL);
+}
+
+/* the table has room for the index k */
+static void
+KonstTableReach(int k) {
+	int capacity = (k_capacity == 0) ? KONST_INITIAL : k_capacity;
+
+	if (k < k_capacity)
+		return;
+	if (k >= MAXNUMCOST) {
+		printf("\n(%d) PELCR: table of the constants full (%d entries, the room of an external letter)\n", rank,
+		       MAXNUMCOST);
+		exit(0);
+	}
+	while (capacity <= k)
+		capacity *= 2;
+	if (capacity > MAXNUMCOST)
+		capacity = MAXNUMCOST;
+	KonstTableResize(capacity);
+}
+
 /* ANTO */
 int
 AddEntryInk(int type, USERTYPE val) {
 	/* ANTO */
 
 	kindex++;
-	if (kindex > MAXNUMCOST) {
-		printf("\nTabella delle costanti piena\n");
-		exit(0);
-	}
+	KonstTableReach(kindex);
 	k_type[kindex] = type;
 	pelcr_value_set(&k_value[kindex], &val);
 	k_refs[kindex]++;
@@ -840,25 +890,27 @@ AddEntryInk(int type, USERTYPE val) {
 	return kindex;
 }
 
+/* kindex: a free entry, the first one after kindex (going round once), or a new one */
 void
 SetNextKIndex(void) {
-	int index_reduced = 0;
+	int start, k;
 
 	if (kindex < 0)
 		kindex = 0;
-	while (k_refs[kindex] != 0) {
-		kindex++;
-		if (kindex >= MAXNUMCOST) {
-			if (index_reduced) {
-				printf("\n>SetNextKIndex: Tabella delle costanti piena!!!\n");
-				exit(0);
-			} else {
-				index_reduced = 1;
-				kindex = kindex % MAXNUMCOST;
-			}
+	KonstTableReach(kindex);
+	start = kindex;
+	for (k = start; k < k_capacity; k++)
+		if (k_refs[k] == 0) {
+			kindex = k;
+			return;
 		}
-	}
-	return;
+	for (k = 0; k < start; k++)
+		if (k_refs[k] == 0) {
+			kindex = k;
+			return;
+		}
+	kindex = k_capacity;
+	KonstTableReach(kindex);
 }
 
 void

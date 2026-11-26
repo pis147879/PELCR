@@ -102,11 +102,7 @@ main(int argc, char **argv) {
 	findex = -1;
 	fcounter = -1;
 
-	for (j = 0; j < MAXNUMCOST; j++) {
-		k_type[j] = 0;
-		pelcr_value_init(&k_value[j]);
-		k_refs[j] = 0;
-	}
+	InitKonstTable();
 	for (j = 0; j < MAXFUNCTIONS; j++) {
 		int i;
 		for (i = 0; i < MAXNUMARG; i++) {

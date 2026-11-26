@@ -60,6 +60,7 @@ void CallXF1ArgChar(char *, char *);
 void CallXF1ArgUser(char *, char *);
 int AddEntryInk(int, USERTYPE);
 void SetNextKIndex(void);
+void InitKonstTable(void);
 /* ANTO */
 int AddEntryInf(char *);
 int XAddEntryInf(char *, int);

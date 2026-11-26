@@ -52,7 +52,12 @@
 #define OR 8
 #define GREATER 9
 
-#define MAXNUMCOST 10000 /*era 1000000*/
+/* the constants: a table that grows (KonstTable, buildgraph.c) from KONST_INITIAL entries (the
+   former fixed size, so that the entries are chosen as before) up to MAXNUMCOST, the room of the
+   index in an external letter X(KONST, index) (XL_OFFSET in h/weight.h); the parser also returns
+   MAXNUMCOST + 1 for #quit, above every index */
+#define KONST_INITIAL 10000
+#define MAXNUMCOST 131072
 #define MAXTYPE 20       /*era 10*/
 #define MAXFUNCTIONS 50  /*era 50*/
 #define MAXDATAVARS 20   /*era 10*/
@@ -71,9 +76,10 @@ typedef struct functionstack {
 } functionstack;
 
 /* ANTO */
-PELCR_EXTERN int k_type[MAXNUMCOST];
-PELCR_EXTERN USERTYPE k_value[MAXNUMCOST];
-PELCR_EXTERN int k_refs[MAXNUMCOST];
+PELCR_EXTERN int *k_type;      /* k_capacity entries (KonstTable) */
+PELCR_EXTERN USERTYPE *k_value;
+PELCR_EXTERN int *k_refs;
+PELCR_EXTERN int k_capacity;
 /* ANTO */
 
 PELCR_EXTERN functionstack f[MAXFUNCTIONS];
