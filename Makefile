@@ -53,6 +53,9 @@ USER_TYPE_FLAGS += -DMSGLETTERS=$(MSGLETTERS)
 endif
 
 SHARED_LIB  = shared.so
+# the examples (Makefile.mac and Makefile.iulia set it too): before its first use, since the rule
+# of $(CRYPTO_LIB) takes its value when it is read (Makefile.linux did not set it: /Crypto/crypto.so)
+PEXDIR      ?= pelcrexamples
 CRYPTO_DIR  = $(PEXDIR)/Crypto
 CRYPTO_LIB  = $(CRYPTO_DIR)/crypto.so
 CRYPTO_TESTFILE = Crypto/pkzipBrute.plcr
@@ -197,7 +200,6 @@ test-nd: gcombustion
 # are summed.  The output of PELCR goes to $(RUNDIR)/<name>.log; the statistics are printed.
 # make nf ...: the same run, then the normal form, read back from the final graph by the decoder of
 # the ND-PELCR article (Python, agents/readback/pelcr_c_readback.py).
-PEXDIR  ?= pelcrexamples
 RUNDIR  ?= $(OUTDIR)/run
 FIRES   ?= 0
 RUNNAME  = $(if $(strip $(EXPR)),term,$(basename $(notdir $(FILE))))
