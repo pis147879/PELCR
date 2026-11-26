@@ -738,6 +738,9 @@ ThreadInteraction() {
 				case COLD_TAG:
 					StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, OUT);
 					break;
+				case ADD_REV_TAG:
+					RevArrive(&msg);
+					break;
 				case ADD_TAG:
 				case EOTADD_TAG: {
 					node *targetaddress;
@@ -745,6 +748,7 @@ ThreadInteraction() {
 
 					targetaddress
 					    = StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, msg.vtarget.sto);
+					RevFilterAdd(&msg, targetaddress);
 					e = msg.vsource;
 					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, MessageWeight(&msg), e.creator, msg.side, e.side);
 

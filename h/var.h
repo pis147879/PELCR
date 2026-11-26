@@ -38,6 +38,7 @@
 #include "distribution.h"
 #include "lambdastar.h"
 #include "buildgraph.h"
+#include "rev.h"
 
 #ifdef PELCR_DEFINE_GLOBALS
 #define PELCR_EXTERN

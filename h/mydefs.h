@@ -68,6 +68,7 @@
 #define STICKY 2
 #define PLUS 1
 #define MINUS 0
+#define REVSIGN 2 /* sign of (B, ADDREV) kept at the source of B (rev.c): not an edge of the graph */
 
 /*seminodo*/
 #define LEFT 1
@@ -76,7 +77,7 @@
 /* the longest string form of a weight (prints, dumps; the weights are words of integer
    letters, at most MAXLETTERS letters: see h/weight.h) */
 #ifndef MAXLETTERS
-#define MAXLETTERS 16
+#define MAXLETTERS 64
 #endif
 #define MAXLENWEIGHT (32 * MAXLETTERS + 16)
 #ifndef MAXUSERVALUELEN
@@ -95,7 +96,7 @@
 #define MANAGERPROCESS 0
 #define INITIALIZERPROCESS 0
 
-#define ADD_REV_TAG 0
+#define ADD_REV_TAG 13 /* type of a message: (B, ADDREV), the reversed unary edge (rev.c); it was 0, unused */
 #define ADD_TAG 1
 #define CREATE_TAG 2
 #define EOT_TAG 3

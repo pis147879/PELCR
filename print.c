@@ -391,6 +391,8 @@ Print(graph g, struct mbuffer *b, long sq) {
 	for (i = 0; P != NULL; i++) {
 		e = P->left.vector;
 		for (; e != NULL; e = e->vector) {
+			if (e->sign == REVSIGN)
+				continue;
 #ifdef _DEBUG
 			DEBUG_PRINT {
 				fprintf(logfile, "(%d) SHOW edge in LEFT scan-hot-graph before entering writedge\n", rank);
@@ -404,6 +406,8 @@ Print(graph g, struct mbuffer *b, long sq) {
 
 		e = P->right.vector;
 		for (; e != NULL; e = e->vector) {
+			if (e->sign == REVSIGN)
+				continue;
 #ifdef _DEBUG
 			DEBUG_PRINT {
 				fprintf(logfile, "(%d) SHOW edge in RIGHT scan-hot-graph before entering writedge\n", rank);
@@ -427,6 +431,8 @@ Print(graph g, struct mbuffer *b, long sq) {
 	for (i = 0; P != NULL; i++) {
 		e = P->left.vector;
 		for (; e != NULL; e = e->vector) {
+			if (e->sign == REVSIGN)
+				continue;
 #ifdef _DEBUG
 			DEBUG_PRINT {
 				fprintf(logfile, "(%d) SHOW edge in LEFT scan-cold-graph before entering writedge\n", rank);
@@ -439,6 +445,8 @@ Print(graph g, struct mbuffer *b, long sq) {
 
 		e = P->right.vector;
 		for (; e != NULL; e = e->vector) {
+			if (e->sign == REVSIGN)
+				continue;
 #ifdef _DEBUG
 			DEBUG_PRINT {
 				fprintf(logfile, "(%d) SHOW edge in RIGHT scan-cold-graph before entering writedge\n", rank);

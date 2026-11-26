@@ -46,7 +46,7 @@
 #include <stddef.h>
 
 #ifndef MAXLETTERS
-#define MAXLETTERS 16
+#define MAXLETTERS 64
 #endif
 
 typedef unsigned long long letter;

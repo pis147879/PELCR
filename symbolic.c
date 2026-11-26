@@ -735,6 +735,67 @@ isone(const weight *w) {
 	return WeightIsOne(w);
 }
 
+/* ---- concatenation (ADDREV, rev.c) ---- */
+
+static wexp
+letter_lift(letter x) {
+	return IS_GEN_LETTER(x) ? (wexp)GEN_LIFT(x) : 1;
+}
+
+/* a word of letters {x, m} in canonical order: indices non-decreasing, by the commutation
+   y_n x_m = x_m y_{n+e(x)-1} (n > m) of positive letters */
+static int
+canon_word(letter *l, int n) {
+	int i, moved = 1;
+	while (moved) {
+		moved = 0;
+		for (i = 0; i + 1 < n; i++) {
+			wexp a = LETTER_EXP(l[i]), b = LETTER_EXP(l[i + 1]);
+			if (a > b) {
+				letter y = l[i], x = l[i + 1];
+				wexp m = a + letter_lift(x) - 1;
+				WeightExpCheck(m);
+				l[i] = x;
+				l[i + 1] = LETTER_WITH_EXP(y, m);
+				moved = 1;
+			}
+		}
+	}
+	return n;
+}
+
+/* out = b a, the product of two positive weights (both components of Lambda*_nd): the path
+   that crosses first the edge of weight b, then the edge of weight a */
+void
+WeightConcat(const weight *b, const weight *a, weight *out) {
+	letter u1[2 * MAXTOK], u0[2 * MAXTOK], c[MAXTOK];
+	int n1, n0, nb0, na0;
+	wexp t1;
+
+	n1 = b->n1 + a->n1;
+	if (n1 > 2 * MAXTOK)
+		tok_overflow();
+	memcpy(u1, WLETTERS_C(b), (size_t)b->n1 * sizeof(letter));
+	memcpy(u1 + b->n1, WLETTERS_C(a), (size_t)a->n1 * sizeof(letter));
+	canon_word(u1, n1);
+	t1 = (n1 > 0) ? LETTER_EXP(u1[n1 - 1]) : 0;
+	WeightCheck(n1, "WeightConcat");
+	if (!W_IS_PAIR(a) && !W_IS_PAIR(b)) {
+		memcpy(WLETTERS(out), u1, (size_t)n1 * sizeof(letter));
+		out->n1 = n1;
+		out->n0 = W_CLASSICAL;
+		out->t1 = t1;
+		out->one = 0;
+		return;
+	}
+	nb0 = component0(b, c);
+	memcpy(u0, c, (size_t)nb0 * sizeof(letter));
+	na0 = component0(a, c);
+	memcpy(u0 + nb0, c, (size_t)na0 * sizeof(letter));
+	n0 = canon_word(u0, nb0 + na0);
+	join(out, u1, n1, t1, u0, n0);
+}
+
 /* ---- lifts and prefixes used by the graph builder (in place: the edges of the graph
    builder have room for MAXLETTERS letters) ---- */
 

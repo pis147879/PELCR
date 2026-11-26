@@ -890,8 +890,14 @@ NodeCombustion(node *n, int polarity, int closing, int done) {
 	XJ = v.vector;
 	XI = vstar.vector;
 	counter = 0;
+	if (XJ != NULL && XJ->sign == REVSIGN) /* (B, ADDREV): it acts in RevArrive (rev.c) */
+		XI = NULL;
 	while (XI != NULL) {
 		int to_xi = 0; /* a message to the source of XI is in m */
+		if (XI->sign == REVSIGN) { /* it has already changed the weight of XJ (RevFilterAdd) */
+			XI = XI->vector;
+			continue;
+		}
 		counter++;
 
 		/*
@@ -1367,6 +1373,10 @@ FunInteraction() {
 					EotArrival(sourceaddress, msg.side);
 				} break;
 
+				case ADD_REV_TAG:
+					RevArrive(&msg);
+					break;
+
 				case COLD_TAG:
 					/* the node is the source of an edge that points to a cold node (SendColdNotice) */
 					StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, OUT);
@@ -1388,6 +1398,7 @@ FunInteraction() {
 						TRACING printf("(%d) ********** principal port address %p\n", rank, principal);
 					};
 
+					RevFilterAdd(&msg, targetaddress);
 					e = msg.vsource;
 
 					AddEdge(targetaddress, e.rankpuit, e.source, e.sto, MessageWeight(&msg), e.creator, msg.side, e.side);
@@ -1648,6 +1659,7 @@ PrintResult() {
 		printf("(%d) fires               :  %ld\n", rank, fires);
 		printf("(%d) trivial             :  %ld optimized\n", rank, one_optimizations);
 		printf("(%d) family reductions   :  %ld\n", rank, family_reductions);
+		RevPrintStats();
 		PrintMessageStats();
 		printf("(%d) EOT                 :  %ld alone, %ld with an edge (EOTADD)\n", rank, eot_alone, eot_with_edge);
 		printf("(%d) max weight length   :  %ld letters (MAXLETTERS %d)\n", rank, max_weight_length, MAXLETTERS);

@@ -108,6 +108,8 @@ write_edges(FILE *f, node *head, int *first) {
 		for (side = 0; side < 2; side++) {
 			e = (side == 0) ? v->left.vector : v->right.vector;
 			for (; e != NULL; e = e->vector) {
+				if (e->sign == REVSIGN)
+					continue;
 				source_id(sid, sizeof(sid), e);
 				fprintf(f,
 				        "%s\n  {\"target\": \"%s\", \"target_side\": %d, \"source\": \"%s\", \"source_side\": %d, "
@@ -295,6 +297,8 @@ write_final_gml(node *principal, const char *path) {
 			for (s2 = 0; s2 < 2; s2++) {
 				for (e = (s2 == 0) ? v->left.vector : v->right.vector; e != NULL; e = e->vector) {
 					char u1[MAXLENWEIGHT], u0[MAXLENWEIGHT], ws[MAXLENWEIGHT];
+					if (e->sign == REVSIGN)
+						continue;
 					long src = node_index(sorted, n, source_node(e));
 					if (src < 0) {
 						/* unresolved source: a node of its own */

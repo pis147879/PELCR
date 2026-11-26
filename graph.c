@@ -106,6 +106,7 @@ AttachNodeToCold(node *P) {
 		return;
 
 	was_hot = (P->sto != OUT);
+	RevNoteCold(P);
 
 	UnlinkNodeFromList(&G.hot, P);
 
@@ -129,6 +130,8 @@ AttachNodeToCold(node *P) {
 static void
 PropagateColdToSourceEndpoints(edge *P) {
 	for (; P != NULL; P = P->vector) {
+		if (P->sign == REVSIGN)
+			continue;
 		P->sto = OUT;
 		if (P->rankpuit == rank)
 			StoreBookedAddress(P->creator, (long)P->source, OUT);

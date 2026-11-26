@@ -37,6 +37,7 @@ int findType(int tipo);
 /* the dynamic algebra Lambda*_nd on the weights of h/weight.h (see symbolic.c) */
 int product(const weight *a, const weight *b, weight *a1, weight *b1);
 int isone(const weight *w);
+void WeightConcat(const weight *b, const weight *a, weight *out);
 void LiftWeight(weight *w);
 void PrefixWeight1(weight *w, int kind);
 void PrefixChoice(weight *w, long h);
