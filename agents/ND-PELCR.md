@@ -130,9 +130,51 @@ la forma normale condivisa è molto più compatta del λ-termine che la srotola 
 - 36 file con costanti o funzioni esterne: solo esecuzione;
 - 51 run confrontate con la build di base: stesse statistiche (finali, o dopo 10000 composizioni), nessuna differenza.
 
+## Frontend e backend (`channel.c`, `h/channel.h`, 2026-11-27)
+
+PELCR come backend di valutazione sempre disponibile: il backend tiene solo il grafo caldo e non termina mai;
+un frontend apre un canale, manda le azioni del termine e riceve sullo stesso canale gli archi diretti ai suoi
+nodi freddi, cioè tutto il grafo finale, qualunque sia il numero di rank del backend.
+
+```
+make serve NP=8 PORT=7070                       # il backend (in primo piano; Ctrl-C lo ferma)
+make run FILE=dd3.plcr BACKEND=localhost:7070   # un frontend
+make nf FILE=dd2.plcr BACKEND=localhost:7070    # ... con la forma normale
+make test-nd BACKEND=localhost:7070             # i test del read-back attraverso il backend
+```
+
+- **Backend** (`-serve <porta>`, tutti i rank di un job MPI): il rank 0 fa da gateway, accetta un canale TCP,
+  inietta le azioni che arrivano e scrive sul canale i messaggi per il frontend (quelli degli altri rank gli
+  arrivano via MPI: l'ordine dei messaggi di ogni rank resta quello).
+- **Frontend** (`-frontend host:porta`, un processo): parser e costruzione del grafo come il rank 0 di una run,
+  `MarkColdNodes`, e tiene i nodi freddi: i nodi iniziali freddi, fra cui le sorgenti fredde dei primi archi.
+  I nodi iniziali caldi vanno sui rank del backend a round robin.
+- **Indirizzi**: `size` è il numero di rank del backend (anche nel frontend, dopo l'handshake) e il creatore
+  delle chiavi del costruttore; i nodi del frontend hanno `rankpuit` = size + 1, che è anche il `rank` del
+  frontend. Un nodo freddo creato da una composizione nel backend vive nel frontend del suo arco freddo: il
+  rank prenota solo una chiave (`SendCreateNewNode`) e il frontend crea il nodo quando viene nominato.
+- **Fine di un termine**, come invariante del passo e non come quiescenza globale: ogni lato di un nodo del
+  frontend il cui arco PLUS sta nel backend aspetta un EOT. Il frontend conta questi debiti lato per lato:
+  +1 per ogni arco iniziale mandato al backend e per l'altro lato di un nodo freddo creato dal backend quando
+  il suo altro arco va al backend (flag `CH_CREATED`, `CH_OTHER_BACKEND` in `vtarget.sign` del messaggio);
+  −1 per ogni EOT ricevuto e quando un'ottimizzazione dell'uno porta nel frontend l'arco PLUS di un lato. Il
+  termine è finito quando nessun lato è squilibrato.
+- **Verifiche**: `test_c_readback` attraverso backend di 1, 2, 3, 4 rank: 88 termini, read-back = nf e Obs = EX;
+  dd3, dd4, nd/delta-choice, nd/prodsum, 2I, d4 a 1, 2, 4 rank: lo stesso grafo finale della run su un
+  processo; un file con sei termini: tutti giusti (la run su un processo fa 0 composizioni dopo il primo
+  termine); i 64 esempi su un processo con le stesse statistiche di prima. Con ADDREV (branch
+  `addrev-frontend`) a 2 e 4 rank: 582 termini (semi 7, 2026, 99, 13) con read-back = nf e Obs = EX (le stesse
+  due eccezioni note), dd2 = 256, e l'osservazione di dd3 (328 cammini) identica a quella senza ADDREV, con
+  grafi finali di 1.193–1.431 nodi invece di 7.130.
+- **Limiti**: solo termini puri e con choice (niente costanti e funzioni esterne, che compongono sui nodi
+  freddi; niente `-fires`); un canale alla volta; il backend non sa a quale termine appartengono i suoi nodi
+  caldi, quindi il garbage di un termine con cancellazione può restarvi (2 nodi caldi per
+  `(λx.λy.y)(λa.λb.(a)b)` a 2 rank) e non viene ripulito; formato dei messaggi binario, quindi frontend e
+  backend sulla stessa architettura; tutti gli archi freddi passano dal rank 0.
+
 ## Limiti e passi successivi
 
-- Read-back su un solo rank; simboli esterni `X(...)` non letti (la loro interazione con le choice non è
+- Read-back su un solo rank (attraverso un backend: qualunque numero di rank, vedi sopra); simboli esterni `X(...)` non letti (la loro interazione con le choice non è
   verificata: le lettere esterne stanno nella componente 1).
 - Il decoder del read-back è in Python (codice dell'articolo); un decoder in C resta da scrivere.
 - Termini con forma normale molto grande (es. (δ)(δ)[two + three]) non finiscono in tempi brevi.

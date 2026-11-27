@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -32,6 +33,10 @@
 #include <unistd.h>
 
 #include "var.h"
+
+#ifndef MSG_NOSIGNAL /* macOS: SIGPIPE is ignored instead (ch_nonblocking) */
+#define MSG_NOSIGNAL 0
+#endif
 
 extern int yyparse(void);
 
@@ -191,6 +196,7 @@ ch_nonblocking(int fd) {
 
 	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) | O_NONBLOCK);
 	setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &one, sizeof(one));
+	signal(SIGPIPE, SIG_IGN); /* a channel that closes is seen by send (EPIPE) */
 }
 
 /* ------------------------------------------------------------------------------------------- */
