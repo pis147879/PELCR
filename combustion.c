@@ -972,7 +972,7 @@ NodeCombustion(node *n, int polarity, int closing, int done) {
 		} else {
 			fires++;
 			if ((XI->sto == OUT) || ((XJ->sto == OUT))) {
-				proc = rank;
+				proc = ColdNodeRank(XI, XJ); /* this process, or the frontend of the cold edge (h/channel.h) */
 				sto = OUT;
 				TRACING {
 					fprintf(logfile, "%d%d%d+%s, %d%d%d-%s\n", sto, RIGHT, XI->side,
@@ -998,9 +998,11 @@ NodeCombustion(node *n, int polarity, int closing, int done) {
 			SendCreateNewNode(proc, sto, aux);
 			TRACING fprintf(logfile, "(%d)- sto:%d pol:%d side:%d\n", rank, sto, LEFT, XJ->side);
 			StoreMessage(&m, XJ, aux, &neg.h, sto, LEFT);
+			ChannelMarkCreated(&m, XI); /* the other edge of the new node goes to the source of XI */
 			CombustionSend(&m, done);
 			TRACING fprintf(logfile, "(%d)+ sto:%d pol:%d side:%d", rank, sto, RIGHT, XI->side);
 			StoreMessage(&m, XI, aux, &pos.h, sto, RIGHT);
+			ChannelMarkCreated(&m, XJ);
 			to_xi = 1;
 		}
 		/* XI is composed for the last time: its EOT goes with the residual to its source */
@@ -1121,6 +1123,7 @@ StoreMessage(struct messaggio *m, edge *target, edge *source, const weight *w, i
 	m->vtarget.source = target->source;
 
 	m->vtarget.sto = target->sto;
+	m->vtarget.sign = 0; /* the flags of a message to a frontend (h/channel.h) */
 	if ((pol != LEFT) && (pol != RIGHT)) {
 		/*printf("(%d) SIDE NON LEGALE\n");*/
 		fflush(stdout);
@@ -1260,6 +1263,8 @@ FunReceiveMessages() {
 				struct messaggio rm;
 
 				position = position + MessageUnpack(&rm, position);
+				if (ChannelForward(&rm))
+					continue;
 #if MINPRIORITY > 1
 				ub = UpperBound(&rm);
 
@@ -1399,7 +1404,7 @@ FunInteraction() {
 
 					targetaddress
 					    = StoreBookedAddress((msg.vtarget).creator, (long)(msg.vtarget).source, msg.vtarget.sto);
-					if ((rank == 0) && (principal == 0)) {
+					if ((rank == principal_rank) && (principal == 0)) {
 						principal = targetaddress;
 						TRACING printf("(%d) ********** principal port address %p\n", rank, principal);
 					};

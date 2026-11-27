@@ -1801,6 +1801,7 @@ InitializeIncoming(termGraph *t) {
 	/* the cut nodes of this term (they were never reset: the list of a file with several terms
 	   overflowed cut_node_messages[MAXCUTNODES] and resent EOTs to nodes of the previous terms) */
 	cut_node_count = 0;
+	ChannelInitialReset(); /* h/channel.h */
 
 	/* the free variables of the term: boundary nodes for the read-back */
 	nfreevars = 0;
@@ -1826,7 +1827,7 @@ InitializeIncoming(termGraph *t) {
 			vtarget = NewReference();
 
 			vsource->creator = size;
-			vsource->rankpuit = rank;
+			vsource->rankpuit = ChannelInitialRank(arco->source); /* h/channel.h */
 
 			//  DEBUG printf("peso dell'arco da inserire %s\n",arco->weight);
 
@@ -1834,7 +1835,7 @@ InitializeIncoming(termGraph *t) {
 			/* carlo : BookedAddress(size,(long) arco->source) ;*/
 
 			vtarget->creator = size;
-			vtarget->rankpuit = rank;
+			vtarget->rankpuit = ChannelInitialRank(nodo);
 			vtarget->source = nodo;
 			/* carlo: BookedAddress(size,(int) nodo) ;*/
 
@@ -1872,7 +1873,7 @@ InitializeIncoming(termGraph *t) {
 			vtarget = NewReference();
 
 			vsource->creator = size;
-			vsource->rankpuit = rank;
+			vsource->rankpuit = ChannelInitialRank(arco->source); /* h/channel.h */
 
 			//  DEBUG printf("peso dell'arco da inserire %s\n",arco->weight);
 
@@ -1880,7 +1881,7 @@ InitializeIncoming(termGraph *t) {
 			/* carlo: BookedAddress(size,(long) arco->source) ;*/
 
 			vtarget->creator = size;
-			vtarget->rankpuit = rank;
+			vtarget->rankpuit = ChannelInitialRank(nodo);
 			vtarget->source = nodo;
 			/* carlo: BookedAddress(size,(int) nodo) ;*/
 
@@ -1916,7 +1917,7 @@ InitializeIncoming(termGraph *t) {
 			edge endpoint;
 
 			endpoint.creator = size;
-			endpoint.rankpuit = rank;
+			endpoint.rankpuit = ChannelInitialRank(nodo);
 			endpoint.source = nodo;
 			endpoint.sto = OUT;
 			endpoint.side = nodo->left.eot ? LEFT : RIGHT;

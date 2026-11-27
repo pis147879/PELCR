@@ -426,6 +426,12 @@ PushMessage(struct messaggio *m) {
 	int nc;
 
 	dest = m->vtarget.rankpuit;
+	if (pelcr_role != PELCR_ALONE) {
+		/* frontend and backend (h/channel.h) */
+		dest = ChannelRoute(m, dest);
+		if (dest < 0)
+			return;
+	}
 
 	m->sender = rank;
 	OutCounter[dest]++;
