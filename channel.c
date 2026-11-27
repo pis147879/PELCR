@@ -60,6 +60,9 @@ typedef struct ch_header {
 
 static int ch_fd = -1;     /* the channel */
 static int ch_listen = -1; /* the gateway: the socket that accepts channels */
+static int ch_rank = -1;   /* the gateway: the rank of the open channel (h/channel.h) */
+static int ch_next = 0;    /* the gateway: channels opened so far */
+static long ch_dropped = 0; /* the gateway: messages for a channel that is closed */
 
 /* output: complete blocks not yet written (from out_sent), then the block being filled */
 static char *out_buf = NULL;
@@ -72,6 +75,8 @@ static char *in_buf = NULL;
 static size_t in_len = 0, in_cap = 0;
 
 static long ch_records_out = 0, ch_records_in = 0;
+
+static void serve_close(const char *why);
 
 static void
 ch_reserve(char **b, size_t *cap, size_t need) {
@@ -149,7 +154,8 @@ ch_flush(int blocking) {
 		}
 		if ((n < 0) && (errno == EINTR))
 			continue;
-		if ((n < 0) && ((errno == EAGAIN) || (errno == EWOULDBLOCK))) {
+		if ((n < 0) && ((errno == EAGAIN) || (errno == EWOULDBLOCK) || (errno == ENOBUFS))) {
+			/* the socket takes nothing now (ENOBUFS: macOS under load): later */
 			struct pollfd p;
 			if (!blocking)
 				return;
@@ -159,6 +165,10 @@ ch_flush(int blocking) {
 			continue;
 		}
 		fprintf(stderr, "(%d) PELCR channel: write failed (%s)\n", rank, strerror(errno));
+		if (pelcr_role == PELCR_BACKEND) {
+			serve_close("write failed");
+			return;
+		}
 		close(ch_fd);
 		ch_fd = -1;
 		break;
@@ -179,7 +189,7 @@ ch_read_all(void *dst, size_t n) {
 			n -= (size_t)r;
 		} else if ((r < 0) && (errno == EINTR))
 			continue;
-		else if ((r < 0) && ((errno == EAGAIN) || (errno == EWOULDBLOCK))) {
+		else if ((r < 0) && ((errno == EAGAIN) || (errno == EWOULDBLOCK) || (errno == ENOBUFS))) {
 			struct pollfd q;
 			q.fd = ch_fd;
 			q.events = POLLIN;
@@ -416,7 +426,7 @@ ChannelRoute(struct messaggio *m, int dest) {
 	if ((pelcr_role == PELCR_BACKEND) && (dest >= size)) {
 		if (rank != CH_GATEWAY)
 			return CH_GATEWAY;
-		ch_write_record(m);
+		ChannelForward(m);
 		return -1;
 	}
 	return dest;
@@ -426,7 +436,13 @@ int
 ChannelForward(struct messaggio *m) {
 	if ((pelcr_role != PELCR_BACKEND) || (rank != CH_GATEWAY) || (m->vtarget.rankpuit < size))
 		return 0;
-	ch_write_record(m);
+	if ((ch_fd >= 0) && (m->vtarget.rankpuit == ch_rank))
+		ch_write_record(m);
+	else {
+		/* a term whose channel closed: its frontend is gone */
+		MessageFreeWeight(m);
+		ch_dropped++;
+	}
 	return 1;
 }
 
@@ -490,8 +506,9 @@ serve_term_end(void) {
 				total[k] += c[k];
 		}
 	ch_put_block(CH_STATS, SERVE_COUNTERS, total, (long)sizeof(total));
-	printf("(%d) term over: %ld compositions, %ld family reductions, %ld hot nodes left\n", rank, total[0],
-	       total[3], total[4]);
+	printf("(%d) term over: %ld compositions, %ld family reductions, %ld hot nodes left (%ld messages of closed "
+	       "channels dropped)\n",
+	       rank, total[0], total[3], total[4], ch_dropped);
 	fflush(stdout);
 }
 
@@ -501,6 +518,7 @@ serve_close(const char *why) {
 	fflush(stdout);
 	close(ch_fd);
 	ch_fd = -1;
+	ch_rank = -1;
 	in_len = out_len = out_sent = 0;
 	blk_open = 0;
 	ch_records_in = ch_records_out = 0;
@@ -546,8 +564,12 @@ serve_poll(void) {
 			return;
 		ch_fd = fd;
 		ch_nonblocking(ch_fd);
-		ch_put_block(CH_HELLO, n, NULL, 0);
-		printf("(%d) channel open\n", rank);
+		ch_rank = size + 1 + (ch_next++ % CH_SLOTS);
+		{
+			long r = ch_rank;
+			ch_put_block(CH_HELLO, n, &r, (long)sizeof(r));
+		}
+		printf("(%d) channel open (rank %d)\n", rank, ch_rank);
 		fflush(stdout);
 	}
 	for (;;) {
@@ -558,8 +580,10 @@ serve_poll(void) {
 			in_len += (size_t)r;
 			continue;
 		}
-		if ((r < 0) && ((errno == EAGAIN) || (errno == EWOULDBLOCK) || (errno == EINTR)))
+		if ((r < 0) && ((errno == EAGAIN) || (errno == EWOULDBLOCK) || (errno == EINTR) || (errno == ENOBUFS)))
 			break;
+		if (r < 0)
+			printf("(%d) channel: read failed (%s)\n", rank, strerror(errno));
 		serve_blocks();
 		if (ch_fd >= 0)
 			serve_close("the frontend went away");
@@ -729,12 +753,16 @@ FrontendMain(const char *address) {
 	ch_header h;
 
 	frontend_connect(address);
-	if (!ch_read_all(&h, sizeof(h)) || (h.type != CH_HELLO)) {
-		fprintf(stderr, "PELCR frontend: %s is not a PELCR backend\n", address);
-		exit(-1);
+	{
+		long r = 0;
+		if (!ch_read_all(&h, sizeof(h)) || (h.type != CH_HELLO) || (h.bytes != (long)sizeof(r))
+		    || !ch_read_all(&r, sizeof(r))) {
+			fprintf(stderr, "PELCR frontend: %s is not a PELCR backend (of this version)\n", address);
+			exit(-1);
+		}
+		size = h.count;
+		rank = (int)r; /* the rank of this channel (h/channel.h) */
 	}
-	size = h.count;
-	rank = FRONTEND_RANK;
 	principal_rank = rank;
 	printf("(%d) frontend of a backend of %d ranks at %s\n", rank, size, address);
 	fflush(stdout);
