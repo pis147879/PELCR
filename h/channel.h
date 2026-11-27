@@ -28,7 +28,9 @@
 
    Addresses.  size is the number of ranks of the backend (also in the frontend, after the
    handshake) and it is also the creator of the keys of the graph builder.  The nodes of the
-   frontend have rankpuit FRONTEND_RANK = size + 1, and so does the frontend process (rank): the
+   frontend have as rankpuit the rank of its channel, between size + 1 and size + CH_SLOTS, a new one
+   for each channel the gateway opens (so the messages of a term whose channel closed are recognized
+   and dropped), and so is the rank of the frontend process: the
    cold initial nodes, among them the cold sources of the initial edges; the hot initial nodes go
    to the ranks of the backend in round robin (ChannelInitialRank).  A
    message to a node of the frontend goes on the channel from the gateway, or to the gateway from
@@ -53,7 +55,7 @@
 #define PELCR_FRONTEND 2 /* -frontend <host:port> */
 
 #define CH_GATEWAY 0 /* the rank of the backend that holds the channel */
-#define FRONTEND_RANK (size + 1)
+#define CH_SLOTS 64 /* the ranks of the channels: size + 1 ... size + CH_SLOTS */
 
 #define CH_CREATED 1       /* the edge leaves a node created by the composition that sends it */
 #define CH_OTHER_BACKEND 2 /* ... and the other edge of that node goes to the backend */
