@@ -77,6 +77,11 @@ static size_t in_len = 0, in_cap = 0;
 static long ch_records_out = 0, ch_records_in = 0;
 
 static void serve_close(const char *why);
+static void ch_close_block(void);
+
+/* the records of a block: the frontend processes its queue at least this often, so that it never
+   holds more than about this many messages from the channel (its queue has a maximum) */
+#define CH_BLOCK_RECORDS 65536
 
 static void
 ch_reserve(char **b, size_t *cap, size_t need) {
@@ -109,6 +114,8 @@ ch_write_record(struct messaggio *m) {
 	out_len += MessagePack(out_buf + out_len, m);
 	blk_count++;
 	ch_records_out++;
+	if (blk_count >= CH_BLOCK_RECORDS)
+		ch_close_block();
 }
 
 static void
@@ -663,6 +670,16 @@ frontend_connect(const char *address) {
 static long backend_counters[SERVE_COUNTERS];
 static int backend_counters_in = 0;
 
+/* the messages in the queue of the frontend: processed (they may push others, all local) */
+static void
+frontend_drain(void) {
+	buf_flush();
+	while (pending_actions > 0) {
+		FunInteraction();
+		buf_flush();
+	}
+}
+
 /* one block from the backend */
 static void
 frontend_read_block(void) {
@@ -688,6 +705,8 @@ frontend_read_block(void) {
 			ch_records_in++;
 			frontend_account(&m);
 			PushIncomingMessage(0, &m);
+			if (pending_actions >= CH_BLOCK_RECORDS)
+				frontend_drain(); /* a big block (an old backend): the queue has a maximum */
 		}
 	} else if (h.type == CH_STATS) {
 		memcpy(backend_counters, payload, sizeof(backend_counters));
@@ -709,12 +728,8 @@ frontend_term(void) {
 	long blocks = 0;
 
 	ch_flush(1);
-	buf_flush();
 	for (;;) {
-		while (pending_actions > 0) {
-			FunInteraction();
-			buf_flush();
-		}
+		frontend_drain();
 		ch_flush(1);
 		if (unbalanced == 0)
 			break;
