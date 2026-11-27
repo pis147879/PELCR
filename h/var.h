@@ -39,6 +39,7 @@
 #include "lambdastar.h"
 #include "buildgraph.h"
 #include "rev.h"
+#include "channel.h"
 
 #ifdef PELCR_DEFINE_GLOBALS
 #define PELCR_EXTERN

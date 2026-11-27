@@ -51,6 +51,8 @@ int
 main(int argc, char **argv) {
 	int j;
 	int parse_status = 0;
+	int serve_port = 0;                /* -serve */
+	const char *backend_address = NULL; /* -frontend */
 
 	aggregation_cumulate = 0;
 	num_receives = 0;
@@ -213,6 +215,18 @@ main(int argc, char **argv) {
 			printf("Read-back dump: %s\n", readbackfile);
 			j = j + 1;
 		}
+
+		/* frontend and backend (h/channel.h) */
+		if ((strcmp(argv[j], "-serve") == 0) && (j + 1 < argc)) {
+			pelcr_role = PELCR_BACKEND;
+			serve_port = atoi(argv[j + 1]);
+			j = j + 1;
+		}
+		if ((strcmp(argv[j], "-frontend") == 0) && (j + 1 < argc)) {
+			pelcr_role = PELCR_FRONTEND;
+			backend_address = argv[j + 1];
+			j = j + 1;
+		}
 	}
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -226,6 +240,17 @@ main(int argc, char **argv) {
 
 	/* provide a buffer for buffered MPI_Send */
 	MPI_Buffer_attach(sendbuffer, sizeof(sendbuffer));
+
+	/* frontend and backend (h/channel.h): the backend never returns */
+	if (pelcr_role == PELCR_BACKEND)
+		ServeLoop(serve_port);
+	if (pelcr_role == PELCR_FRONTEND) {
+		FrontendMain(backend_address);
+		CloseLib();
+		FreePendingBuffers();
+		Finally();
+		return 0;
+	}
 
 	/*******************************************/
 	if ((size < MAXNPROCESS) && (size >= 1)) {

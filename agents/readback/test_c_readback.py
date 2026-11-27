@@ -229,7 +229,13 @@ def main(argv):
         stats[status] += 1
         print('%-15s %-7s %s' % (name, status, s[:90]), flush=True)
 
-    # divergent term of Section 5: interrupted runs give approximants
+    # divergent term of Section 5: interrupted runs give approximants (not through a backend:
+    # a frontend has no -fires)
+    if os.environ.get('PELCR_BACKEND'):
+        print('\n%d terms in %.0f s: %s' % (stats['terms'], time.time() - t0, dict(stats)))
+        for b in bad:
+            print('  FAIL', b)
+        return 1 if bad else 0
     s = r'(%s)[\i.i + %s]' % (D, D)
     plcr = os.path.join(workdir, 'divergent.plcr')
     PR.write_plcr(s, plcr)

@@ -39,6 +39,12 @@ def run_pelcr(plcr_path, exe, workdir, timeout=600, fires=0, use_gdb=False, need
     args = [os.path.abspath(exe), '--', '-loop', '10000000']
     if fires:
         args += ['-fires', str(fires)]
+    # PELCR_BACKEND=host:port: PELCR runs as a frontend of that backend (make serve), which has
+    # the whole final graph for any number of ranks of the backend (h/channel.h)
+    if os.environ.get('PELCR_BACKEND'):
+        if fires:
+            raise RuntimeError('-fires is not available through a backend')
+        args += ['-frontend', os.environ['PELCR_BACKEND']]
     if use_gdb:
         env.update(PELCR_INPUT=cmd, PELCR_DUMP_JSON=base + '.json', PELCR_NOFREE=nofree_lib())
         run = ['gdb', '-q', '-batch', '-x', os.path.join(HERE, 'pelcr_gdb_dump.py'), '--args'] + args

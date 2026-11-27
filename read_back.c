@@ -132,7 +132,7 @@ write_readback_dump(node *principal, const char *path) {
 	long nnodes, nedges;
 	int first;
 
-	if (size == 1)
+	if ((size == 1) || (pelcr_role == PELCR_FRONTEND))
 		snprintf(name, sizeof(name), "%s", path);
 	else {
 		snprintf(name, sizeof(name), "%s.%d", path, rank);
@@ -231,7 +231,7 @@ write_final_gml(node *principal, const char *path) {
 	long *order; /* node index -> position in the lists (ids follow the lists) */
 	int side, k;
 
-	if (size == 1)
+	if ((size == 1) || (pelcr_role == PELCR_FRONTEND))
 		snprintf(name, sizeof(name), "%s", path);
 	else
 		snprintf(name, sizeof(name), "%s.%d", path, rank);

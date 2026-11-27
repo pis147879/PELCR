@@ -3,9 +3,9 @@ include Makefile.head
 ################ common part
 
 BUILDDIR    = build
-OBJECTS     = $(BUILDDIR)/parser.tab.o $(BUILDDIR)/lex.yy.o $(BUILDDIR)/read_back.o $(BUILDDIR)/dvm.o $(BUILDDIR)/io.o $(BUILDDIR)/graph.o $(BUILDDIR)/symbolic.o $(BUILDDIR)/weight.o $(BUILDDIR)/message.o $(BUILDDIR)/rev.o $(BUILDDIR)/distribution.o $(BUILDDIR)/print.o $(BUILDDIR)/main.o $(BUILDDIR)/buildgraph.o $(BUILDDIR)/combustion.o $(BUILDDIR)/globals.o
+OBJECTS     = $(BUILDDIR)/parser.tab.o $(BUILDDIR)/lex.yy.o $(BUILDDIR)/read_back.o $(BUILDDIR)/dvm.o $(BUILDDIR)/io.o $(BUILDDIR)/graph.o $(BUILDDIR)/symbolic.o $(BUILDDIR)/weight.o $(BUILDDIR)/message.o $(BUILDDIR)/rev.o $(BUILDDIR)/channel.o $(BUILDDIR)/distribution.o $(BUILDDIR)/print.o $(BUILDDIR)/main.o $(BUILDDIR)/buildgraph.o $(BUILDDIR)/combustion.o $(BUILDDIR)/globals.o
 PARSERSRC = lex.yy.c parser.tab.c
-SRCS      = lex.yy.c parser.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)weight.c $(COMPILINGRDIR)message.c $(COMPILINGRDIR)rev.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c $(COMPILINGRDIR)globals.c
+SRCS      = lex.yy.c parser.tab.c $(COMPILINGRDIR)read_back.c $(COMPILINGRDIR)dvm.c  $(COMPILINGRDIR)io.c $(COMPILINGRDIR)graph.c $(COMPILINGRDIR)symbolic.c $(COMPILINGRDIR)weight.c $(COMPILINGRDIR)message.c $(COMPILINGRDIR)rev.c $(COMPILINGRDIR)channel.c $(COMPILINGRDIR)distribution.c $(COMPILINGRDIR)print.c $(COMPILINGRDIR)main.c $(COMPILINGRDIR)buildgraph.c $(COMPILINGRDIR)combustion.c $(COMPILINGRDIR)globals.c
 
 GMLDIR      = GML
 LOGDIR      = LOGS
@@ -187,7 +187,21 @@ test4:
 # (needs NDPELCR_PYTHON=.../ND-VM-PELCR/python, see agents/readback/README.md)
 NDRANDOM ?= 50
 test-nd: gcombustion
-	python3 agents/readback/test_c_readback.py --exe $(BUILDDIR)/$(EXECS) --random $(NDRANDOM)
+	$(if $(strip $(BACKEND)),PELCR_BACKEND=$(BACKEND)) python3 agents/readback/test_c_readback.py --exe $(BUILDDIR)/$(EXECS) --random $(NDRANDOM)
+
+# Frontend and backend (h/channel.h): the backend keeps only the hot graph and is always available;
+# a frontend parses the terms, keeps their cold nodes and gets the whole final graph, for any NP.
+#   make serve NP=8 PORT=7070                       the backend (foreground; Ctrl-C stops it)
+#   make run FILE=dd3.plcr BACKEND=localhost:7070   a frontend: the term evaluated by the backend
+#   make nf FILE=dd2.plcr BACKEND=localhost:7070    ... and its normal form
+#   make test-nd BACKEND=localhost:7070             the read-back tests through the backend
+# Only pure terms and terms with choices for now (no constants and external functions, no FIRES).
+PORT    ?= 7070
+BACKEND ?=
+
+serve: $(BUILDDIR)/$(EXECS)
+	@mkdir -p $(LOGDIR) $(OUTDIR)
+	$(MPIR_HOME)/bin/mpirun $(MPIRUNFLAGS) -np $(RUNNP) $(BUILDDIR)/$(EXECS) -- -serve $(PORT)
 
 # Run one term with the C machine only, no Python:
 #   make run FILE=nd/two-ab.plcr                     a file (in $(PEXDIR), or a path from here)
@@ -197,7 +211,8 @@ test-nd: gcombustion
 #                                                    if the machine has fewer cores)
 # One rank: the final graph goes to $(RUNDIR)/<name>.json (-readback) and $(RUNDIR)/<name>.gml (-gml).
 # Several ranks: each rank has its part of the graph, so no read-back; the statistics of the ranks
-# are summed.  The output of PELCR goes to $(RUNDIR)/<name>.log; the statistics are printed.
+# are summed.  Through a backend (BACKEND=host:port, see make serve) the frontend has the whole
+# final graph, whatever the ranks of the backend.  The output of PELCR goes to $(RUNDIR)/<name>.log; the statistics are printed.
 # make nf ...: the same run, then the normal form, read back from the final graph by the decoder of
 # the ND-PELCR article (Python, agents/readback/pelcr_c_readback.py).
 RUNDIR  ?= $(OUTDIR)/run
@@ -205,12 +220,15 @@ FIRES   ?= 0
 RUNNAME  = $(if $(strip $(EXPR)),term,$(basename $(notdir $(FILE))))
 RUNFIRES = $(if $(filter-out 0,$(FIRES)),-fires $(FIRES))
 RUNNP    = $(if $(strip $(NP)),$(strip $(NP)),1)
-RUNMPI   = $(if $(filter-out 1,$(RUNNP)),$(MPIR_HOME)/bin/mpirun $(MPIRUNFLAGS) -np $(RUNNP))
-RUNDUMP  = $(if $(filter-out 1,$(RUNNP)),,-readback $(RUNDIR)/$(RUNNAME).json -gml $(RUNDIR)/$(RUNNAME).gml)
+RUNMPI   = $(if $(strip $(BACKEND)),,$(if $(filter-out 1,$(RUNNP)),$(MPIR_HOME)/bin/mpirun $(MPIRUNFLAGS) -np $(RUNNP)))
+RUNDUMP  = $(if $(and $(filter-out 1,$(RUNNP)),$(if $(strip $(BACKEND)),,x)),,-readback $(RUNDIR)/$(RUNNAME).json -gml $(RUNDIR)/$(RUNNAME).gml)
+RUNFRONT = $(if $(strip $(BACKEND)),-frontend $(BACKEND))
+RUNRANKS = $(if $(strip $(BACKEND)),1,$(RUNNP))
 
 run: $(BUILDDIR)/$(EXECS)
 	@if [ -z "$(strip $(FILE)$(EXPR))" ]; then \
-	  printf '%s\n' "usage: make run FILE=nd/two-ab.plcr   or   make run EXPR='(\f.\x.(f)(f)x)[a + b]'   [FIRES=N] [NP=N]"; exit 2; fi
+	  printf '%s\n' "usage: make run FILE=nd/two-ab.plcr   or   make run EXPR='(\f.\x.(f)(f)x)[a + b]'   [FIRES=N] [NP=N] [BACKEND=host:port]"; exit 2; fi
+	@if [ -n "$(strip $(BACKEND))" ] && [ "$(FIRES)" != "0" ]; then echo "make run: FIRES is not available through a backend"; exit 2; fi
 	@mkdir -p $(LOGDIR) $(RUNDIR)
 	@if [ -n '$(strip $(EXPR))' ]; then \
 	  printf '%s ;\n\043quit ;\n' '$(EXPR)' > $(RUNDIR)/term.plcr; dir=$(RUNDIR); file=term.plcr; \
@@ -220,23 +238,29 @@ run: $(BUILDDIR)/$(EXECS)
 	rm -f $(RUNDIR)/$(RUNNAME).json $(RUNDIR)/$(RUNNAME).gml; \
 	t0=$$($(NOW)); \
 	printf '\043setdir "%s" ; \043open "%s"\n' "$$dir" "$$file" | \
-	  $(RUNMPI) $(BUILDDIR)/$(EXECS) -- -loop $(LOOP) $(RUNFIRES) $(RUNDUMP) > $(RUNDIR)/$(RUNNAME).log 2>&1; \
+	  $(RUNMPI) $(BUILDDIR)/$(EXECS) -- -loop $(LOOP) $(RUNFIRES) $(RUNDUMP) $(RUNFRONT) > $(RUNDIR)/$(RUNNAME).log 2>&1; \
 	t1=$$($(NOW)); \
+	if [ -n "$(strip $(BACKEND))" ]; then \
+	  awk -v t0=$$t0 -v t1=$$t1 'BEGIN { printf "elapsed time (frontend of $(BACKEND)): %.3f s\n", t1 - t0 }'; \
+	  grep -a -E 'frontend of|final nodes|edge compositions|\) fires|family reductions|hot nodes left|ERROR|PELCR frontend' $(RUNDIR)/$(RUNNAME).log; \
+	else \
 	awk -v t0=$$t0 -v t1=$$t1 -v np=$(RUNNP) 'BEGIN { printf "elapsed time (%d rank%s): %.3f s\n", np, (np > 1) ? "s" : "", t1 - t0 }'; \
-	if [ $(RUNNP) -gt 1 ]; then \
+	fi; \
+	if [ $(RUNRANKS) -gt 1 ]; then \
 	  grep -a -E 'ERROR' $(RUNDIR)/$(RUNNAME).log; \
 	  awk '/final nodes/ {n += $$NF; r++} /edge compositions/ {c += $$NF} /^\([0-9]+\) fires/ {f += $$NF} \
 	       /family reductions/ {m += $$NF} END {if (r) printf "%d ranks: final nodes %d, edge compositions %d, fires %d, family reductions %d\n", r, n, c, f, m; \
 	       else {print "no statistics"; exit 1}}' $(RUNDIR)/$(RUNNAME).log || { tail -20 $(RUNDIR)/$(RUNNAME).log; exit 1; }; \
 	  echo "output: $(RUNDIR)/$(RUNNAME).log"; \
 	  exit 0; fi; \
-	grep -a -E 'final nodes|edge compositions|^\(0\) fires|family reductions|ERROR' $(RUNDIR)/$(RUNNAME).log; \
+	if [ -z "$(strip $(BACKEND))" ]; then \
+	  grep -a -E 'final nodes|edge compositions|^\(0\) fires|family reductions|ERROR' $(RUNDIR)/$(RUNNAME).log; fi; \
 	if [ -f $(RUNDIR)/$(RUNNAME).json ]; then \
 	  echo "final graph: $(RUNDIR)/$(RUNNAME).json, $(RUNDIR)/$(RUNNAME).gml   output: $(RUNDIR)/$(RUNNAME).log"; \
 	else echo "no final graph, see $(RUNDIR)/$(RUNNAME).log:"; tail -20 $(RUNDIR)/$(RUNNAME).log; exit 1; fi
 
 nf:
-	@if [ $(RUNNP) -gt 1 ]; then echo "make nf: the read-back needs one rank (NP=1)"; exit 2; fi
+	@if [ $(RUNRANKS) -gt 1 ]; then echo "make nf: the read-back needs one rank (NP=1), or a backend (BACKEND=host:port, make serve)"; exit 2; fi
 	@$(MAKE) --no-print-directory run
 	@python3 agents/readback/pelcr_c_readback.py $(if $(filter-out 0,$(FIRES)),--partial) $(RUNDIR)/$(RUNNAME).json
 
