@@ -23,7 +23,7 @@ endif
 CCLINKER    = $(CCC)
 PROFILING   = $(PMPILIB)
 #OPTFLAGS    = -DDEBUG -DWDEBUG -DMEMDEBUG -Wall -g -pg
-OPTFLAGS    = -D_DEBUG -DWDEBUG -DMEMDEBUG $(USER_TYPE_FLAGS) $(PENDING_FLAGS) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
+OPTFLAGS    = -O2 -D_DEBUG -DWDEBUG -DMEMDEBUG $(USER_TYPE_FLAGS) $(PENDING_FLAGS) -Wall -g -Wl,-export-dynamic -I $(COMPILINGRDIR)h -I .
 #-mpilog -mpitrace -mpianim -02 -DWDEBUG 
 #OPTFLAGS    =  -DWDEBUG -DMEMDEBUG -g -pg
 

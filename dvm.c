@@ -75,20 +75,33 @@ table_init(HashTable *table) {
 	return table;
 }
 
+/* The keys are addresses of the creator process, multiples of 16: every bit of the key must reach
+   the low bits of the hash, which choose the bucket (the finalizer of splitmix64).  The previous hash
+   (the one of ELF, on the bytes of the key) left the hash a multiple of 16 or 256: from 1.6 to 6 % of
+   the buckets used, with chains growing with the table (12 entries scanned per lookup in dd4 at 2
+   processes, 1.2 with this one). */
 unsigned long
 hash_ikey(unsigned long key) {
-	unsigned long h = 0, g;
-	int i;
-	char skey[sizeof(unsigned long)];
+	unsigned long z = key;
 
-	memcpy(skey, &key, sizeof(unsigned long));
-	for (i = 0; i < sizeof(unsigned long); i++) {
-		h = (h << 4) + skey[i];
-		if ((g = h & 0xf0000000))
-			h ^= g >> 24;
-		h &= ~g;
-	}
-	return h;
+	z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9UL;
+	z = (z ^ (z >> 27)) * 0x94d049bb133111ebUL;
+	return z ^ (z >> 31);
+}
+
+static long book_lookups = 0; /* table_iget */
+static long book_scanned = 0; /* entries scanned by table_iget */
+
+void
+PrintBookTableStats(void) {
+	long entries = 0;
+	int i;
+
+	for (i = 0; i <= size; i++)
+		if (BookTable[i] != NULL)
+			entries += BookTable[i]->elements;
+	printf("(%d) book table          :  %ld entries, %ld lookups, %.2f entries scanned per lookup\n", rank, entries,
+	       book_lookups, book_lookups ? (double)book_scanned / (double)book_lookups : 0.0);
 }
 
 int
@@ -103,7 +116,9 @@ table_iget(HashTable *table, unsigned long key, node **address)
 
 	hkey = hash_ikey(key) % table->size;
 	entry = table->table[hkey];
+	book_lookups++;
 	while (entry != NULL) {
+		book_scanned++;
 		if (entry->key == key) {
 			*address = entry->address;
 			return 1;
