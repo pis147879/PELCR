@@ -397,6 +397,9 @@ PopMessage(struct messaggio *m, struct mbuffer *l) {
 				case ISZERO:
 					f[indice].fun = pelcr_iszero;
 					break;
+				case GREATER:
+					f[indice].fun = pelcr_great;
+					break;
 			}
 		}
 	} else if ((k = WeightFindX(MessageWeight(m), KONST)) >= 0) {

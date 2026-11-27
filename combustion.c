@@ -1096,6 +1096,10 @@ StoreMessage(struct messaggio *m, edge *target, edge *source, const weight *w, i
 	int i, k;
 
 	m->tpy = ADD_TAG;
+	m->funWhich = 0;
+	m->funWait = 0;
+	m->funNarg = 0;
+	m->funType = 0;
 	pelcr_wire_clear(m->funValue);
 	for (i = 0; i < MAXNUMARG; i++)
 		pelcr_wire_clear(m->funArgs[i]);
@@ -1128,16 +1132,28 @@ StoreMessage(struct messaggio *m, edge *target, edge *source, const weight *w, i
 	if ((k = WeightFindX(MessageWeight(m), FUNC)) >= 0) {
 		long indice = XL_VALUE(WLETTERS(MessageWeight(m))[k]);
 
+		/* the arity and the type travel with the function: PopMessage copies them into f[] */
 		if (fcounter > -1) {
 			m->funWhich = f[indice].which; // Va eliminata successivamente
+			m->funNarg = f[indice].narg;
+			m->funType = f[indice].type;
 
 			WeightSetXAndTruncate(MessageWeight(m), k, f[indice].fun_id);
 			m->funWait = f[indice].wait;
 			for (i = 0; i < f[indice].wait - 1; i++)
 				pelcr_value_to_wire(&f[indice].s[i], m->funArgs[i]);
 		} else {
-			m->funWhich = f_db[indice].which;
-			m->funWait = f_db[indice].wait;
+			/* a predefined function: its entry of f_db, written by the parser, exists only in the
+			   process that parsed the term; the other processes have the copy in f[] that PopMessage
+			   wrote when the function arrived */
+			const functionstack *src = (f_db[indice].fun != NULL) ? &f_db[indice] : &f[indice];
+
+			m->funWhich = src->which;
+			m->funWait = src->wait;
+			m->funNarg = src->narg;
+			m->funType = src->type;
+			for (i = 0; i < src->wait - 1; i++)
+				pelcr_value_to_wire(&src->s[i], m->funArgs[i]);
 		}
 
 	} else if ((k = WeightFindX(MessageWeight(m), KONST)) >= 0) {
